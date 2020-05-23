@@ -37,7 +37,7 @@
                     </ul>
 
                     <!-- Right Side Of Navbar -->
-                    <ul class="navbar-nav ml-auto">
+                    {{-- <ul class="navbar-nav ml-auto">
                         <!-- Authentication Links -->
                         @guest
                             <li class="nav-item">
@@ -66,7 +66,7 @@
                                     </form>
                                 </div>
                             </li>
-                        @endguest
+                        @endguest --}}
                     </ul>
                 </div>
             </div>
@@ -76,5 +76,6 @@
             @yield('content')
         </main>
     </div>
+    @yield('scripts')
 </body>
 </html>
