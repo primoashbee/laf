@@ -16,8 +16,6 @@ use Illuminate\Support\Facades\Storage;
 
 Route::get('/', 'UploadController@index');
 Route::post('/', 'UploadController@upload')->name('form.upload');
-Route::get('/test', 'UploadController@upload1');
-
 Route::get('/dl',function(){
 
         // $zip = new ZipArchive();
