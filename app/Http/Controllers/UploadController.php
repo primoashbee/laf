@@ -17,22 +17,21 @@ class UploadController extends Controller
     public function index(){
         return view('upload');
     }
-    public function upload1(){
-        $template = Storage::disk('public')->path('LAF Final Template.docx');
-        $templateProcessor = new TemplateProcessor($template);
-        $templateProcessor->setValue('e', 'X');
-        $templateProcessor->setValue('name', 'Morgado, John Ashbee, A.');
-        $folder = uniqid();
-        File::makeDirectory(Storage::disk('public')->path($folder));
-        $newFile = Storage::disk('public')->path($folder.'/LAF Record - TEST.docx');
-        $templateProcessor->saveAs($newFile);
-
-    }
     public function upload(Request $request){
+        $q1 = 0;
+        $q2 = 0;
+        $q3 = 0;
+        $q4 = 0;
+        $q5 = 0;
+        $q6 = 0;
+        $q7 = 0;
+        $q8 = 0;
+        $q9 = 0;
+        $q10 = 0;
         if($request->hasFile('uploadFile')){
             $file = $request->file('uploadFile');
             $array = Excel::toCollection([], $file);
-            $template = Storage::disk('public')->path('LAF Template.docx');        
+            $template = Storage::disk('public')->path('LAF Final Template.docx');        
             $ctr = 0;
             $folder = uniqid();
             File::makeDirectory(Storage::disk('public')->path($folder));
@@ -152,7 +151,7 @@ class UploadController extends Controller
 
                     $templateProcessor->setValue('spouse_contact', $value[21]);
 
-                    $date = Carbon::parse(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($value[22]));
+                    $date = Carbon::parse(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($value[30]));
                     $templateProcessor->setValue('spouse_birthday', $date->toDateString());
 
                     $templateProcessor->setValue('spouse_age', $date->age);
@@ -163,6 +162,182 @@ class UploadController extends Controller
 
                     $templateProcessor->setValue('mother_name', $value[26]);
                     
+
+                // Progress Poverty Index
+
+
+                if ($value[57] == "Walo o Higit pa") {
+                    $q1 = 0;
+                }
+                if ($value[57] == "Pito") {
+                    $q1 = 2;
+                }
+                if ($value[57] == "Anim") {
+                    $q1 = 6;
+                }
+                if ($value[57] == "Lima") {
+                    $q1 = 11;
+                }
+                 if ($value[57] == "Apat") {
+                    $q1 = 15;
+                }
+                if ($value[57] == "Tatlo") {
+                    $q1 = 21;
+                }
+                if ($value[57] == "Isa o Dalawa") {
+                    $q1 = 30;
+                }
+
+                // Question 2
+
+                if ($value[58] == "Hindi") {
+                    $q2 = 0;
+                }
+
+                if ($value[58] == "Oo") {
+                    $q2 = 1;
+                }
+
+                if ($value[58] == "Walang may edad 6-17") {
+                    $q2 = 2;
+                }
+
+                // Question 3
+
+                if ($value[59] == "Wala") {
+                    $q3 = 0;
+                }
+                if ($value[59] == "Isa") {
+                    $q3 = 2;
+                }
+
+                if ($value[59] == "Dalawa") {
+                    $q3 = 7;
+                }
+
+                if ($value[59] == "Tatlo o higit pa") {
+                    $q3 = 12;
+                }
+
+
+                // Question 4
+
+                if ($value[60] == "Tatlo o higit pa") {
+                    $q4 = 0;
+                }
+
+                if ($value[60] == "Dalawa") {
+                    $q4 = 4;
+                }
+
+                if ($value[60] == "Isa") {
+                    $q4 = 8;
+                }
+
+                if ($value[60] == "Wala") {
+                    $q4 = 12;
+                }
+
+                // Question 5
+
+                if ($value[61] == "Elementary o No Grade Completed") {
+                    $q5 = 0;
+                }
+
+                if ($value[61] == "Walang babaeng puno ng pamilya") {
+                    $q5 = 2;
+                }
+
+                if ($value[61] == "Elementary or HS undergrad") {
+                    $q5 = 2;
+                }
+                
+                if ($value[61] == "High School Graduate") {
+                    $q5 = 4;
+                }
+
+                if ($value[61] == "College undergrad o higit pa") {
+                    $q5 = 7;
+                }
+
+                // Question 6
+
+                if ($value[62] == "Light Materials (LM) (cogon/nipa/anahaw) or mixed but more LM") {
+                    $q6 = 0;
+                }
+                if ($value[62] == "Mixed but predominantly strong materials") {
+                    $q6 = 2;
+                }
+
+                if ($value[62] == "Strong materials (galvanized iron, aluminum, tile, concrete, brick, stone, wood, plywood, asbestos)") {
+                    $q6 = 3;
+                }
+                
+                // Question 7
+
+                if ($value[63] == "Hindi (Walang pagmamay-ari)") {
+                    $q7 = 0;
+                }
+
+                if ($value[63] == "Oo (Mayroong pagmamay-ari)") {
+                    $q7 = 3;
+                }
+
+                // Question 8
+                if ($value[64] == "Wala (Walang pagmamay-ari)") {
+                    $q8 = 0;
+                }
+
+                if ($value[64] == "1 sa nabanggit, pero hindi pareho") {
+                    $q8 = 6;
+                }
+
+                if ($value[64] == "Parehong may pagmamay-ari") {
+                    $q8 = 12;
+                }
+
+                // Question 9
+
+                if ($value[65] == "Hindi/ Wala") {
+                    $q9 = 0;
+                }
+
+                if ($value[65] == "TV lamang") {
+                    $q9 = 4;
+                }
+                if ($value[65] == "TV/ VCD/DVD player") {
+                    $q9 = 7;
+                }
+
+                // Question 10
+
+                if ($value[66] == "Wala") {
+                    $q10 = 0;
+                }
+
+                if ($value[66] == "Isa") {
+                    $q10 = 4;
+                }
+
+                if ($value[66] == "Dalawa") {
+                    $q10 = 7;
+                }
+                if ($value[66] == "Tatlo o Higit pa") {
+                    $q10 = 12;
+                }   
+                $qts = $q1+$q2+$q3+$q4+$q5+$q6+$q7+$q8+$q9+$q10;     
+                $templateProcessor->setValue('q1', $q1);
+                $templateProcessor->setValue('q2', $q2);
+                $templateProcessor->setValue('q3', $q3);
+                $templateProcessor->setValue('q4', $q4);
+                $templateProcessor->setValue('q5', $q5);
+                $templateProcessor->setValue('q6', $q6);
+                $templateProcessor->setValue('q7', $q7);
+                $templateProcessor->setValue('q8', $q8);
+                $templateProcessor->setValue('q9', $q9);
+                $templateProcessor->setValue('q10', $q10);
+                $templateProcessor->setValue('qts', $qts);
+
 
                     // $filename = $value[61];
                     // $tempImage = tempnam(sys_get_temp_dir(), $filename);
@@ -179,9 +354,7 @@ class UploadController extends Controller
                     // $document->replaceStrToImg( 'profile', $templateProcessor);
 
                     
-
-
-
+                
                     
 
 
