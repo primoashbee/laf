@@ -22,17 +22,36 @@ class UploadController extends Controller
         $templateProcessor = new TemplateProcessor($template);
         $templateProcessor->setValue('e', 'X');
         $templateProcessor->setValue('name', 'Morgado, John Ashbee, A.');
+        $row = 'pito';
+        $score = 0;
+        
+        if($row ==''){
+            $score =2;
+            
+        }
+        if($row =='Anim'){
+            $score = 6;
+        }
+
+        $templateProcessor->setValue('s1', $score);
+        
+       
+        
+        $templateProcessor->setValue('s1', $score);
         $folder = uniqid();
         File::makeDirectory(Storage::disk('public')->path($folder));
         $newFile = Storage::disk('public')->path($folder.'/LAF Record - TEST.docx');
         $templateProcessor->saveAs($newFile);
+
+        
+        
 
     }
     public function upload(Request $request){
         if($request->hasFile('uploadFile')){
             $file = $request->file('uploadFile');
             $array = Excel::toCollection([], $file);
-            $template = Storage::disk('public')->path('LAF Template.docx');        
+            $template = Storage::disk('public')->path('LAF Template.docx');
             $ctr = 0;
             $folder = uniqid();
             File::makeDirectory(Storage::disk('public')->path($folder));
