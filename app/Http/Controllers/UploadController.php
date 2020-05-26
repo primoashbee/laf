@@ -414,7 +414,88 @@ class UploadController extends Controller
                 $templateProcessor->setValue('q10', $q10);
                 $templateProcessor->setValue('qts', $qts);
 
+                $new_loan='';
+                $reloan='';
 
+                if ($value[67] == 'New Loan') {
+                    $new_loan = 'X';
+                }
+                if ($value[67] == 'Reloan') {
+                    $new_loan = 'X';
+                }
+                $templateProcessor->setValue('nl', $new_loan);
+                $templateProcessor->setValue('rl', $reloan);
+                $templateProcessor->setValue('branch', $value[68]);
+                $templateProcessor->setValue('cluster', $value[69]);
+                $templateProcessor->setValue('loan_purpose', $value[70]);
+
+                
+                $templateProcessor->setValue('lc', $value[72]); 
+                $date_of_membership = Carbon::parse(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($value[73]));       
+
+                $templateProcessor->setValue('dom', $date_of_membership);  
+                $templateProcessor->setValue('pref_loan', $value[74]);
+                $templateProcessor->setValue('terms_in_months', $value[75]);
+
+
+                $total_income = $value[76]+$value[77]+$value[78];
+
+                $templateProcessor->setValue('bi_1', $value[76]);
+                $templateProcessor->setValue('bi_2', $value[77]);
+                $templateProcessor->setValue('bi_3', $value[78]);
+                $templateProcessor->setValue('bus_ti', $total_income);
+
+
+                $templateProcessor->setValue('b1_labor', $value[79]);
+                $templateProcessor->setValue('b1_rent', $value[80]);
+                $templateProcessor->setValue('b1_uti', $value[81]);
+                $templateProcessor->setValue('b1_transpo', $value[82]);
+                $templateProcessor->setValue('b1_others', $value[83]);
+
+
+                $templateProcessor->setValue('b2_labor', $value[84]);
+                $templateProcessor->setValue('b2_rent', $value[85]);
+                $templateProcessor->setValue('b2_uti', $value[86]);
+                $templateProcessor->setValue('b2_transpo', $value[87]);
+                $templateProcessor->setValue('b2_others', $value[88]);
+
+                $templateProcessor->setValue('b3_labor', $value[89]);
+                $templateProcessor->setValue('b3_rent', $value[90]);
+                $templateProcessor->setValue('b3_uti', $value[91]);
+                $templateProcessor->setValue('b3_transpo', $value[92]);
+                $templateProcessor->setValue('b3_others', $value[93]);
+
+                $total_labor = $value[79]+$value[84]+$value[89];
+                $total_rent = $value[80]+$value[85]+$value[90];
+                $total_utilities = $value[81]+$value[86]+$value[91];
+                $total_transpo = $value[82]+$value[87]+$value[92];
+                $total_others = $value[83]+$value[88]+$value[93];
+
+                $templateProcessor->setValue('t_labor', $total_labor);
+                $templateProcessor->setValue('t_rent', $total_rent);
+                $templateProcessor->setValue('t_uti', $total_utilities);
+                $templateProcessor->setValue('t_transpo', $total_transpo);
+                $templateProcessor->setValue('t_others', $total_others);
+
+
+                $total_hh_income = $value[103]+$value[104]+$value[105];
+                $templateProcessor->setValue('salary', $value[103]);
+                $templateProcessor->setValue('remittance', $value[104]);
+                $templateProcessor->setValue('hi_oi', $value[105]);
+                $templateProcessor->setValue('hi_ti', $total_hh_income);
+
+
+                $total_household_expense = $value[106]+$value[107]+$value[108]+$value[109]+$value[110]+$value[111]+$value[112]+$value[113];
+
+                $templateProcessor->setValue('food', $value[106]);
+                $templateProcessor->setValue('educ', $value[107]);
+                $templateProcessor->setValue('transpo', $value[108]);
+                $templateProcessor->setValue('rent', $value[109]);
+                $templateProcessor->setValue('clothing', $value[110]);
+                $templateProcessor->setValue('water', $value[111]);
+                $templateProcessor->setValue('elec', $value[112]);
+                $templateProcessor->setValue('he_others', $value[113]);
+                $templateProcessor->setValue('he_te', $total_household_expense);
                     // $filename = $value[61];
                     // $tempImage = tempnam(sys_get_temp_dir(), $filename);
                     // copy($value[61], $tempImage);
