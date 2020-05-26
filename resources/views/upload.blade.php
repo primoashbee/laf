@@ -16,8 +16,8 @@
                     <form action="{{route('form.upload')}}" method="POST" enctype="multipart/form-data">
                         <div class="custom-file">
                             @csrf
-                            <input type="file" class="custom-file-input"  name="uploadFile"  accept="" required id="customFile">
-                            {{-- <input type="file" class="custom-file-input"  name="uploadFile"  accept=".xlsx, csv" required id="customFile"> --}}
+                            {{-- <input type="file" class="custom-file-input"  name="uploadFile"  accept="" required id="customFile"> --}}
+                            <input type="file" class="custom-file-input"  name="uploadFile"  accept=".xlsx, csv" required id="customFile">
                             <label class="custom-file-label" for="customFile">Choose file</label>
                         </div>
                         <button class="btn btn-success mt-2" type="submit">Upload</button>

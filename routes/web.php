@@ -14,10 +14,14 @@ use Illuminate\Support\Facades\Storage;
 |
 */
 
-Route::get('/', 'UploadController@index');
-Route::post('/', 'UploadController@upload')->name('form.upload');
-Route::get('/test', 'UploadController@upload1');
-
+Route::group(['middleware' => ['auth']], function () {
+        Route::get('/home', 'UploadController@index');
+        Route::post('/home', 'UploadController@upload')->name('form.upload');
+        Route::get('/', function(){
+                return response()->redirectTo('/home');
+        });
+        Route::get('/test', 'UploadController@upload1');    
+});
 Route::get('/dl',function(){
 
         // $zip = new ZipArchive();
@@ -80,4 +84,4 @@ Route::get('/dl',function(){
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+// Route::get('/home', 'HomeController@index')->name('home');
