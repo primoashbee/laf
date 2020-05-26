@@ -31,7 +31,7 @@ class UploadController extends Controller
         if($request->hasFile('uploadFile')){
             $file = $request->file('uploadFile');
             $array = Excel::toCollection([], $file);
-            $template = Storage::disk('public')->path('LAF Final Template.docx');        
+            $template = Storage::disk('public')->path('LAF-Final-Template.docx');        
             $ctr = 0;
             $folder = uniqid();
             File::makeDirectory(Storage::disk('public')->path($folder));
@@ -43,68 +43,69 @@ class UploadController extends Controller
                     $templateProcessor->setValue('name', $name);
                     $nickname = ucwords($value[4]);
                     $templateProcessor->setValue('nickname', $nickname);
-                    $present_address = ucwords($value[5]);
-                    $templateProcessor->setValue('present_address', $present_address);
-                    $templateProcessor->setValue('years_of_stay', $value[6]);
-                    $templateProcessor->setValue('business_address', $value[7]);
+                    $present_address = ucwords($value[5]). ' Brgy. '. ucwords($value[6]). ' '. ucwords($value[7]). ' '. ucwords($value[8]);
+                    $templateProcessor->setValue('present_home_address', $present_address);
+                    $templateProcessor->setValue('years_of_stay', $value[10]);
+                    $business_address = ucwords($value[11]). ' Brgy. '. ucwords($value[12]). ' '. ucwords($value[13]). ' '. ucwords($value[14]);
+                    $templateProcessor->setValue('business_address', $business_address);
                     $owned= '';
                     $rented= '';
-                    if($value[8] == "Owned"){
+                    if($value[16] == "Owned"){
                         $owned = 'X';
                     }
 
-                    if($value[8] == "Rented"){
+                    if($value[16] == "Rented"){
                         $rented = 'X';
                     }
 
-                    $templateProcessor->setValue('house_owned', $owned);
-                    $templateProcessor->setValue('house_rented', $rented);
+                    $templateProcessor->setValue('ho', $owned);
+                    $templateProcessor->setValue('hr', $rented);
 
-                    $date = Carbon::parse(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($value[9]));
+                    $date = Carbon::parse(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($value[17]));
                     
                     $templateProcessor->setValue('birthday', $date->toDateString());
                     $templateProcessor->setValue('age', $date->age);
 
                     $male= '';
                     $female= '';
-                    if($value[10] == "Male"){
+                    if($value[18] == "Male"){
                         $male = 'X';
                     }
 
-                    if($value[10] == "Female"){
+                    if($value[18] == "Female"){
                         $female = 'X';
                     }
                     
-                    $templateProcessor->setValue('is_male', $male);
-                    $templateProcessor->setValue('is_female', $female);
-                    
-                    $templateProcessor->setValue('birthplace', ucwords($value[11]));
-                    
+                    $templateProcessor->setValue('m', $male);
+                    $templateProcessor->setValue('f', $female);
+                     
+                    $templateProcessor->setValue('birthplace', ucwords($value[19]));
+                    $templateProcessor->setValue('tin', $value[20]);
                     $single= '';
                     $married= '';
                     $widowed= '';
                     $separated= '';
-                    if($value[12] == "Single"){
+                    if($value[21] == "Single"){
                         $single = 'X';
                     }
 
-                    if($value[12] == "Married"){
+                    if($value[21] == "Married"){
                         $married = 'X';
                     }
 
-                    if($value[12] == "Widow"){
+                    if($value[21] == "Widow"){
                         $widowed = 'X';
                     }
 
-                    if($value[12] == "Separated"){
+                    if($value[21] == "Separated"){
                         $separated = 'X';
                     }
 
-                    $templateProcessor->setValue('is_single', $single);
-                    $templateProcessor->setValue('is_married', $married);
-                    $templateProcessor->setValue('is_widowed', $widowed);
-                    $templateProcessor->setValue('is_separated', $separated);
-                    
+                    $templateProcessor->setValue('cs', $single);
+                    $templateProcessor->setValue('cm', $married);
+                    $templateProcessor->setValue('cw', $widowed);
+                    $templateProcessor->setValue('cse', $separated);
+                    $templateProcessor->setValue('umid', $value[22]);
 
                       
                     $post_grad= '';
@@ -112,56 +113,131 @@ class UploadController extends Controller
                     $highschool= '';
                     $elementary= '';
                     $others= '';
-                    if($value[13] == "Post Graduate"){
+                    if($value[23] == "Post Graduate"){
                         $post_grad = 'X';
                     }
 
-                    if($value[13] == "College"){
+                    if($value[23] == "College"){
                         $college = 'X';
                     }
 
-                    if($value[13] == "High School"){
+                    if($value[23] == "High School"){
                         $highschool = 'X';
                     }
 
-                    if($value[13] == "Elementary"){
+                    if($value[23] == "Elementary"){
                         $elementary = 'X';
                     }
 
-                    if($value[13] != "Post Graduate" && $value[12] != "College" && $value[12] != "High School" && $value[12] != "Elementary"){
-                        $others = $value[13];
+                    if($value[23] != "Post Graduate" && $value[23] != "College" && $value[23] != "High School" && $value[23] != "Elementary"){
+                        $others = $value[23];
                     }
 
-                    $templateProcessor->setValue('is_post_graduate', $post_grad);
-                    $templateProcessor->setValue('is_college', $college);
-                    $templateProcessor->setValue('is_highschool', $highschool);
-                    $templateProcessor->setValue('is_elementary', $elementary);
-                    $templateProcessor->setValue('is_others', $others);
+                    $templateProcessor->setValue('ep', $post_grad);
+                    $templateProcessor->setValue('ec', $college);
+                    $templateProcessor->setValue('eh', $highschool);
+                    $templateProcessor->setValue('ee', $elementary);
+                    $templateProcessor->setValue('eo', $others);
 
-                    $templateProcessor->setValue('fb_account', $value[14]);
-                    $templateProcessor->setValue('contact', $value[15]);
-
-                    $templateProcessor->setValue('tin', $value[16]);
-
-                    $templateProcessor->setValue('other_ids', $value[17]);
+                    $templateProcessor->setValue('fb_account', $value[24]);
+                    $templateProcessor->setValue('contact', $value[25]);
                     
-                    $spouse_name = $value[20].' '.$value[18].' '.$value[19];
+                    $spouse_name = $value[26].' '.$value[27].' '.$value[28];
 
-                    $templateProcessor->setValue('spouse_name', $spouse_name);
+                    $templateProcessor->setValue('s_name', $spouse_name);
 
-                    $templateProcessor->setValue('spouse_contact', $value[21]);
+                    $templateProcessor->setValue('s_contact', $value[29]);
 
                     $date = Carbon::parse(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($value[30]));
-                    $templateProcessor->setValue('spouse_birthday', $date->toDateString());
+                    $templateProcessor->setValue('s_birthday', $date->toDateString());
 
-                    $templateProcessor->setValue('spouse_age', $date->age);
+                    $templateProcessor->setValue('s_age', $date->age);
 
-                    $templateProcessor->setValue('dependents', $value[24]);
+                    $templateProcessor->setValue('dependents', $value[32]);
 
-                    $templateProcessor->setValue('household', $value[25]);
+                    $templateProcessor->setValue('household', $value[33]);
 
-                    $templateProcessor->setValue('mother_name', $value[26]);
+                    $templateProcessor->setValue('mother_name', $value[34]);
+
+                    // Personal References
+
+                    $templateProcessor->setValue('pr1_name', $value[35]);
+                    $templateProcessor->setValue('pr1_contact', $value[36]);
+                    $templateProcessor->setValue('p1r_address', $value[37]);
+
+                    $templateProcessor->setValue('pr2_name', $value[38]);
+                    $templateProcessor->setValue('pr2_contact', $value[39]);
+                    $templateProcessor->setValue('p2r_address', $value[40]);
+            
+
+                    // Household Income
+
+                    $self_employed='';
+                    $other_income='';
+                    $spouse_other_income='';
+                    if ($value[41] == 'Yes') {
+                        $self_employed = 'X';
+                    }
+                    if (!empty($value[44])) {
+                        $other_income = 'X';
+                    }
                     
+                    $templateProcessor->setValue('e', $self_employed);
+                    $templateProcessor->setValue('service_type', $value[42]);
+                    $templateProcessor->setValue('b_mgi', $value[43]);
+
+                    $templateProcessor->setValue('o', $other_income);
+                    $templateProcessor->setValue('o_name', $value[44]);
+                    $templateProcessor->setValue('o_mgi', $value[45]);
+
+                    // Spouse Employment Information
+
+                    $spouse_self_employed='';
+                    $spouse_employed='';
+                    if ($value[46] == 'Yes') {
+                        $spouse_self_employed = 'X';
+                    }
+
+                    $templateProcessor->setValue('se', $spouse_self_employed);
+                    $templateProcessor->setValue('s_service_type', $value[47]);
+                    $templateProcessor->setValue('se_mgi', $value[48]);
+
+
+
+                    if ($value[49] == 'Yes') {
+                        $spouse_employed = 'X';
+                    }
+                    $templateProcessor->setValue('sep', $spouse_employed);
+                    $templateProcessor->setValue('position', $value[50]);
+                    $templateProcessor->setValue('company', $value[51]);
+                    $templateProcessor->setValue('sep_mgi', $value[52]);
+
+                    if (!empty($value[53])) {
+                        $spouse_other_income = 'X';
+                    }
+
+                    $templateProcessor->setValue('so', $spouse_other_income);
+                    $templateProcessor->setValue('so_name', $value[53]);
+                    $templateProcessor->setValue('so_mgi', $value[54]);
+
+                    $pension ='';
+                    $remittance ='';
+                    $total_others=$value[55]+$value[56];
+
+                    if (!empty($value[55])) {
+                        $pension = 'X';
+                    }
+                    if (!empty($value[56])) {
+                        $remittance = 'X';
+                    }
+
+                    $templateProcessor->setValue('rem', $remittance);
+                    $templateProcessor->setValue('pen', $pension);
+                    $templateProcessor->setValue('total_others', $total_others);
+
+                    $total_household_income= $value[43]+$value[45]+$value[48]+$value[52]+$value[54]+$value[56];
+
+                    $templateProcessor->setValue('total_hh', $total_household_income);
 
                 // Progress Poverty Index
 
@@ -338,7 +414,88 @@ class UploadController extends Controller
                 $templateProcessor->setValue('q10', $q10);
                 $templateProcessor->setValue('qts', $qts);
 
+                $new_loan='';
+                $reloan='';
 
+                if ($value[67] == 'New Loan') {
+                    $new_loan = 'X';
+                }
+                if ($value[67] == 'Reloan') {
+                    $new_loan = 'X';
+                }
+                $templateProcessor->setValue('nl', $new_loan);
+                $templateProcessor->setValue('rl', $reloan);
+                $templateProcessor->setValue('branch', $value[68]);
+                $templateProcessor->setValue('cluster', $value[69]);
+                $templateProcessor->setValue('loan_purpose', $value[70]);
+
+                
+                $templateProcessor->setValue('lc', $value[72]); 
+                $date_of_membership = Carbon::parse(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($value[73]));       
+
+                $templateProcessor->setValue('dom', $date_of_membership);  
+                $templateProcessor->setValue('pref_loan', $value[74]);
+                $templateProcessor->setValue('terms_in_months', $value[75]);
+
+
+                $total_income = $value[76]+$value[77]+$value[78];
+
+                $templateProcessor->setValue('bi_1', $value[76]);
+                $templateProcessor->setValue('bi_2', $value[77]);
+                $templateProcessor->setValue('bi_3', $value[78]);
+                $templateProcessor->setValue('bus_ti', $total_income);
+
+
+                $templateProcessor->setValue('b1_labor', $value[79]);
+                $templateProcessor->setValue('b1_rent', $value[80]);
+                $templateProcessor->setValue('b1_uti', $value[81]);
+                $templateProcessor->setValue('b1_transpo', $value[82]);
+                $templateProcessor->setValue('b1_others', $value[83]);
+
+
+                $templateProcessor->setValue('b2_labor', $value[84]);
+                $templateProcessor->setValue('b2_rent', $value[85]);
+                $templateProcessor->setValue('b2_uti', $value[86]);
+                $templateProcessor->setValue('b2_transpo', $value[87]);
+                $templateProcessor->setValue('b2_others', $value[88]);
+
+                $templateProcessor->setValue('b3_labor', $value[89]);
+                $templateProcessor->setValue('b3_rent', $value[90]);
+                $templateProcessor->setValue('b3_uti', $value[91]);
+                $templateProcessor->setValue('b3_transpo', $value[92]);
+                $templateProcessor->setValue('b3_others', $value[93]);
+
+                $total_labor = $value[79]+$value[84]+$value[89];
+                $total_rent = $value[80]+$value[85]+$value[90];
+                $total_utilities = $value[81]+$value[86]+$value[91];
+                $total_transpo = $value[82]+$value[87]+$value[92];
+                $total_others = $value[83]+$value[88]+$value[93];
+
+                $templateProcessor->setValue('t_labor', $total_labor);
+                $templateProcessor->setValue('t_rent', $total_rent);
+                $templateProcessor->setValue('t_uti', $total_utilities);
+                $templateProcessor->setValue('t_transpo', $total_transpo);
+                $templateProcessor->setValue('t_others', $total_others);
+
+
+                $total_hh_income = $value[103]+$value[104]+$value[105];
+                $templateProcessor->setValue('salary', $value[103]);
+                $templateProcessor->setValue('remittance', $value[104]);
+                $templateProcessor->setValue('hi_oi', $value[105]);
+                $templateProcessor->setValue('hi_ti', $total_hh_income);
+
+
+                $total_household_expense = $value[106]+$value[107]+$value[108]+$value[109]+$value[110]+$value[111]+$value[112]+$value[113];
+
+                $templateProcessor->setValue('food', $value[106]);
+                $templateProcessor->setValue('educ', $value[107]);
+                $templateProcessor->setValue('transpo', $value[108]);
+                $templateProcessor->setValue('rent', $value[109]);
+                $templateProcessor->setValue('clothing', $value[110]);
+                $templateProcessor->setValue('water', $value[111]);
+                $templateProcessor->setValue('elec', $value[112]);
+                $templateProcessor->setValue('he_others', $value[113]);
+                $templateProcessor->setValue('he_te', $total_household_expense);
                     // $filename = $value[61];
                     // $tempImage = tempnam(sys_get_temp_dir(), $filename);
                     // copy($value[61], $tempImage);
