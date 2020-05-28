@@ -10,13 +10,31 @@ use Illuminate\Support\Facades\File;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Storage;
 use PhpOffice\PhpWord\TemplateProcessor;
+use Revolution\Google\Sheets\Facades\Sheets;
 
 class UploadController extends Controller
 {
     //
     public function index(){
+        
         return view('upload');
     }
+
+    public function get(){
+        
+        $token = [
+            'access_token'  => env('ACCESS_TOKEN'),
+            'refresh_token' => env('REFRESH_TOKEN'),
+            'expires_in'    => env('EXPIRES_IN'),
+            'created'       => env('CREATED'),
+        ];
+        
+        $values = Sheets::setAccessToken($token)->spreadsheet('1qAkyBUKgkN7ISvHFlOoOAN5QaXTga2A5QFIVNEk7pug')->sheet('Form Responses 1')->all();
+        return $values;
+    }
+
+
+    
     public function upload1(){
         $template = Storage::disk('public')->path('LAF Final Template.docx');
         $templateProcessor = new TemplateProcessor($template);
@@ -175,7 +193,7 @@ class UploadController extends Controller
 
                         $templateProcessor->setValue('spouse_contact', $value[21]);
 
-                        $date = Carbon::parse(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($value[22]));
+                        $date = Carbon::parse(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($value[22]))->format('F d, Y');
                         $templateProcessor->setValue('spouse_birthday', $date->toDateString());
 
                         $templateProcessor->setValue('spouse_age', $date->age);
