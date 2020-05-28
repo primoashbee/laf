@@ -16,7 +16,39 @@ class UploadController extends Controller
 {
     //
     public function index(){
+        
         return view('upload');
+    }
+
+    public function get(){
+        
+        $token = [
+            'access_token'  => env('ACCESS_TOKEN'),
+            'refresh_token' => env('REFRESH_TOKEN'),
+            'expires_in'    => env('EXPIRES_IN'),
+            'created'       => env('CREATED'),
+        ];
+        
+        $values = Sheets::setAccessToken($token)->spreadsheet('1qAkyBUKgkN7ISvHFlOoOAN5QaXTga2A5QFIVNEk7pug')->sheet('Form Responses 1')->all();
+        return $values;
+    }
+
+
+    
+    public function upload1(){
+        $template = Storage::disk('public')->path('LAF Final Template.docx');
+        $templateProcessor = new TemplateProcessor($template);
+        $templateProcessor->setValue('e', 'X');
+        $templateProcessor->setValue('name', 'Morgado, John Ashbee, A.');
+        $row = 'pito';
+        $score = 0;
+        
+        if ($row =='') {
+            $score =2;
+        }
+        if ($row =='Anim') {
+            $score = 6;
+        }
     }
 
     public function currency($value){
