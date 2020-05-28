@@ -4,13 +4,14 @@ namespace App\Http\Controllers;
 
 use ZipArchive;
 use Carbon\Carbon;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Imports\ClientImport;
 use Illuminate\Support\Facades\File;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Storage;
 use PhpOffice\PhpWord\TemplateProcessor;
-use Illuminate\Support\Str;
+use Revolution\Google\Sheets\Facades\Sheets;
 
 class UploadController extends Controller
 {
@@ -54,6 +55,7 @@ class UploadController extends Controller
     public function currency($value){
         return '₱ '.number_format($value,2,".",",");
     }
+    
 
     public function check_5c($value, $string){
         $cb = '☐';
@@ -78,7 +80,7 @@ class UploadController extends Controller
         if($request->hasFile('uploadFile')){
             $file = $request->file('uploadFile');
             $array = Excel::toCollection([], $file);
-            $template = Storage::disk('public')->path('LAF Final Template.docx');        
+            $template = Storage::disk('public')->path('LAF-Final-Template.docx');        
             $ctr = 0;
             
             $folder = uniqid();
@@ -253,6 +255,16 @@ class UploadController extends Controller
                     $templateProcessor->setValue('s_service_type', $value[47]);
                     
                     $templateProcessor->setValue('se_mgi', $this->currency($value[48]));
+                    
+
+
+                    $templateProcessor->setValue('igp1', '');
+                    $templateProcessor->setValue('e_mgi', $this->currency(0));
+                    $templateProcessor->setValue('igp1_mgi', $this->currency(0));
+
+                    $templateProcessor->setValue('igp2_mgi', $this->currency(0));
+
+
 
 
 
