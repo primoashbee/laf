@@ -34,6 +34,13 @@ class UploadController extends Controller
         return $values;
     }
 
+    public function currency($value, $weekly=false){
+        if ($weekly == true) {
+            return '₱ '.number_format($value/4,2,".",",");
+        }
+
+        return '₱ '.number_format($value,2,".",",");
+    }
 
     
     public function upload1(){
@@ -50,10 +57,6 @@ class UploadController extends Controller
         if ($row =='Anim') {
             $score = 6;
         }
-    }
-
-    public function currency($value){
-        return '₱ '.number_format($value,2,".",",");
     }
     
 
@@ -80,7 +83,7 @@ class UploadController extends Controller
         if($request->hasFile('uploadFile')){
             $file = $request->file('uploadFile');
             $array = Excel::toCollection([], $file);
-            $template = Storage::disk('public')->path('LAF-Final-Template.docx');        
+            $template = Storage::disk('public')->path('LAF Final Template.docx');        
             $ctr = 0;
             
             $folder = uniqid();
@@ -259,6 +262,7 @@ class UploadController extends Controller
 
 
                     $templateProcessor->setValue('igp1', '');
+                    $templateProcessor->setValue('igp2', '');
                     $templateProcessor->setValue('e_mgi', $this->currency(0));
                     $templateProcessor->setValue('igp1_mgi', $this->currency(0));
 
@@ -283,7 +287,7 @@ class UploadController extends Controller
 
                     $templateProcessor->setValue('so', $spouse_other_income);
                     $templateProcessor->setValue('so_name', $value[53]);
-                    $templateProcessor->setValue('so_mgi', $value[54]);
+                    $templateProcessor->setValue('so_mgi', $this->currency($value[54]));
 
                     $pension ='';
                     $remittance ='';
@@ -298,7 +302,7 @@ class UploadController extends Controller
 
                     $templateProcessor->setValue('rem', $remittance);
                     $templateProcessor->setValue('pen', $pension);
-                    $templateProcessor->setValue('total_others', $total_others);
+                    $templateProcessor->setValue('total_others', $this->currency($total_others));
 
                     $total_household_income= $this->currency($value[43]+$value[45]+$value[48]+$value[52]+$value[54]+$value[56]);
                     
@@ -527,123 +531,121 @@ class UploadController extends Controller
                 $templateProcessor->setValue('terms_in_months', $value[75]);
 
 
-                $total_income = $value[76]+$value[77]+$value[78];
+                $total_income = $value[76]/4+$value[77]/4+$value[78]/4;
 
-                $templateProcessor->setValue('bi_1', $this->currency($value[76]));
-                $templateProcessor->setValue('bi_2', $this->currency($value[77]));
-                $templateProcessor->setValue('bi_3', $this->currency($value[78]));
+                $templateProcessor->setValue('bi_1', $this->currency($value[76], true));
+                $templateProcessor->setValue('bi_2', $this->currency($value[77], true));
+                $templateProcessor->setValue('bi_3', $this->currency($value[78], true));
                 $templateProcessor->setValue('bus_ti', $this->currency($total_income));
 
 
-                $templateProcessor->setValue('b1_labor', $this->currency($value[79]));
-                $templateProcessor->setValue('b1_rent', $this->currency($value[80]));
-                $templateProcessor->setValue('b1_uti', $this->currency($value[81]));
-                $templateProcessor->setValue('b1_transpo', $this->currency($value[82]));
-                $templateProcessor->setValue('b1_others', $this->currency($value[83]));
+                $templateProcessor->setValue('b1_labor', $this->currency($value[79], true));
+                $templateProcessor->setValue('b1_rent', $this->currency($value[80], true));
+                $templateProcessor->setValue('b1_uti', $this->currency($value[81], true));
+                $templateProcessor->setValue('b1_transpo', $this->currency($value[82], true));
+                $templateProcessor->setValue('b1_others', $this->currency($value[83], true));
 
 
-                $templateProcessor->setValue('b2_labor', $this->currency($value[84]));
-                $templateProcessor->setValue('b2_rent', $this->currency($value[85]));
-                $templateProcessor->setValue('b2_uti', $this->currency($value[86]));
-                $templateProcessor->setValue('b2_transpo', $this->currency($value[87]));
-                $templateProcessor->setValue('b2_others', $this->currency($value[88]));
+                $templateProcessor->setValue('b2_labor', $this->currency($value[84], true));
+                $templateProcessor->setValue('b2_rent', $this->currency($value[85], true));
+                $templateProcessor->setValue('b2_uti', $this->currency($value[86], true));
+                $templateProcessor->setValue('b2_transpo', $this->currency($value[87], true));
+                $templateProcessor->setValue('b2_others', $this->currency($value[88], true));
 
-                $templateProcessor->setValue('b3_labor', $this->currency($value[89]));
-                $templateProcessor->setValue('b3_rent', $this->currency($value[90]));
-                $templateProcessor->setValue('b3_uti', $this->currency($value[91]));
-                $templateProcessor->setValue('b3_transpo', $this->currency($value[92]));
-                $templateProcessor->setValue('b3_others', $this->currency($value[93]));
+                $templateProcessor->setValue('b3_labor', $this->currency($value[89], true));
+                $templateProcessor->setValue('b3_rent', $this->currency($value[90], true));
+                $templateProcessor->setValue('b3_uti', $this->currency($value[91], true));
+                $templateProcessor->setValue('b3_transpo', $this->currency($value[92], true));
+                $templateProcessor->setValue('b3_others', $this->currency($value[93], true));
+
+                $weekly_omfi1= 0;
+                if (!empty($value[95]) && !empty($value[96])) {
+                    $weekly_omfi1 = $value[95] / $value[96];
+                }
 
                 $templateProcessor->setValue('omfi_1', $value[94]);
                 $templateProcessor->setValue('a1_omfi', $this->currency($value[95]));
-                $templateProcessor->setValue('w1_omfi', $this->currency($value[96]));
+                $templateProcessor->setValue('w1_omfi', $this->currency($weekly_omfi1));
 
+                $weekly_omfi2= 0;
+                if (!empty($value[98]) && !empty($value[99])) {
+                    $weekly_omfi2 = $value[98] / $value[99];
+                }
                 $templateProcessor->setValue('omfi_2', $value[97]);
                 $templateProcessor->setValue('a2_omfi', $this->currency($value[98]));
-                $templateProcessor->setValue('w2_omfi', $this->currency($value[99]));
+                $templateProcessor->setValue('w2_omfi', $this->currency($weekly_omfi2));
+
+                $weekly_ape = 0;
+                if (!empty($value[101]) && !empty($value[102])) {
+                    $weekly_ape = $value[101] / $value[102]*4;
+                }
 
                 $templateProcessor->setValue('ape', $value[100]);
                 $templateProcessor->setValue('a_ape', $this->currency($value[101]));
-                $templateProcessor->setValue('m_ape', $this->currency($value[102]));
+                $templateProcessor->setValue('m_ape', $this->currency($weekly_ape));
 
-                $total_labor = $this->currency($value[79]+$value[84]+$value[89]);
-                $total_rent = $this->currency($value[80]+$value[85]+$value[90]);
-                $total_utilities = $this->currency($value[81]+$value[86]+$value[91]);
-                $total_transpo = $this->currency($value[82]+$value[87]+$value[92]);
-                $total_others = $this->currency($value[83]+$value[88]+$value[93]);
+                $total_labor = $value[79]+$value[84]+$value[89];
+                $total_rent = $value[80]+$value[85]+$value[90];
+                $total_utilities = $value[81]+$value[86]+$value[91];
+                $total_transpo = $value[82]+$value[87]+$value[92];
+                $total_others = $value[83]+$value[88]+$value[93];
 
-                $templateProcessor->setValue('t_labor', $total_labor);
-                $templateProcessor->setValue('t_rent', $total_rent);
-                $templateProcessor->setValue('t_uti', $total_utilities);
-                $templateProcessor->setValue('t_transpo', $total_transpo);
-                $templateProcessor->setValue('t_others', $total_others);
-
-
-                $total_hh_income = $this->currency($value[103]+$value[104]+$value[105]);
-                $templateProcessor->setValue('salary', $this->currency($value[103]));
-                $templateProcessor->setValue('remittance', $this->currency($value[104]));
-                $templateProcessor->setValue('hi_oi', $this->currency($value[105]));
-                $templateProcessor->setValue('hi_ti', $total_hh_income);
+                $templateProcessor->setValue('t_labor', $this->currency($total_labor,true));
+                $templateProcessor->setValue('t_rent', $this->currency($total_rent,true));
+                $templateProcessor->setValue('t_uti', $this->currency($total_utilities,true));
+                $templateProcessor->setValue('t_transpo', $this->currency($total_transpo,true));
+                $templateProcessor->setValue('t_others', $this->currency($total_others,true));
 
 
-                $total_household_expense = $this->currency($value[106]+$value[107]+$value[108]+$value[109]+$value[110]+$value[111]+$value[112]+$value[113]);
+                $total_hh_income = $value[103]/4+$value[104]/4+$value[105]/4;
+                $templateProcessor->setValue('salary', $this->currency($value[103], true));
+                $templateProcessor->setValue('remittance', $this->currency($value[104], true));
+                $templateProcessor->setValue('hi_oi', $this->currency($value[105], true));
+                $templateProcessor->setValue('hi_ti', $this->currency($total_hh_income));
 
-                $templateProcessor->setValue('food', $this->currency($value[106]));
-                $templateProcessor->setValue('educ', $this->currency($value[107]));
-                $templateProcessor->setValue('transpo', $this->currency($value[108]));
-                $templateProcessor->setValue('rent', $this->currency($value[109]));
-                $templateProcessor->setValue('clothing', $this->currency($value[110]));
-                $templateProcessor->setValue('water', $this->currency($value[111]));
-                $templateProcessor->setValue('elec', $this->currency($value[112]));
-                $templateProcessor->setValue('he_others', $this->currency($value[113]));
-                $templateProcessor->setValue('he_te', $total_household_expense);
+                             
 
-                $cb1= $this->check_5c($value[114], "Shows honesty and integrity");
-                $cb2= $this->check_5c($value[114], "Reputation in the community is good, no cases in the barangay");
-                $cb3= $this->check_5c($value[114], "Good repayment behavior from other MFI (if applies");
-                $cb4= $this->check_5c($value[114], "Family supports loan application of the Partner Client");
-                $cb5= $this->check_5c($value[114], "Family members shows support to each other");
+                $total_household_expense = 
+                    $value[106]/4+
+                    $value[107]/4+
+                    $value[108]/4+
+                    $value[109]/4+
+                    $value[110]/4+
+                    $value[111]/4+
+                    $value[112]/4+
+                    $value[113]/4;
 
-                $cb6= $this->check_5c($value[115], "HH income is greater than HH expenses");
-                $cb7= $this->check_5c($value[115], "Current business inventory is higher than the applied loan.");
+                $templateProcessor->setValue('food', $this->currency($value[106],true));
+                $templateProcessor->setValue('educ', $this->currency($value[107],true));
+                $templateProcessor->setValue('transpo', $this->currency($value[108],true));
+                $templateProcessor->setValue('rent', $this->currency($value[109],true));
+                $templateProcessor->setValue('clothing', $this->currency($value[110],true));
+                $templateProcessor->setValue('water', $this->currency($value[111],true));
+                $templateProcessor->setValue('elec', $this->currency($value[112],true));
+                $templateProcessor->setValue('he_others', $this->currency($value[113],true));
+                $templateProcessor->setValue('he_te', $this->currency($total_household_expense));
 
-                $cb8= $this->check_5c($value[116], "Family including PC invested additional money in the business aside from loan with LIGHT MFI");
+                $e1 = $total_labor/4 + $total_rent/4 + $total_transpo/4 + $total_utilities/4 + $total_others/4;
 
-                $cb9= $this->check_5c($value[117], "Total business assets are greater than the loan applied");
-                $cb10= $this->check_5c($value[117], "Co-maker has other stable source of income");
-                $cb11= $this->check_5c($value[117], "With Savings");
+                $e2 = $weekly_ape + $weekly_omfi1 + $weekly_omfi2;
+                $bndi = $total_income - ($e1+$e2);
 
-                $cb12= $this->check_5c($value[118], "Has regular supplier");
-                $cb13= $this->check_5c($value[118], "Business is not seasonal");
-                $cb14= $this->check_5c($value[118], "Business exist at least 1 year");
-                $cb15= $this->check_5c($value[118], "Has adequate and stable market to sustain the business");
+                $twndi = $bndi + ($total_hh_income - $total_household_expense);
+                $pccp = $twndi * .7;
+                $ltw = $value[75]*4;
+                $credit_limit = $pccp * $ltw;
+                $cla = $credit_limit * .82;
+                
 
-                $total_score_5c = 0;
-                for ($i=0; $i < 15 ; $i++) { 
-                    $cbs=[$cb1,$cb2,$cb3,$cb4,$cb5,$cb6,$cb7,$cb8,$cb9,$cb10,$cb11,$cb12,$cb13,$cb14,$cb15];
-                    if ($cbs[$i] == '☒') {
-                        $total_score_5c += 1;
-                    }
-
-                }
+                $templateProcessor->setValue('ltw', $this->currency($ltw)); 
+                $templateProcessor->setValue('bndi', $this->currency($bndi)); 
+                $templateProcessor->setValue('twndi', $this->currency($twndi));   
+                $templateProcessor->setValue('pccp', $this->currency($pccp));
+                $templateProcessor->setValue('cl', $this->currency($credit_limit));
+                $templateProcessor->setValue('cla', $this->currency($cla));
 
 
-                $templateProcessor->setValue('cb1', $cb1);
-                $templateProcessor->setValue('cb2', $cb2);
-                $templateProcessor->setValue('cb3', $cb3);
-                $templateProcessor->setValue('cb4', $cb4);
-                $templateProcessor->setValue('cb5', $cb5);
-                $templateProcessor->setValue('cb6', $cb6);
-                $templateProcessor->setValue('cb7', $cb7);
-                $templateProcessor->setValue('cb8', $cb8);
-                $templateProcessor->setValue('cb9', $cb9);
-                $templateProcessor->setValue('cb10', $cb10);
-                $templateProcessor->setValue('cb11', $cb11);
-                $templateProcessor->setValue('cb12', $cb12);
-                $templateProcessor->setValue('cb13', $cb13);
-                $templateProcessor->setValue('cb14', $cb14);
-                $templateProcessor->setValue('cb15', $cb15);
-                $templateProcessor->setValue('t5c', $total_score_5c);
+               
                 $newFile = Storage::disk('public')->path($folder.'/LAF Record - '.$name.'.docx');
                 $templateProcessor->saveAs($newFile);
                 }
