@@ -40,10 +40,10 @@ class UploadController extends Controller
         }
         if ($value>0) {
             return '₱ '.number_format($value,2,".",",");
-        }else{
+        }
             $value = '';
             return $value;
-        }
+        
         
     }
 
@@ -695,12 +695,13 @@ class UploadController extends Controller
                 $cla = $credit_limit * .82;
                 
 
+
                 $templateProcessor->setValue('ltw', $ltw); 
-                $templateProcessor->setValue('bndi', $this->currency($bndi)); 
-                $templateProcessor->setValue('twndi', $this->currency($twndi));   
-                $templateProcessor->setValue('pccp', $this->currency($pccp));
-                $templateProcessor->setValue('cl', $this->currency($credit_limit));
-                $templateProcessor->setValue('cla', $this->currency($cla));
+                $templateProcessor->setValue('bndi', '₱ '.number_format($bndi,2,".",",")); 
+                $templateProcessor->setValue('twndi', '₱ '.number_format($twndi,2,".",","));   
+                $templateProcessor->setValue('pccp', '₱ '.number_format($pccp,2,".",","));
+                $templateProcessor->setValue('cl', '₱ '.number_format($credit_limit,2,".",","));
+                $templateProcessor->setValue('cla', '₱ '.number_format($cla,2,".",","));
 
 
                
