@@ -35,11 +35,16 @@ class UploadController extends Controller
     }
 
     public function currency($value, $weekly=false){
-        if ($weekly == true) {
+        if ($weekly == true && $value > 0) {
             return '₱ '.number_format($value/4,2,".",",");
         }
-
-        return '₱ '.number_format($value,2,".",",");
+        if ($value>0) {
+            return '₱ '.number_format($value,2,".",",");
+        }else{
+            $value = '';
+            return $value;
+        }
+        
     }
 
     
@@ -195,16 +200,18 @@ class UploadController extends Controller
 
                     $templateProcessor->setValue('fb_account', $value[24]);
                     $templateProcessor->setValue('contact', $value[25]);
+
+                    // Spouse Information
                     
                     $spouse_name = $value[28].' '.$value[27].' '.$value[26];
+
+                    
 
                     $templateProcessor->setValue('s_name', $spouse_name);
 
                     $templateProcessor->setValue('s_contact', $value[29]);
-
                     $date = Carbon::parse(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($value[30]));
                     $templateProcessor->setValue('s_birthday', $date->toDateString());
-
                     $templateProcessor->setValue('s_age', $date->age);
 
                     $templateProcessor->setValue('dependents', $value[32]);
@@ -247,47 +254,69 @@ class UploadController extends Controller
                     $templateProcessor->setValue('o_mgi', $this->currency($value[45]));
 
                     // Spouse Employment Information
-
+                    $templateProcessor->setValue('igp1', '');
+                    $templateProcessor->setValue('igp1_mgi', '');
+                    $templateProcessor->setValue('igp2', '');
+                    $templateProcessor->setValue('igp2_mgi', '');
+                    
+                    $spouse_total_income=0;
                     $spouse_self_employed='';
                     $spouse_employed='';
-                    if ($value[46] == 'Yes') {
-                        $spouse_self_employed = 'X';
+                    if ($value[28] && $value [26]) {
+                        if ($value[46] == 'Yes') {
+                            $spouse_self_employed = 'X';
+                        }
+
+                        $templateProcessor->setValue('se', $spouse_self_employed);
+                        $templateProcessor->setValue('s_service_type', $value[47]);
+
+                        if ($value[48]>0) {
+                            $templateProcessor->setValue('se_mgi', $this->currency($value[48]));
+                        }else{
+                            $templateProcessor->setValue('se_mgi', '');
+                        }
+                        
+                        if ($value[49] == 'Yes') {
+                            $spouse_employed = 'X';
+                        }
+
+                        $templateProcessor->setValue('sep', $spouse_employed);
+                        $templateProcessor->setValue('position', $value[50]);
+                        $templateProcessor->setValue('company', $value[51]);
+
+                        if ($value[52]>0) {
+                            $templateProcessor->setValue('sep_mgi', $this->currency($value[52]));
+                        }else{
+                            $templateProcessor->setValue('sep_mgi', '');
+                        }
+                        
+
+                        if (!empty($value[53])) {
+                            $spouse_other_income = 'X';
+                        }
+
+                        $templateProcessor->setValue('so', $spouse_other_income);
+                        $templateProcessor->setValue('so_name', $value[53]);
+                        if ($value[54]>0) {
+                            $templateProcessor->setValue('so_mgi', $this->currency($value[54]));
+                        }else{
+                            $templateProcessor->setValue('so_mgi', '');
+                        }
+
+                        $spouse_total_income = $value[54]+$value[52]+$value[48];
+                        
+                    }else{
+                        $templateProcessor->setValue('se', $spouse_self_employed);
+                        $templateProcessor->setValue('s_service_type', '');
+                        $templateProcessor->setValue('se_mgi', '');
+                        $templateProcessor->setValue('sep_mgi', '');
+                        $templateProcessor->setValue('sep', $spouse_employed);
+                        $templateProcessor->setValue('position', '');
+                        $templateProcessor->setValue('company', '');
+                        $templateProcessor->setValue('so', $spouse_other_income);
+                        $templateProcessor->setValue('so_name', '');
+                        $templateProcessor->setValue('so_mgi', '');
                     }
-
-                    $templateProcessor->setValue('se', $spouse_self_employed);
-                    $templateProcessor->setValue('s_service_type', $value[47]);
-                    
-                    $templateProcessor->setValue('se_mgi', $this->currency($value[48]));
-                    
-
-
-                    $templateProcessor->setValue('igp1', '');
-                    $templateProcessor->setValue('igp2', '');
-                    $templateProcessor->setValue('e_mgi', $this->currency(0));
-                    $templateProcessor->setValue('igp1_mgi', $this->currency(0));
-
-                    $templateProcessor->setValue('igp2_mgi', $this->currency(0));
-
-
-
-
-
-                    if ($value[49] == 'Yes') {
-                        $spouse_employed = 'X';
-                    }
-                    $templateProcessor->setValue('sep', $spouse_employed);
-                    $templateProcessor->setValue('position', $value[50]);
-                    $templateProcessor->setValue('company', $value[51]);
-                    
-                    $templateProcessor->setValue('sep_mgi', $this->currency($value[52]));
-
-                    if (!empty($value[53])) {
-                        $spouse_other_income = 'X';
-                    }
-
-                    $templateProcessor->setValue('so', $spouse_other_income);
-                    $templateProcessor->setValue('so_name', $value[53]);
-                    $templateProcessor->setValue('so_mgi', $this->currency($value[54]));
 
                     $pension ='';
                     $remittance ='';
@@ -302,9 +331,14 @@ class UploadController extends Controller
 
                     $templateProcessor->setValue('rem', $remittance);
                     $templateProcessor->setValue('pen', $pension);
-                    $templateProcessor->setValue('total_others', $this->currency($total_others));
+                    if ($total_others>0) {
+                        $templateProcessor->setValue('total_others', $this->currency($total_others));
+                    }else{
+                        $templateProcessor->setValue('total_others', '');
+                    }
+                    
 
-                    $total_household_income= $this->currency($value[43]+$value[45]+$value[48]+$value[52]+$value[54]+$value[56]);
+                    $total_household_income= $this->currency($value[43]+$value[45]+$spouse_total_income+$value[56]);
                     
                     $templateProcessor->setValue('total_hh', $total_household_income);
 
@@ -538,25 +572,49 @@ class UploadController extends Controller
                 $templateProcessor->setValue('bi_3', $this->currency($value[78], true));
                 $templateProcessor->setValue('bus_ti', $this->currency($total_income));
 
+                if ($value[76]>0) {
+                    $templateProcessor->setValue('b1_labor', $this->currency($value[79], true));
+                    $templateProcessor->setValue('b1_rent', $this->currency($value[80], true));
+                    $templateProcessor->setValue('b1_uti', $this->currency($value[81], true));
+                    $templateProcessor->setValue('b1_transpo', $this->currency($value[82], true));
+                    $templateProcessor->setValue('b1_others', $this->currency($value[83], true));
+                }else{
+                    $templateProcessor->setValue('b1_labor', '');
+                    $templateProcessor->setValue('b1_rent', '');
+                    $templateProcessor->setValue('b1_uti', '');
+                    $templateProcessor->setValue('b1_transpo', '');
+                    $templateProcessor->setValue('b1_others', '');
+                }
+                
 
-                $templateProcessor->setValue('b1_labor', $this->currency($value[79], true));
-                $templateProcessor->setValue('b1_rent', $this->currency($value[80], true));
-                $templateProcessor->setValue('b1_uti', $this->currency($value[81], true));
-                $templateProcessor->setValue('b1_transpo', $this->currency($value[82], true));
-                $templateProcessor->setValue('b1_others', $this->currency($value[83], true));
-
-
-                $templateProcessor->setValue('b2_labor', $this->currency($value[84], true));
-                $templateProcessor->setValue('b2_rent', $this->currency($value[85], true));
-                $templateProcessor->setValue('b2_uti', $this->currency($value[86], true));
-                $templateProcessor->setValue('b2_transpo', $this->currency($value[87], true));
-                $templateProcessor->setValue('b2_others', $this->currency($value[88], true));
-
-                $templateProcessor->setValue('b3_labor', $this->currency($value[89], true));
-                $templateProcessor->setValue('b3_rent', $this->currency($value[90], true));
-                $templateProcessor->setValue('b3_uti', $this->currency($value[91], true));
-                $templateProcessor->setValue('b3_transpo', $this->currency($value[92], true));
-                $templateProcessor->setValue('b3_others', $this->currency($value[93], true));
+                if ($value[77]>0) {
+                    $templateProcessor->setValue('b2_labor', $this->currency($value[84], true));
+                    $templateProcessor->setValue('b2_rent', $this->currency($value[85], true));
+                    $templateProcessor->setValue('b2_uti', $this->currency($value[86], true));
+                    $templateProcessor->setValue('b2_transpo', $this->currency($value[87], true));
+                    $templateProcessor->setValue('b2_others', $this->currency($value[88], true));
+                }else{
+                    $templateProcessor->setValue('b2_labor', '');
+                    $templateProcessor->setValue('b2_rent', '');
+                    $templateProcessor->setValue('b2_uti', '');
+                    $templateProcessor->setValue('b2_transpo', '');
+                    $templateProcessor->setValue('b2_others', '');
+                }
+                
+                if ($value[78]>0) {
+                    $templateProcessor->setValue('b3_labor', $this->currency($value[89], true));
+                    $templateProcessor->setValue('b3_rent', $this->currency($value[90], true));
+                    $templateProcessor->setValue('b3_uti', $this->currency($value[91], true));
+                    $templateProcessor->setValue('b3_transpo', $this->currency($value[92], true));
+                    $templateProcessor->setValue('b3_others', $this->currency($value[93], true));
+                }else{
+                    $templateProcessor->setValue('b3_labor', '');
+                    $templateProcessor->setValue('b3_rent', '');
+                    $templateProcessor->setValue('b3_uti', '');
+                    $templateProcessor->setValue('b3_transpo', '');
+                    $templateProcessor->setValue('b3_others', '');
+                }
+                
 
                 $weekly_omfi1= 0;
                 if (!empty($value[95]) && !empty($value[96])) {
@@ -576,10 +634,10 @@ class UploadController extends Controller
                 $templateProcessor->setValue('w2_omfi', $this->currency($weekly_omfi2));
 
                 $weekly_ape = 0;
+                $number_of_weeks=$value[102]*4;
                 if (!empty($value[101]) && !empty($value[102])) {
-                    $weekly_ape = $value[101] / $value[102]*4;
+                    $weekly_ape = $value[101] / $number_of_weeks;
                 }
-
                 $templateProcessor->setValue('ape', $value[100]);
                 $templateProcessor->setValue('a_ape', $this->currency($value[101]));
                 $templateProcessor->setValue('m_ape', $this->currency($weekly_ape));
@@ -637,7 +695,7 @@ class UploadController extends Controller
                 $cla = $credit_limit * .82;
                 
 
-                $templateProcessor->setValue('ltw', $this->currency($ltw)); 
+                $templateProcessor->setValue('ltw', $ltw); 
                 $templateProcessor->setValue('bndi', $this->currency($bndi)); 
                 $templateProcessor->setValue('twndi', $this->currency($twndi));   
                 $templateProcessor->setValue('pccp', $this->currency($pccp));
