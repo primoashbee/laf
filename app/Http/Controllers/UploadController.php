@@ -22,16 +22,34 @@ class UploadController extends Controller
     }
 
     public function get(){
+        $client = new \Google_Client();
+        $client->setApplicationName('My PHP App');
+        $client->setScopes([\Google_Service_Sheets::SPREADSHEETS]);
+        $client->setAccessType('offline');
+
+        $jsonAuth = Storage::disk('public')->path('service account.json');
+        $client->setAuthConfig($jsonAuth, true);
+
+        $sheets = new \Google_Service_Sheets($client);
+
+
+
+        // The range of A2:H will get columns A through H and all rows starting from row 2
+        $spreadsheetId = getenv('SPREADSHEET_ID');
+
+        $range = 'A:DP';
+        $currentRow = 2;
+        $rows = $sheets->spreadsheets_values->get($spreadsheetId, $range, ['majorDimension' => 'ROWS']);
+        dd($rows);
+        // $token = [
+        //     'access_token'  => env('ACCESS_TOKEN'),
+        //     'refresh_token' => env('REFRESH_TOKEN'),
+        //     'expires_in'    => env('EXPIRES_IN'),
+        //     'created'       => env('CREATED'),
+        // ];
         
-        $token = [
-            'access_token'  => env('ACCESS_TOKEN'),
-            'refresh_token' => env('REFRESH_TOKEN'),
-            'expires_in'    => env('EXPIRES_IN'),
-            'created'       => env('CREATED'),
-        ];
-        
-        $values = Sheets::setAccessToken($token)->spreadsheet('1qAkyBUKgkN7ISvHFlOoOAN5QaXTga2A5QFIVNEk7pug')->sheet('Form Responses 1')->all();
-        return $values;
+        // $values = Sheets::setAccessToken($token)->spreadsheet('1qAkyBUKgkN7ISvHFlOoOAN5QaXTga2A5QFIVNEk7pug')->sheet('Form Responses 1')->all();
+        // return $values;
     }
 
     public function currency($value, $weekly=false){
@@ -693,7 +711,6 @@ class UploadController extends Controller
                 $ltw = $value[75]*4;
                 $credit_limit = $pccp * $ltw;
                 $cla = $credit_limit * .82;
-                
 
 
                 $templateProcessor->setValue('ltw', $ltw); 
