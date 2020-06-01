@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use ZipArchive;
 use Carbon\Carbon;
+use App\ExcelReader;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Imports\ClientImport;
@@ -33,14 +34,13 @@ class UploadController extends Controller
         $sheets = new \Google_Service_Sheets($client);
 
 
-
-        // The range of A2:H will get columns A through H and all rows starting from row 2
+        
         $spreadsheetId = getenv('SPREADSHEET_ID');
 
         $range = 'A:DP';
         $currentRow = 2;
         $rows = $sheets->spreadsheets_values->get($spreadsheetId, $range, ['majorDimension' => 'ROWS']);
-        dd($rows);
+        $data = new ExcelReader($rows);
         // $token = [
         //     'access_token'  => env('ACCESS_TOKEN'),
         //     'refresh_token' => env('REFRESH_TOKEN'),

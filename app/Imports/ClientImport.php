@@ -15,10 +15,10 @@ class ClientImport implements ToModel
     public function model(array $row)
     {
         return new Client([
-            'Name' => $row[0],
-            'ID' => $row[1],
-            'Status' => $row[2],
-            'Gender' => $row[3]
+            'first_name' => $row[0],
+            'middle_name' => $row[1],
+            'last_name' => $row[2],
+            'nickname' => $row[3]
         ]);
     }
 }
