@@ -2,6 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Client;
+use DB;
+use App\PPI;
+use App\CWE;
+use App\ExcelReader;
 use ZipArchive;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
@@ -104,6 +109,8 @@ class UploadController extends Controller
         $q10 = 0;
 
         if($request->hasFile('uploadFile')){
+
+
             $file = $request->file('uploadFile');
             $array = Excel::toCollection([], $file);
             $template = Storage::disk('public')->path('LAF Final Template.docx');        
@@ -113,8 +120,17 @@ class UploadController extends Controller
             File::makeDirectory(Storage::disk('public')->path($folder));
             foreach($array[0] as $key => $value){
                 if ($ctr > 0) {
+                    
+
                     $templateProcessor = new TemplateProcessor($template);
                     $entry_date = Carbon::parse(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($value[0]));
+                    $clients = new ExcelReader($value);
+                    
+                    $clientToDb = Client::create($clients->client);
+                    PPI::create(array_merge(['client_id' => $clientToDb->id],$clients->ppi));
+                    CWE::create(array_merge(['client_id' => $clientToDb->id],$clients->cwe));
+                    
+
                     $templateProcessor->setValue('date', $entry_date->toDateString());
                     $name = ucwords($value[1]). ' '. ucwords($value[2]). ' '. ucwords($value[3]);
                     $templateProcessor->setValue('name', $name);

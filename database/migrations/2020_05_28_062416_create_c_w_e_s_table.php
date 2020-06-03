@@ -49,12 +49,10 @@ class CreateCWESTable extends Migration
 
             $table->string('mfi_1')->nullable();
             $table->string('mfi_1_loan_amount')->nullable();
-            $table->string('mfi_1_weekly_installment')->nullable();
-
+            $table->string('mfi_1_number_of_weeks_installment')->nullable();
             $table->string('mfi_2')->nullable();
             $table->string('mfi_2_loan_amount')->nullable();
-            $table->string('mfi_2_weekly_installment')->nullable();
-
+            $table->string('mfi_2_number_of_weeks_installment')->nullable();
             $table->string('appliances_equipment')->nullable();
             $table->string('appliances_equipment_loan_amount')->nullable();
             $table->string('appliances_equipment_monthly_installment')->nullable();
