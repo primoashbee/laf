@@ -736,7 +736,16 @@ class UploadController extends Controller
                 $templateProcessor->setValue('cl', '₱ '.number_format($credit_limit,2,".",","));
                 $templateProcessor->setValue('cla', '₱ '.number_format($cla,2,".",","));
 
+                $n_p ='';
+                $p_p ='';
 
+                if ($pccp > 0) {
+                    $p_p ='X';
+                }else{
+                    $n_p ='X';
+                }
+                $templateProcessor->setValue('p_p', $p_p);
+                $templateProcessor->setValue('n_p', $n_p);
                
                 $newFile = Storage::disk('public')->path($folder.'/LAF Record - '.$name.'.docx');
                 $templateProcessor->saveAs($newFile);
