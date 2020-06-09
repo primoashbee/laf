@@ -32,7 +32,7 @@ class UploadController extends Controller
         $client->setScopes([\Google_Service_Sheets::SPREADSHEETS]);
         $client->setAccessType('offline');
 
-        $jsonAuth = Storage::disk('public')->path('service account.json');
+        $jsonAuth = public_path('credentials.json');
         $client->setAuthConfig($jsonAuth, true);
 
         $sheets = new \Google_Service_Sheets($client);
@@ -40,21 +40,20 @@ class UploadController extends Controller
 
 
         // The range of A2:H will get columns A through H and all rows starting from row 2
-        $spreadsheetId = getenv('SPREADSHEET_ID');
+        $spreadsheetId = '1qAkyBUKgkN7ISvHFlOoOAN5QaXTga2A5QFIVNEk7pug';
 
+        !Transactions::count() == 0:
         $range = 'A:DP';
+
         $currentRow = 2;
         $rows = $sheets->spreadsheets_values->get($spreadsheetId, $range, ['majorDimension' => 'ROWS']);
-        dd($rows);
-        // $token = [
-        //     'access_token'  => env('ACCESS_TOKEN'),
-        //     'refresh_token' => env('REFRESH_TOKEN'),
-        //     'expires_in'    => env('EXPIRES_IN'),
-        //     'created'       => env('CREATED'),
-        // ];
         
-        // $values = Sheets::setAccessToken($token)->spreadsheet('1qAkyBUKgkN7ISvHFlOoOAN5QaXTga2A5QFIVNEk7pug')->sheet('Form Responses 1')->all();
-        // return $values;
+        foreach ($rows as $key => $value) {
+            
+        }
+
+        dd($rows);
+    
     }
 
     public function currency($value, $weekly=false){
