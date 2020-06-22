@@ -73,6 +73,8 @@ class CreateClientsTable extends Migration
             $table->string('spouse_other_income_monthly_estimated_earnings')->nullable();
             $table->string('pension')->nullable();
             $table->string('remittance')->nullable();
+            $table->string('branch')->nullable();
+            $table->boolean('received')->nullable();
      
             
 

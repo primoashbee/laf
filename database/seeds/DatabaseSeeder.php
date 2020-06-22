@@ -12,6 +12,7 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         generateStucture();
+        createAdminAccount();
         // $this->call(UserSeeder::class);
     }
 }

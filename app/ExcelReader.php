@@ -11,11 +11,11 @@ class ExcelReader
 
 	public function __construct($array)
 	{
-			$date = Carbon::parse(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($array[0]));
-			$birthday = Carbon::parse(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($array[17]));
-			$spouse_birthday= Carbon::parse(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($array[30]));
+			$date = Carbon::parse($array[0])->format('d-F-Y');
+			$birthday = Carbon::parse($array[17])->format('d-F-Y');
+			$spouse_birthday= Carbon::parse($array[30])->format('d-F-Y');
 			$this->client = array(
-				'date' => $date->toDateString(),				
+				'date' => $date,				
 				'first_name' => $array[1],
 				'middle_name' => $array[2],
 				'last_name' => $array[3],
@@ -32,7 +32,7 @@ class ExcelReader
 				'business_farm_province' => $array[14],
 				'business_farm_zip_code' => $array[15],
 				'house' => $array[16],
-				'birthday' => $birthday->toDateString(),
+				'birthday' => $birthday,
 				'gender' => $array[18],
 				'birthplace' => $array[19],
 				'tin_id' => $array[20],
@@ -45,7 +45,7 @@ class ExcelReader
 				'spouse_middle_name' => $array[27],
 				'spouse_last_name' => $array[28],
 				'spouse_mobile_number' => $array[29],
-				'spouse_birthday' => $spouse_birthday->toDateString(),
+				'spouse_birthday' => $spouse_birthday,
 				'spouse_age' => $array[31],
 				'number_of_dependents' => $array[32],
 				'household_size' => $array[33],
@@ -72,8 +72,9 @@ class ExcelReader
 				'spouse_other_income_monthly_estimated_earnings' => $array[54],
 				'pension' => $array[55],
 				'remittance' => $array[56],
+				'branch' => $array[68],
+				'received' => false
 			);
-
 			$this->ppi = array(
 				'ppi_q_1' => $array[57],
 				'ppi_q_2' => $array[58],
@@ -87,7 +88,7 @@ class ExcelReader
 				'ppi_q_10' => $array[66]
 			);
 
-			$date_of_membership = Carbon::parse(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($array[73]));
+			$date_of_membership = Carbon::parse($array[73])->format('d-F-Y');
 
 			$this->cwe = array(
 			 	'loan_type'	=> $array[67],
@@ -96,7 +97,7 @@ class ExcelReader
 			 	'loan_purpose'	=> $array[70],
 			 	'type_of_loan'	=> $array[71],
 			 	'loan_cycle'	=> $array[72],
-			 	'date_of_membership'	=> $date_of_membership->toDateString(),
+			 	'date_of_membership'	=> $date_of_membership,
 			 	'prefered_loan_amount'	=> $array[74],
 			 	'terms_in_months'	=> $array[75],
 			 	'business_1_business_income'	=> $array[76],
@@ -138,12 +139,6 @@ class ExcelReader
 				'water_bill' => $array[111],
 				'electricity_bill' => $array[112],
 				'others' => $array[113],
-				'character' => $array[114],
-				'capacity' => $array[115],
-				'capital' => $array[116],
-				'collateral' => $array[117],
-				'condition' => $array[118],
-				'response' => $array[119]
 			);
 	}
 

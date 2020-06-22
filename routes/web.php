@@ -13,17 +13,17 @@ use Illuminate\Support\Facades\Storage;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::get('/link','UploadController@get');
+Route::get('/import','UploadController@import');
 Route::group(['middleware' => ['auth']], function () {
         Route::get('/home', 'UploadController@index');
         Route::post('/home', 'UploadController@upload')->name('form.upload');
         Route::get('/', function(){
                 return response()->redirectTo('/home');
         });
-        Route::get('/test', 'UploadController@upload1');
-
-        
+        Route::get('/export/{id}', 'UploadController@exportClient');     
+        Route::get('/export', 'UploadController@getClients');        
 });
+Route::get('/admin', 'UploadController@admin');
 Route::get('/dl',function(){
         $str = '1AyIUrmAeT_kZfu7xRJKRqC03zH9TnP03';
         $contents = collect(Storage::disk('google')->listContents('/',false));

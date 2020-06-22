@@ -1,6 +1,8 @@
 <?php 
 
 use App\Office;
+use App\User;
+use App\OfficeUser;
 use Carbon\Carbon;
 use App\Imports\OfficeImport;
     function generateStucture(){
@@ -25,6 +27,20 @@ use App\Imports\OfficeImport;
         }
         
         Office::insert($data);
+    }
+
+    function createAdminAccount(){
+        $user = User::create([
+            'name' => 'Nelson Abilgos Tan',
+            'email' => 'nelson.tan@light.org.ph',
+            'is_admin' => true,
+            'password' => Hash::make('tannelsona')
+        ]);
+
+        OfficeUser::create([
+            'user_id'=>$user->id,
+            'office_id'=>1
+        ]);   
     }
 
 ?>

@@ -63,7 +63,8 @@ class Client extends Model
 		'spouse_other_income_monthly_estimated_earnings',
 		'pension',
 		'remittance',
-    	'status'];
+    	'branch',
+    	'received'];
 		
 
 		public function ppi(){
