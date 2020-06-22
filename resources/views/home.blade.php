@@ -33,6 +33,7 @@
                                     <tr>
                                         <td>Branch</td>
                                         <td>Name</td>
+                                        
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -41,6 +42,7 @@
                                         <tr>
                                             <td>{{$client->branch}}</td>
                                             <td>{{$client->first_name.' '.$client->middle_name.' '.$client->last_name}}</td>
+                                            
                                         </tr>
                                         @endif
                                     @endforeach
@@ -63,6 +65,7 @@
                                     <tr>
                                         <td>Branch</td>
                                         <td>Name</td>
+                                        <td>Exported At</td>
                                         <td>Action</td>
                                     </tr>
                                 </thead>
@@ -72,6 +75,7 @@
                                             <tr>
                                                 <td>{{$client->branch}}</td>
                                                 <td>{{$client->first_name.' '.$client->middle_name.' '.$client->last_name}}</td>
+                                                <td>{{$client->created_at->diffForHumans()}}</td>
                                                 <td>
                                                     <a href="/export/{{$client->id}}">
                                                        <i class="btn btn-primary fa fa-download"></i>

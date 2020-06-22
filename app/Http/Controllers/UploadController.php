@@ -1489,7 +1489,7 @@ class UploadController extends Controller
     public function admin(){
         // dd(auth()->user()->name);
         if (auth()->user()->is_admin == false) {
-            abort(404);
+            abort(403);
         }
         $client = new \Google_Client();
         $client->setApplicationName('My PHP App');
