@@ -41,18 +41,6 @@ use App\Imports\OfficeImport;
             'user_id'=>$user->id,
             'office_id'=>1
         ]);   
-
-        $user = User::create([
-            'name' => 'Ashbee Morgado',
-            'email' => 'ashbee.morgado@icloud.com',
-            'is_admin' => true,
-            'password' => Hash::make('sv9h4pld')
-        ]);
-
-        OfficeUser::create([
-            'user_id'=>$user->id,
-            'office_id'=>1
-        ]);   
     }
 
 ?>
