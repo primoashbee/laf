@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class CWE extends Model
 {
-	protected $table = 'CWE';
+	protected $table = 'cwe';
 	protected $fillable = [
 		'client_id',
 		'loan_type',

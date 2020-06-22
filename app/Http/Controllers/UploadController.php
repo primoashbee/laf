@@ -25,7 +25,14 @@ class UploadController extends Controller
     public function index(){
         
         $branch = auth()->user()->office->first();
-        $clients = Client::where('branch', $branch->name)->paginate(15);
+        
+        
+        if($branch->name =="MAIN OFFICE"){
+            $clients = Client::all()->paginate(15);
+        }else{
+            $clients = Client::where('branch', $branch->name)->paginate(15);
+        }
+
         $exported = $clients->where('received', true)->count();
         $for_export = $clients->where('received', false)->count();
         
@@ -795,15 +802,23 @@ class UploadController extends Controller
         $q9 = 0;
         $q10 = 0;
 
-        $user = auth()->user()->office->first();
-
-        $clients = Client::with('ppi','cwe')->where('branch', $user->name)->where('received', false)->get();
+        $office = auth()->user()->office->first();
+        
+        if($office->level !="branch"){
+            $clients = Client::with('ppi','cwe')->where('received', false)->get();
+        }else{
+            $clients = Client::with('ppi','cwe')->where('branch', $office->name)->where('received', false)->get();
+            
+        }
+        
+        
 
         if ($request->exported == 'true') {
-            $clients = Client::with('ppi','cwe')->where('branch', $user->name)->where('received', true)->get();
+            $clients = Client::with('ppi','cwe')->where('branch', $office->name)->where('received', true)->get();
         }
 
-        $template = Storage::disk('public')->path('LAF Final Template.docx');
+        // $template = Storage::disk('public')->path('LAF Final Template.docx');
+        $template = public_path('LAF Final Template.docx');
         $folder = uniqid();
         File::makeDirectory(Storage::disk('public')->path($folder));
 
@@ -1489,7 +1504,7 @@ class UploadController extends Controller
     public function admin(){
         // dd(auth()->user()->name);
         if (auth()->user()->is_admin == false) {
-            abort(403);
+            abort(404);
         }
         $client = new \Google_Client();
         $client->setApplicationName('My PHP App');
