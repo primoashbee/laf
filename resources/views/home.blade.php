@@ -60,6 +60,22 @@
                             <a href="/export?exported=true" {{$exported > 0 ? '' : 'disabled'}} class="btn btn-primary">Export All</a>
                         </div>
                         <div class="table-container">
+                            
+                            <div class="form-inline float-right">
+                                <div class="form-check mb-2 mr-sm-2">
+                                    
+                                    <label class="form-check-label" for="inlineFormCheck">
+                                        Filter Branch: 
+                                    </label>
+
+                                    <select class="form-control" style="margin-left:10px" id="select_office" onselect="changeOffice()">
+                                        <option> Please Select </option>
+                                        @foreach ($offices as $office)
+                                        <option>{{ $office->name }}</option>
+                                        @endforeach
+                                    </select>
+                                  </div>
+                            </div>
                             <table class="table">
                                 <thead>
                                     <tr>
@@ -110,5 +126,12 @@ function disable(a){
         event.preventDefault();
      }
 }
+
+function changeOffice(){
+    var selected = document.getElementById("select_office").value;
+    alert(selected)
+}
+
+
 </script>
 @endsection

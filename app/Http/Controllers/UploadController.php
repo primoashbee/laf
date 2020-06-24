@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Client;
 use DB;
-use App\PPI;
 use App\CWE;
-use App\Transaction;
-use App\ExcelReader;
+use App\PPI;
+use App\Client;
+use App\Office;
 use ZipArchive;
 use Carbon\Carbon;
+use App\ExcelReader;
+use App\Transaction;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Imports\ClientImport;
@@ -22,21 +23,25 @@ use Revolution\Google\Sheets\Facades\Sheets;
 class UploadController extends Controller
 {
     //
-    public function index(){
+    public function index(Request $request){
         
         $branch = auth()->user()->office->first();
         
-        
         if($branch->name =="MAIN OFFICE"){
-            $clients = Client::all()->paginate(15);
+
+            if($request->has('office')){
+                $clients = Client::where('branch',$request->office)->paginate(15);    
+            }else{
+                $clients = Client::all()->paginate(15);
+            }
         }else{
             $clients = Client::where('branch', $branch->name)->paginate(15);
         }
 
         $exported = $clients->where('received', true)->count();
         $for_export = $clients->where('received', false)->count();
-        
-        return view('home',compact(['clients','exported','for_export']));
+        $offices = Office::where('level','branch')->orderBy('name','asc')->get();
+        return view('home',compact(['clients','exported','for_export','offices']));
     }
 
 
@@ -115,10 +120,18 @@ class UploadController extends Controller
 
     public function exportClient($id){
         $user = auth()->user()->office->first();
-        $client = Client::with('ppi','cwe')->where('id', $id)->where('received', true)->first();
-        if ($client->branch !== $user->name) {
-            abort(404);
+        $client = Client::find($id);
+        if($user->level=="main_office"){
+            $client = $client->load('ppi','cwe')->where('received', true)->first();
+        }else{    
+            
+            if ($client->branch !== $user->name) {
+                abort(403);
+            }
+            $client = $client->load('ppi','cwe')->where('received', true)->first();
+
         }
+        
 
         $q1 = 0;
         $q2 = 0;
@@ -789,8 +802,7 @@ class UploadController extends Controller
     }
 
     public function getClients(Request $request){
-
-
+        
         $q1 = 0;
         $q2 = 0;
         $q3 = 0;
@@ -810,24 +822,31 @@ class UploadController extends Controller
             $clients = Client::with('ppi','cwe')->where('branch', $office->name)->where('received', false)->get();
             
         }
-        
-        
 
+        
         if ($request->exported == 'true') {
-            $clients = Client::with('ppi','cwe')->where('branch', $office->name)->where('received', true)->get();
+            if(auth()->user()->office->first()->level=="main_office"){
+                $clients = Client::with('ppi', 'cwe')->where('received', true)->get();
+            }else{
+                $clients = Client::with('ppi', 'cwe')->where('branch', $office->name)->where('received', true)->get();
+            }
         }
 
-        // $template = Storage::disk('public')->path('LAF Final Template.docx');
         $template = public_path('LAF Final Template.docx');
+        // $template = Storage::disk('public')->path('LAF Final Template.docx');
+        // $template = public_path('LAF Final Template.docx');
         $folder = uniqid();
         File::makeDirectory(Storage::disk('public')->path($folder));
 
+        // dd($template);
         
         $ctr= 0;
+        
         foreach ($clients as $client) {
+            
             $templateProcessor = new TemplateProcessor($template);
-
-            $name = ucwords($client->last_name.' ,'.$client->first_name.' '.$client->middle_name);
+            
+            $name = ucwords($client->last_name.', '.$client->first_name.' '.$client->middle_name);
 
             $templateProcessor->setValue('name', $name);
             $templateProcessor->setValue('nickname', ucwords($client->nickname));
