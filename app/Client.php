@@ -64,7 +64,9 @@ class Client extends Model
 		'pension',
 		'remittance',
     	'branch',
-    	'received'];
+		'received',
+		'batch_id'
+	];
 		
 
 		public function ppi(){
@@ -73,6 +75,10 @@ class Client extends Model
 
 		public function cwe(){
 			return $this->hasOne(CWE::class);
+		}
+
+		public function pulledAt(){
+			return $this->where('batch_id',$this->batch_id)->orderBy('created_at','desc')->limit(1)->get()->first()->created_at;
 		}
 
 }

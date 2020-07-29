@@ -1,11 +1,12 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
+<div class="container" id="root">
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header">Dashboard</div>
+
 
                 <div class="card-body">
                     @if(session()->has('message'))
@@ -13,104 +14,73 @@
                             {{ session()->get('message') }}
                         </div>
                     @endif
-                    <ul class="nav nav-tabs mb-3" id="pills-tab" role="tablist">
-                      <li class="nav-item">
-                        <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#for-export" role="tab" aria-controls="pills-home" aria-selected="true">For Export</a>
-                      </li>
-                      <li class="nav-item">
-                        <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#exported" role="tab" aria-controls="pills-profile" aria-selected="false">Exported</a>
-                      </li>
-                    </ul>
-                    <div class="tab-content mt-50" id="pills-tabContent">
-                      <div class="tab-pane fade show active" id="for-export" role="tabpanel" aria-labelledby="pills-home-tab">
-                        <div style="clear:left;text-align: right;margin-bottom: 20px;">
-                            <h4 class="float-left">For Export Partner Clients</h4>
-                            <a href="/export?exported=false" {{$for_export > 0 ? '' : 'disabled'}} class="btn btn-primary">Export Client</a>
-                        </div>
-                        <div class="table-container">
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <td>Branch</td>
-                                        <td>Name</td>
-                                        
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach($clients as $client)
-                                        @if($client->received == false)
-                                        <tr>
-                                            <td>{{$client->branch}}</td>
-                                            <td>{{$client->first_name.' '.$client->middle_name.' '.$client->last_name}}</td>
-                                            
-                                        </tr>
-                                        @endif
-                                    @endforeach
-                                </tbody>
-                            </table>
-                            @if($for_export == 0)
-                                <h3>No Results Found.</h3>
-                            @endif
-                            {{ $clients->links() }}
-                        </div>
-                      </div>
-                      <div class="tab-pane fade" id="exported" role="tabpanel" aria-labelledby="pills-exported-tab">
-                        <div style="clear:left;text-align: right;margin-bottom: 20px;">
-                            <h4 class="float-left">Exported Partner Clients</h4>
-                            <a href="/export?exported=true" {{$exported > 0 ? '' : 'disabled'}} class="btn btn-primary">Export All</a>
-                        </div>
-                        <div class="table-container">
-                            
-                            <div class="form-inline float-right">
-                                <div class="form-check mb-2 mr-sm-2">
-                                    
-                                    <label class="form-check-label" for="inlineFormCheck">
-                                        Filter Branch: 
-                                    </label>
-
-                                    <select class="form-control" style="margin-left:10px" id="select_office" onselect="changeOffice()">
-                                        <option> Please Select </option>
-                                        @foreach ($offices as $office)
-                                        <option>{{ $office->name }}</option>
-                                        @endforeach
-                                    </select>
-                                  </div>
+                    <div class="table-container">
+                        {{-- <div class="form-inline float-left">
+                            <input type="text" class="form-control" placeholder="Client name" aria-label="Client name" aria-describedby="basic-addon2">
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary" type="button">Search</button>
                             </div>
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <td>Branch</td>
-                                        <td>Name</td>
-                                        <td>Exported At</td>
-                                        <td>Action</td>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach($clients as $client)
-                                        @if($client->received == true)
-                                            <tr>
-                                                <td>{{$client->branch}}</td>
-                                                <td>{{$client->first_name.' '.$client->middle_name.' '.$client->last_name}}</td>
-                                                <td>{{$client->created_at->diffForHumans()}}</td>
-                                                <td>
-                                                    <a href="/export/{{$client->id}}">
-                                                       <i class="btn btn-primary fa fa-download"></i>
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                        @endif
-                                    @endforeach
-                                </tbody>
-                            </table>
+                        </div>                             --}}
+{{-- 
+                        <div class="form-inline float-right">
+                            <div class="form-check mb-2 mr-sm-2">
+                                <label class="form-check-label" for="inlineFormCheck">
+                                    Filter Branch: 
+                                </label>
 
-                            @if($exported == 0)
-                                <h3>No Results Found.</h3>
-                            @endif
-                            {{ $clients->links() }}
+                                <select class="form-control" style="margin-left:10px" id="select_office">
+                                    <option> Please Select </option>
+                                    @if(auth()->user()->is_admin)
+                                    <option value="MAIN OFFICE"> Main Office </option>
+                                    @endif
+                                    
+                                    @foreach ($offices as $office)
+                                    <option value="{{$office->name}}">{{ $office->name }}</option>
+                                    @endforeach
+                                </select>
+                              </div>
+                        </div> --}}
+                        {{-- <div class="clearfix"></div>
+                        <div class="form-inline float-right">
+                            <div class="form-check mb-2 mr-sm-2">
+                                <button class="btn btn-primary ">Print All</button>
+                              </div>
                         </div>
-                      </div>
+                         --}}
+                        <?php 
+                            $ctr = 1;
+                        ?>
+                        <table class="table" id="table-list">
+                            <thead>
+                                <tr>
+                                    <td>#</td>
+                                    <td>Batch ID</td>
+                                    <td>Pulled At</td>
+                                    {{-- <td>Exported At</td> --}}
+                                    {{-- <td>Action</td> --}}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($batches as $batch)
+                                        <tr>
+                                            <td>{{$ctr}}</td>
+                                            <td><a href="{{route('forms.by.batch',$batch->batch_id)}}">{{$batch->batch_id}}</a></td>
+                                            <td>{{$batch->pulledAt()->diffForHumans()}}</td>
+                                      
+                                        </tr>
+                                @endforeach
+                                <?php $ctr++; ?>
+                                
+                            </tbody>
+                        </table>
+
+                        {{-- @if($clients->count() == 0)
+                            <h3>No Results Found.</h3>
+                        @else
+                            <h4># of Clients: {{$clients->total()}}</h4>
+                        @endif --}}
+                        {{-- {{ $clients->links() }} --}}
                     </div>
-                    
                 </div>
             </div>
         </div>
@@ -120,18 +90,23 @@
 
 
 @section('scripts')
-<script>
-function disable(a){
-    a.onclick = function(event) {
-        event.preventDefault();
-     }
-}
+<script defer>
+    window.addEventListener('DOMContentLoaded', function() {
+            (function($) {
+                @if(request()->has('branch'))
+                $('#pills-profile-tab').click()
+                $('#select_office').val('{{request()->branch}}')
+                @endif
+                @if(request()->has('page'))
+                $('#pills-profile-tab').click()
+                @endif
+                $('#select_office').change(function(){
+                    var selected = $(this).val()
+                    var href = window.location.origin + window.location.pathname
+                    window.location = href+'?branch='+selected
+                })
 
-function changeOffice(){
-    var selected = document.getElementById("select_office").value;
-    alert(selected)
-}
-
-
-</script>
+            })(jQuery);
+        });
+    </script>
 @endsection

@@ -8,9 +8,10 @@ class ExcelReader
 	public $client;
 	public $cwe;
 	public $ppi;
-
-	public function __construct($array)
+	public $batch_id;
+	public function __construct($array,$batch_id)
 	{
+			$this->batch_id =  $batch_id;
 			$date = Carbon::parse($array[0])->format('d-F-Y');
 			$birthday = Carbon::parse($array[17])->format('d-F-Y');
 			$spouse_birthday= Carbon::parse($array[30])->format('d-F-Y');
@@ -73,7 +74,8 @@ class ExcelReader
 				'pension' => $array[55],
 				'remittance' => $array[56],
 				'branch' => $array[68],
-				'received' => false
+				'received' => false,
+				'batch_id' => $this->batch_id
 			);
 			$this->ppi = array(
 				'ppi_q_1' => $array[57],
@@ -85,7 +87,7 @@ class ExcelReader
 				'ppi_q_7' => $array[63],
 				'ppi_q_8' => $array[64],
 				'ppi_q_9' => $array[65],
-				'ppi_q_10' => $array[66]
+				'ppi_q_10' => $array[66],
 			);
 
 			$date_of_membership = Carbon::parse($array[73])->format('d-F-Y');

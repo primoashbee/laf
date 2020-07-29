@@ -21,6 +21,14 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/', function(){
                 return response()->redirectTo('/home');
         });
+        Route::get('/printed','UploadController@printed')->name('forms.printed');
+        Route::get('/unprinted','UploadController@unPrinted')->name('forms.unprinted');
+        Route::get('/batch/{batch_id}','UploadController@byBatch')->name('forms.by.batch');
+        
+        Route::get('/download','UploadController@download')->name('download.list');
+        // Route::post('/downloadFile', function(Request $request){
+        //         return response()->download($file)->deleteFileAfterSend(true);
+        // })->name('download.file');
         Route::get('/export/{id}', 'UploadController@exportClient');     
         Route::get('/export', 'UploadController@getClients');        
         Route::get('/admin', 'UploadController@admin')->middleware('is.admin');

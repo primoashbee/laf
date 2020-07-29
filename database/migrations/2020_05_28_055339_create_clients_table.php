@@ -75,6 +75,7 @@ class CreateClientsTable extends Migration
             $table->string('remittance')->nullable();
             $table->string('branch')->nullable();
             $table->boolean('received')->nullable();
+            $table->string('batch_id')->nullable();
      
             
 
