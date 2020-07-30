@@ -65,7 +65,8 @@ class Client extends Model
 		'remittance',
     	'branch',
 		'received',
-		'batch_id'
+		'batch_id',
+		'loan_officer'
 	];
 		
 

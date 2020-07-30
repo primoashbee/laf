@@ -132,6 +132,7 @@ class UploadController extends Controller
         }
               
         $offices = Office::where('level','branch')->orderBy('name','asc')->get();
+
         return view('client-list',compact('clients','offices'));
     }
 
@@ -144,7 +145,8 @@ class UploadController extends Controller
         $client->setScopes([\Google_Service_Sheets::SPREADSHEETS]);
         $client->setAccessType('offline');
 
-        $jsonAuth = public_path('credentials.json');
+        // $jsonAuth = public_path('credentials.json');
+        $jsonAuth = public_path('credentials-v2.json');
         $client->setAuthConfig($jsonAuth, true);
 
         $sheets = new \Google_Service_Sheets($client);
@@ -152,7 +154,7 @@ class UploadController extends Controller
 
 
         // The range of A2:H will get columns A through H and all rows starting from row 2
-        $spreadsheetId = '1qAkyBUKgkN7ISvHFlOoOAN5QaXTga2A5QFIVNEk7pug';
+        $spreadsheetId = '172nRLbv4cIjyYbphX1XqMnz_Jax69Qt-mQRy7GGxMSg';
 
         $range = 'A:DP';
         if (Transaction::count() == 0) {
@@ -642,7 +644,8 @@ class UploadController extends Controller
 
                 $templateProcessor->setValue('branch', $client->cwe->branch);
                 $templateProcessor->setValue('cluster', $client->cwe->cluster);
-                $templateProcessor->setValue('loan_purpose', $client->cwe->loan_purpose);
+                $templateProcessor->setValue('lo', $client->loan_officer);
+                /*$templateProcessor->setValue('loan_purpose', $client->cwe->loan_purpose);
 
 
                 $mpl = '[   ]MPL';
@@ -842,7 +845,7 @@ class UploadController extends Controller
                     $n_p ='X';
                 }
                 $templateProcessor->setValue('p_p', $p_p);
-                $templateProcessor->setValue('n_p', $n_p);
+                $templateProcessor->setValue('n_p', $n_p);*/
 
                 if ($client->received == false) {
                     $client->update(['received' => true]);    
@@ -967,12 +970,11 @@ class UploadController extends Controller
         $q9 = 0;
         $q10 = 0;
 
-        
+        $template = public_path('LAF Final Template.docx');
 
-    
-        $template = Storage::disk('public')->path('LAF Final Template.docx');
-        // $folder = uniqid();
-        // File::makeDirectory(Storage::disk('public')->path($folder));
+        $folder = uniqid();
+        File::makeDirectory(Storage::disk('public')->path($folder));
+
 
         
         
@@ -1412,9 +1414,9 @@ class UploadController extends Controller
 
             $templateProcessor->setValue('branch', $client->cwe->branch);
             $templateProcessor->setValue('cluster', $client->cwe->cluster);
-            $templateProcessor->setValue('loan_purpose', $client->cwe->loan_purpose);
+            $templateProcessor->setValue('lo', $client->loan_officer." | ");
 
-
+            /*$templateProcessor->setValue('loan_purpose', $client->cwe->loan_purpose);
             $mpl = '[   ]MPL';
             $gml = '[   ]GML';
             $llp = '[   ]LLP';
@@ -1612,7 +1614,7 @@ class UploadController extends Controller
                 $n_p ='X';
             }
             $templateProcessor->setValue('p_p', $p_p);
-            $templateProcessor->setValue('n_p', $n_p);
+            $templateProcessor->setValue('n_p', $n_p);*/
 
             if ($client->received == false) {
                 $client->update(['received' => true]);    
