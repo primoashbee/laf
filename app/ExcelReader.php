@@ -73,7 +73,8 @@ class ExcelReader
 				'spouse_other_income_monthly_estimated_earnings' => $array[54],
 				'pension' => $array[55],
 				'remittance' => $array[56],
-				'branch' => $array[68],
+				'branch' => $array[69],
+				'loan_officer' => $array[71],
 				'received' => false,
 				'batch_id' => $this->batch_id
 			);
@@ -90,13 +91,13 @@ class ExcelReader
 				'ppi_q_10' => $array[66],
 			);
 
-			$date_of_membership = Carbon::parse($array[73])->format('d-F-Y');
+			// $date_of_membership = Carbon::parse($array[73])->format('d-F-Y');
 
 			$this->cwe = array(
-			 	'loan_type'	=> $array[67],
-			 	'branch'	=> $array[68],
-			 	'cluster'	=> $array[69],
-			 	'loan_purpose'	=> $array[70],
+			 	'loan_type'	=> $array[68],
+			 	'branch'	=> $array[69],
+			 	'cluster'	=> $array[70],
+			 /*	'loan_purpose'	=> $array[70],
 			 	'type_of_loan'	=> $array[71],
 			 	'loan_cycle'	=> $array[72],
 			 	'date_of_membership'	=> $date_of_membership,
@@ -140,7 +141,7 @@ class ExcelReader
 				'clothing' => $array[110],
 				'water_bill' => $array[111],
 				'electricity_bill' => $array[112],
-				'others' => $array[113],
+				'others' => $array[113],*/
 			);
 	}
 

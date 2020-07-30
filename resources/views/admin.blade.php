@@ -29,7 +29,7 @@
                             <tbody>
                                 @foreach($rows as $key => $client)
                                     <tr>
-                                        <td>{{$client[68]}}</td>
+                                        <td>{{$client[69]}}</td>
                                         <td>{{$client[1].' '.$client[2].' '.$client[3]}}</td>
                                     </tr>
                                 @endforeach
