@@ -8,6 +8,7 @@ use App\Rules\OfficeID;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use App\Providers\RouteServiceProvider;
+use App\Rules\UserLevel;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 
@@ -51,9 +52,11 @@ class RegisterController extends Controller
      */
     protected function validator(array $data)
     {
+        
         return Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'level' => ['required', 'string', new UserLevel],
             'branch_id' => ['required', new OfficeID],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ], [
@@ -72,11 +75,12 @@ class RegisterController extends Controller
         $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
+            'level'=>$data['level'],
             'password' => Hash::make($data['password']),
         ]);
         OfficeUser::create([
             'user_id'=>$user->id,
-            'office_id'=>$data['branch_id']
+            'office_id'=>$data['branch_id'],
         ]);
         return $user;
     }

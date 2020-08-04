@@ -23,8 +23,9 @@ Route::group(['middleware' => ['auth']], function () {
         });
         Route::get('/printed','UploadController@printed')->name('forms.printed');
         Route::get('/unprinted','UploadController@unPrinted')->name('forms.unprinted');
-        Route::get('/batch/{batch_id}','UploadController@byBatch')->name('forms.by.batch');
-        
+        // Route::get('/batch/{batch_id}','UploadController@byBatch')->name('forms.by.batch');
+        Route::get('/batch/{branch}/{date}','UploadController@batchByNameAndDate')->name('forms.by.batch.and.date');
+        Route::get('/print/list','UploadController@download')->name('print.list');
         Route::get('/download','UploadController@download')->name('download.list');
         // Route::post('/downloadFile', function(Request $request){
         //         return response()->download($file)->deleteFileAfterSend(true);

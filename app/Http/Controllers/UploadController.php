@@ -25,41 +25,35 @@ class UploadController extends Controller
 {
     //
     public function index(Request $request){
+        $branch = auth()->user()->office->first()->name;
         
-        // $branch = auth()->user()->office->first();
-        // $client_for_export = Client::where('received',false)->paginate(15)->setPageName('for_export');
-        // $client_exported = Client::where('received',true)->paginate(15)->setPageName('exported');
-        // if($branch->name =="MAIN OFFICE"){
-        //     if($request->has('branch')){
-        //         $client_for_export = Client::where('branch',$request->branch)->where('received',false)->paginate(15)->setPageName('for_exported');
-        //         $client_exported = Client::where('branch',$request->branch)->where('received',true)->paginate(15)->setPageName('exported'); 
-        //     }
-        // }else{
-        //     if($request->has('branch')){
-        //         $client_for_export = Client::where('branch',$request->branch)->where('received',false)->paginate(15)->setPageName('for_export');
-        //         $client_exported = Client::where('branch',$request->branch)->where('received',true)->paginate(15)->setPageName('exported');
-        //     }
-        // }
+        $clients = Client::batches();
+        if(auth()->user()->is_admin){
+            if($request->has('branch')){
+                // $clients = Client::where('received',true)->where('branch',$request->branch)->get();
+                $clients = Client::batches()->where('branch',$request->branch);
+            }
+            
+        }else{
+            if($request->has('branch')){
+                if($request->branch != $branch){
+                    abort(404);
+                }
+                $clients = Client::batches()->where('branch',$request->branch);
+            }
+            if (auth()->user()->level!="MANAGER") {
+                $clients = Client::batches()->where('branch', $branch);
+            }
+        }
 
         
-        
-       
-        // $exported = $clients->where('received', true)->count();
-  
-        // $client_for_export = $clients->where('received', false)->paginate(15);
-        
-        // $for_export = $clients->where('received', false)->count();
-        
-        // $client_exported = $clients->where(function(Builder $query){
-        //     $query->where('received', true);
-        // })->get();
-        // dd($client_exported);
-        $batches = Client::select('batch_id')->distinct()->get();
-        return view('home',compact('batches'));
+        $offices = Office::where('level','branch')->orderBy('name','asc')->get();
+
+        return view('home',compact('clients','offices'));
     }
 
     public function printed(Request $request){
-        $branch = auth()->user()->office->first();
+        $branch = auth()->user()->office->first()->name;
         
         $clients = Client::where('received',true)->get();
         if(auth()->user()->is_admin){
@@ -82,8 +76,24 @@ class UploadController extends Controller
         return view('client-list',compact('clients','offices'));
     }
 
+    public function batchByNameAndDate(Request $request){
+
+        $offices = Office::where('level','branch')->orderBy('name','asc')->get();
+        $clients = Client::where('branch',$request->branch)->where(DB::raw('date(created_at)'),$request->date)->get();
+        
+        if(auth()->user()->level!="MANAGER"){
+            $clients = Client::where('branch',$request->branch)
+            ->where(DB::raw('RIGHT(loan_officer,1)'),auth()->user()->level)
+            ->where(DB::raw('date(created_at)'),$request->date)
+            ->get();
+
+
+        }
+
+        return view('client-list',compact('offices','clients'));
+    }
     public function byBatch(Request $request, $batch_id){
-        $branch = auth()->user()->office->first();
+        $branch = auth()->user()->office->first()->name;
         
         $clients = Client::where('batch_id',$batch_id)->get();
         $offices = Office::where('level','branch')->orderBy('name','asc')->get();
@@ -112,7 +122,7 @@ class UploadController extends Controller
     }
     
     public function unprinted(Request $request){
-        $branch = auth()->user()->office->first();
+        $branch = auth()->user()->office->first()->name;
         
         $clients = Client::where('received',false)->get();
         if(auth()->user()->is_admin){
@@ -888,44 +898,60 @@ class UploadController extends Controller
     }
 
     public function download(Request $request){
-        $branch = auth()->user()->office->first();
+        $branch = auth()->user()->office->first()->name;
         $printed = false;
-        
-        if($request->has('printed')){
-            
-            if($request->printed=="true"){
-                $printed = true;
-            }
+        $clients = Client::where('branch', $request->branch)->where(DB::raw('date(created_at)'), $request->date)->get();
+
+        if(auth()->user()->level!="MANAGER"){
+            $clients = Client::where('branch', $request->branch)
+                    ->where(DB::raw('date(created_at)'), $request->date)
+                    ->where(DB::raw('RIGHT(loan_officer,1)'),auth()->user()->level)
+                    ->get();
         }
-        
-        $clients = Client::where('received',$printed)->get();
-        
-        if(auth()->user()->is_admin){
-                
-            if($request->has('branch')){
-                $clients = Client::where('received',$printed)->where('branch',$request->branch)->get();
-            }
-            
-        }else{
-            
-            if($request->has('branch')){
-                if($request->branch != $branch){
-                    abort(404);
-                }
-                
-                $clients = Client::where('received',$printed)->where('branch',$request->branch)->get();
-            }
-            
-            $clients = Client::where('received',$printed)->get();
-        }
-        
-        if($clients->count() == 0){
-            return redirect()->back();
-        }
+        $this->printList($clients);
         $file = $this->printList($clients);
         
         session()->flash('download',$file);
+
         return response()->download($file)->deleteFileAfterSend(true);
+        
+        // if($request->has('printed')){
+            
+        //     if($request->printed=="true"){
+        //         $printed = true;
+        //     }
+        // }
+        
+        // $clients = Client::where('received',$printed)->get();
+        
+        // if(auth()->user()->is_admin){
+                
+        //     if($request->has('branch')){
+        //         $clients = Client::where('received',$printed)->where('branch',$request->branch)->get();
+        //     }
+            
+        // }else{
+            
+        //     if($request->has('branch')){
+        //         if($request->branch != $branch){
+        //             abort(404);
+        //         }
+                
+        //         $clients = Client::where('received',$printed)->where('branch',$request->branch)->get();
+        //     }
+            
+        //     $clients = Client::where('received',$printed)->get();
+        // }
+        
+        // if($clients->count() == 0){
+        //     return redirect()->back();
+        // }
+        // $file = $this->printList($clients);
+        
+        // session()->flash('download',$file);
+
+        // return response()->download($file)->deleteFileAfterSend(true);
+        
     }
 
     

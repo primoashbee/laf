@@ -22,7 +22,7 @@
                                 <button class="btn btn-outline-secondary" type="button">Search</button>
                             </div>
                         </div>                             --}}
-
+                        @if(\Str::contains(request()->fullUrl(),'/home'))
                         <div class="form-inline float-right">
                             <div class="form-check mb-2 mr-sm-2">
                                 <label class="form-check-label" for="inlineFormCheck">
@@ -30,48 +30,39 @@
                                 </label>
 
                                 <select class="form-control" style="margin-left:10px" id="select_office">
-                                    <option> Please Select </option>
                                     @if(auth()->user()->is_admin)
-                                    <option value="MAIN OFFICE"> Main Office </option>
-                                    @endif
-                                    
-                                    @foreach ($offices as $office)
-                                    <option value="{{$office->name}}">{{ $office->name }}</option>
-                                    @endforeach
+                                        <option value="MAIN OFFICE"> Main Office </option>
+                                        @foreach ($offices as $office)
+                                            <option value="{{$office->name}}">{{ $office->name }}</option>
+                                        @endforeach
+                                    @else
+                                        <option value="{{auth()->user()->office()->first()->name}}">{{ auth()->user()->office()->first()->name}}</option>
+                                    @endif   
                                 </select>
                               </div>
                         </div>
+                        @endif
                         <div class="clearfix"></div>
+                        @if(\Str::contains(request()->fullUrl(),'/batch/'))
+                        <h3>Branch: {{request()->branch}}</h3>
+                        <h3>Date: {{request()->date}}</h3>
+                            @if(auth()->user()->level=="MANAGER")
+                            
+                            <?php
+                                $clients->where(function($query){
+                                    
+                                });
+                            ?>
+                            <h5>Unit A: </h5>
+                            <h5>Unit B: </h5>
+                            @endif
+                        @endif
                         <div class="form-inline float-right">
                             <div class="form-check mb-2 mr-sm-2">
                             @if($clients->count() > 0)  
-                                
-                                {{-- @if(\Str::contains(request()->fullUrl(),'print') )
-                                    @if(\Str::contains(request()->fullUrl(),'?'))
-                                        @if(!\Str::contains(request()->fullUrl(),'print=true'))
-                                            <a href="{{request()->fullUrl().'&print=true'}}">
-                                        @endif
-                                    @else
-                                        <a href="{{request()->fullUrl().'?print=true'}}">
-                                        
-                                    @endif
-                                    <button class="btn btn-primary ">Print All</button></a>
-                                @endif --}}
-                                
-                                @if(\Str::contains(request()->fullUrl(),'/unprinted'))
-                                    @if(request()->has('branch'))
-                                        <a href="{{route('download.list').'?printed=false&branch='.request()->branch}}"> <button class="btn btn-primary">Print All</button></a>
-                                    @else
-                                        <a href="{{route('download.list').'?printed=false'}}"> <button class="btn btn-primary">Print All</button></a>
-                                    @endif            
-                                @endif
-
-                                @if(\Str::contains(request()->fullUrl(),'/printed'))
-                                    @if(request()->has('branch'))
-                                        <a href="{{route('download.list').'?printed=true&branch='.request()->branch}}"> <button class="btn btn-primary">Print All</button></a>
-                                    @else
-                                        <a href="{{route('download.list').'?printed=true'}}"> <button class="btn btn-primary">Print All</button></a>
-                                    @endif   
+                             
+                                @if(\Str::contains(request()->fullUrl(),'/batch/'))
+                                    <a href="{{route('print.list').'?branch='.request()->branch.'&date='.request()->date}}"> <button class="btn btn-primary">Print All</button></a>
                                 @endif
 
                                 
@@ -83,6 +74,7 @@
                             <thead>
                                 <tr>
                                     <td>Branch</td>
+                                    <td>Loan Officer</td>
                                     <td>Name</td>
                                     <td>Exported At</td>
                                     <td>Action</td>
@@ -92,6 +84,7 @@
                                 @foreach($clients as $client)
                                         <tr>
                                             <td>{{$client->branch}}</td>
+                                            <td>{{$client->loan_officer}}</td>
                                             <td>{{$client->first_name.' '.$client->middle_name.' '.$client->last_name}}</td>
                                             <td>{{$client->created_at->diffForHumans()}}</td>
                                             <td>
@@ -154,4 +147,4 @@
             })(jQuery);
         });
     </script>
-@endsection
+@endsection 

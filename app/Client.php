@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 
 class Client extends Model
@@ -80,6 +81,26 @@ class Client extends Model
 
 		public function pulledAt(){
 			return $this->where('batch_id',$this->batch_id)->orderBy('created_at','desc')->limit(1)->get()->first()->created_at;
+		}
+
+		public static function batches(){
+            if (auth()->user()->level!="MANAGER") {
+				$unit = auth()->user()->level;
+                return collect(
+					DB::select(
+						'SELECT x.* from (Select date(created_at) as created_at, count(id) as total, RIGHT(loan_officer,1) AS unit, branch 
+						from clients 
+						group by date(created_at), branch, loan_officer) X where x.unit = :unit',
+						['unit'=>$unit]
+					)
+				);
+			}
+			return collect(DB::select('Select date(created_at) as created_at, count(id) as total, branch from clients group by date(created_at), branch'));
+			
+		}
+
+		public static function batchesByLoanOfficer(){
+			return collect(DB::select('Select date(created_at) as created_at, count(id) as total, branch, loan_officer from clients group by date(created_at), branch, loan_officer'));
 		}
 
 }

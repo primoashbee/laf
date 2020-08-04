@@ -102,12 +102,6 @@
                                 </li>
                                  @endif 
                              @endif
-                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('forms.printed') }}">Printed Forms</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('forms.unprinted') }}">Unprinted Forms</a>
-                            </li>
                             <li class="nav-item dropdown">
                                  
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
