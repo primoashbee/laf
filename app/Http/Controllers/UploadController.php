@@ -79,18 +79,18 @@ class UploadController extends Controller
     public function batchByNameAndDate(Request $request){
 
         $offices = Office::where('level','branch')->orderBy('name','asc')->get();
-        $clients = Client::where('branch',$request->branch)->where(DB::raw('date(created_at)'),$request->date)->get();
+        $clients = Client::where('branch',$request->branch)->where(DB::raw('date(created_at)'),$request->date);
+        $client_list = Client::where('branch',$request->branch)->where(DB::raw('date(created_at)'),$request->date)->get();
         
         if(auth()->user()->level!="MANAGER"){
-            $clients = Client::where('branch',$request->branch)
+            
+            $client_list = Client::where('branch',$request->branch)
             ->where(DB::raw('RIGHT(loan_officer,1)'),auth()->user()->level)
             ->where(DB::raw('date(created_at)'),$request->date)
             ->get();
-
-
         }
-
-        return view('client-list',compact('offices','clients'));
+        
+        return view('client-list',compact('offices','clients','client_list'));
     }
     public function byBatch(Request $request, $batch_id){
         $branch = auth()->user()->office->first()->name;
@@ -166,33 +166,51 @@ class UploadController extends Controller
         // The range of A2:H will get columns A through H and all rows starting from row 2
         $spreadsheetId = '172nRLbv4cIjyYbphX1XqMnz_Jax69Qt-mQRy7GGxMSg';
 
-        $range = 'A:DP';
+        $range = 'A1:DP';
+        $transactionRange = 2;
+        $isEmpty = true;
         if (Transaction::count() == 0) {
-            $range = 'A:DP';    
+            $range = 'A2:DP';
         }else{
             $transactionRange = Transaction::latest()->first()->range+1;
             $range = 'A'.$transactionRange.':DP';
+            $isEmpty = false;
         }
+        
         $currentRow = 1;
         $rows = collect($sheets->spreadsheets_values->get($spreadsheetId, $range, ['majorDimension' => 'ROWS']));
         $ctr = 0;
         $clientList = [];
         $batch_id = str_shuffle(uniqid());
+        
         foreach ($rows as $key => $value) {
-            if ($ctr > 0 ) {
-                $clients = new ExcelReader($rows[$ctr],$batch_id);
-                $clientToDb = Client::create($clients->client);
-                PPI::create(array_merge(['client_id' => $clientToDb->id],$clients->ppi));
-                CWE::create(array_merge(['client_id' => $clientToDb->id],$clients->cwe));
-            }
+            
+            $clients = new ExcelReader($rows[$ctr],$batch_id);
+        
+            $clientToDb = Client::create($clients->client);
+            // PPI::create(array_merge(['client_id' => $clientToDb->id],$clients->ppi));
+            // CWE::create(array_merge(['client_id' => $clientToDb->id],$clients->cwe));
+            
             $ctr++;
         }
 
-        Transaction::create(
-            [
-                'range' => $ctr
-            ]
-        );
+
+        
+        if ($ctr> 0) {
+            if ($isEmpty) {
+                Transaction::create(
+                    [
+                    'range' => $transactionRange-1 + $ctr
+                    ]
+                );
+            }else{
+                Transaction::create(
+                    [
+                    'range' => $transactionRange -1 + $ctr
+                    ]
+                );
+            }
+        }
 
         return redirect()->back()->with('message','Client Successfully Import');
     

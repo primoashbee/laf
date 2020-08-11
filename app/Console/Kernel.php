@@ -25,7 +25,8 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // $schedule->command('inspire')->hourly();
-        $schedule->command('import:laf')->everyMinute();
+        // $schedule->command('import:laf')->everyMinute();
+        // $schedule->command('command:test')->everyMinute();
     }
 
     /**

@@ -6,7 +6,7 @@
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header">Exported</div>
+                <div class="card-header">Client List</div>
 
                 
                 <div class="card-body">
@@ -47,21 +47,16 @@
                         <h3>Branch: {{request()->branch}}</h3>
                         <h3>Date: {{request()->date}}</h3>
                             @if(auth()->user()->level=="MANAGER")
-                            
-                            <?php
-                                $clients->where(function($query){
-                                    
-                                });
-                            ?>
-                            <h5>Unit A: </h5>
-                            <h5>Unit B: </h5>
+                            <h5>Unit A: {{$clients->where(DB::raw('RIGHT(loan_officer,1)'),'A')->count()}}</h5>
+                            <h5>Unit B: {{$clients->where(DB::raw('RIGHT(loan_officer,1)'),'B')->count()}} </h5>
                             @endif
                         @endif
                         <div class="form-inline float-right">
                             <div class="form-check mb-2 mr-sm-2">
-                            @if($clients->count() > 0)  
+                            @if($client_list->count() > 0)  
                              
                                 @if(\Str::contains(request()->fullUrl(),'/batch/'))
+                            
                                     <a href="{{route('print.list').'?branch='.request()->branch.'&date='.request()->date}}"> <button class="btn btn-primary">Print All</button></a>
                                 @endif
 
@@ -81,7 +76,8 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach($clients as $client)
+                                
+                                @foreach($client_list as $client)
                                         <tr>
                                             <td>{{$client->branch}}</td>
                                             <td>{{$client->loan_officer}}</td>

@@ -58,33 +58,51 @@ class FetchSpreadsheetRecords extends Command
         // The range of A2:H will get columns A through H and all rows starting from row 2
         $spreadsheetId = '172nRLbv4cIjyYbphX1XqMnz_Jax69Qt-mQRy7GGxMSg';
 
-        $range = 'A:DP';
+        $range = 'A1:DP';
+        $transactionRange = 2;
+        $isEmpty = true;
         if (Transaction::count() == 0) {
-            $range = 'A:DP';    
+            $range = 'A2:DP';
         }else{
             $transactionRange = Transaction::latest()->first()->range+1;
             $range = 'A'.$transactionRange.':DP';
+            $isEmpty = false;
         }
+        
         $currentRow = 1;
         $rows = collect($sheets->spreadsheets_values->get($spreadsheetId, $range, ['majorDimension' => 'ROWS']));
         $ctr = 0;
         $clientList = [];
         $batch_id = str_shuffle(uniqid());
+        
         foreach ($rows as $key => $value) {
-            if ($ctr > 0 ) {
-                $clients = new ExcelReader($rows[$ctr],$batch_id);
-                $clientToDb = Client::create($clients->client);
-                PPI::create(array_merge(['client_id' => $clientToDb->id],$clients->ppi));
-                CWE::create(array_merge(['client_id' => $clientToDb->id],$clients->cwe));
-            }
+            
+            $clients = new ExcelReader($rows[$ctr],$batch_id);
+        
+            $clientToDb = Client::create($clients->client);
+            // PPI::create(array_merge(['client_id' => $clientToDb->id],$clients->ppi));
+            // CWE::create(array_merge(['client_id' => $clientToDb->id],$clients->cwe));
+            
             $ctr++;
         }
 
-        Transaction::create(
-            [
-                'range' => $ctr
-            ]
-        );
+
+        
+        if ($ctr> 0) {
+            if ($isEmpty) {
+                Transaction::create(
+                    [
+                    'range' => $transactionRange-1 + $ctr
+                    ]
+                );
+            }else{
+                Transaction::create(
+                    [
+                    'range' => $transactionRange -1 + $ctr
+                    ]
+                );
+            }
+        }
 
         $this->info('Imported!');
     }
