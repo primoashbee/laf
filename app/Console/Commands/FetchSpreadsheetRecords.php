@@ -80,8 +80,8 @@ class FetchSpreadsheetRecords extends Command
             $clients = new ExcelReader($rows[$ctr],$batch_id);
         
             $clientToDb = Client::create($clients->client);
-            // PPI::create(array_merge(['client_id' => $clientToDb->id],$clients->ppi));
-            // CWE::create(array_merge(['client_id' => $clientToDb->id],$clients->cwe));
+            PPI::create(array_merge(['client_id' => $clientToDb->id],$clients->ppi));
+            CWE::create(array_merge(['client_id' => $clientToDb->id],$clients->cwe));
             
             $ctr++;
         }

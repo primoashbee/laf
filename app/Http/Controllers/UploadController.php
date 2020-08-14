@@ -188,8 +188,8 @@ class UploadController extends Controller
             $clients = new ExcelReader($rows[$ctr],$batch_id);
         
             $clientToDb = Client::create($clients->client);
-            // PPI::create(array_merge(['client_id' => $clientToDb->id],$clients->ppi));
-            // CWE::create(array_merge(['client_id' => $clientToDb->id],$clients->cwe));
+            PPI::create(array_merge(['client_id' => $clientToDb->id],$clients->ppi));
+            CWE::create(array_merge(['client_id' => $clientToDb->id],$clients->cwe));
             
             $ctr++;
         }
@@ -1267,178 +1267,178 @@ class UploadController extends Controller
         // Progress Poverty Index
 
 
-        // //QUESTION 1 
-        // if ($client->ppi->ppi_q_1 == "Walo o Higit pa") {
-        //         $q1 = 0;
-        //     }
-        //     if ($client->ppi->ppi_q_1 == "Pito") {
-        //         $q1 = 2;
-        //     }
-        //     if ($client->ppi->ppi_q_1 == "Anim") {
-        //         $q1 = 6;
-        //     }
-        //     if ($client->ppi->ppi_q_1 == "Lima") {
-        //         $q1 = 11;
-        //     }
-        //      if ($client->ppi->ppi_q_1 == "Apat") {
-        //         $q1 = 15;
-        //     }
-        //     if ($client->ppi->ppi_q_1 == "Tatlo") {
-        //         $q1 = 21;
-        //     }
-        //     if ($client->ppi->ppi_q_1 == "Isa o Dalawa") {
-        //         $q1 = 30;
-        //     }    
+        //QUESTION 1 
+        if ($client->ppi->ppi_q_1 == "Walo o Higit pa") {
+                $q1 = 0;
+            }
+            if ($client->ppi->ppi_q_1 == "Pito") {
+                $q1 = 2;
+            }
+            if ($client->ppi->ppi_q_1 == "Anim") {
+                $q1 = 6;
+            }
+            if ($client->ppi->ppi_q_1 == "Lima") {
+                $q1 = 11;
+            }
+             if ($client->ppi->ppi_q_1 == "Apat") {
+                $q1 = 15;
+            }
+            if ($client->ppi->ppi_q_1 == "Tatlo") {
+                $q1 = 21;
+            }
+            if ($client->ppi->ppi_q_1 == "Isa o Dalawa") {
+                $q1 = 30;
+            }    
 
-        // // Question 2
+        // Question 2
 
-        //     if ($client->ppi->ppi_q_2 == "Hindi") {
-        //         $q2 = 0;
-        //     }
+            if ($client->ppi->ppi_q_2 == "Hindi") {
+                $q2 = 0;
+            }
 
-        //     if ($client->ppi->ppi_q_2 == "Oo") {
-        //         $q2 = 1;
-        //     }
+            if ($client->ppi->ppi_q_2 == "Oo") {
+                $q2 = 1;
+            }
 
-        //     if ($client->ppi->ppi_q_2 == "Walang may edad 6-17") {
-        //         $q2 = 2;
-        //     }    
+            if ($client->ppi->ppi_q_2 == "Walang may edad 6-17") {
+                $q2 = 2;
+            }    
 
-        // // Question 3
+        // Question 3
 
-        //     if ($client->ppi->ppi_q_3 == "Wala") {
-        //         $q3 = 0;
-        //     }
-        //     if ($client->ppi->ppi_q_3 == "Isa") {
-        //         $q3 = 2;
-        //     }
+            if ($client->ppi->ppi_q_3 == "Wala") {
+                $q3 = 0;
+            }
+            if ($client->ppi->ppi_q_3 == "Isa") {
+                $q3 = 2;
+            }
 
-        //     if ($client->ppi->ppi_q_3 == "Dalawa") {
-        //         $q3 = 7;
-        //     }
+            if ($client->ppi->ppi_q_3 == "Dalawa") {
+                $q3 = 7;
+            }
 
-        //     if ($client->ppi->ppi_q_3 == "Tatlo o higit pa") {
-        //         $q3 = 12;
-        //     }   
+            if ($client->ppi->ppi_q_3 == "Tatlo o higit pa") {
+                $q3 = 12;
+            }   
 
-        // // Question 4
+        // Question 4
 
-        //     if ($client->ppi->ppi_q_4 == "Tatlo o higit pa") {
-        //         $q4 = 0;
-        //     }
+            if ($client->ppi->ppi_q_4 == "Tatlo o higit pa") {
+                $q4 = 0;
+            }
 
-        //     if ($client->ppi->ppi_q_4 == "Dalawa") {
-        //         $q4 = 4;
-        //     }
+            if ($client->ppi->ppi_q_4 == "Dalawa") {
+                $q4 = 4;
+            }
 
-        //     if ($client->ppi->ppi_q_4 == "Isa") {
-        //         $q4 = 8;
-        //     }
+            if ($client->ppi->ppi_q_4 == "Isa") {
+                $q4 = 8;
+            }
 
-        //     if ($client->ppi->ppi_q_4 == "Wala") {
-        //         $q4 = 12;
-        //     } 
+            if ($client->ppi->ppi_q_4 == "Wala") {
+                $q4 = 12;
+            } 
 
-        // // Question 5
+        // Question 5
 
-        //     if ($client->ppi->ppi_q_5 == "Elementary o No Grade Completed") {
-        //         $q5 = 0;
-        //     }
+            if ($client->ppi->ppi_q_5 == "Elementary o No Grade Completed") {
+                $q5 = 0;
+            }
 
-        //     if ($client->ppi->ppi_q_5 == "Walang babaeng puno ng pamilya") {
-        //         $q5 = 2;
-        //     }
+            if ($client->ppi->ppi_q_5 == "Walang babaeng puno ng pamilya") {
+                $q5 = 2;
+            }
 
-        //     if ($client->ppi->ppi_q_5 == "Elementary or HS undergrad") {
-        //         $q5 = 2;
-        //     }
+            if ($client->ppi->ppi_q_5 == "Elementary or HS undergrad") {
+                $q5 = 2;
+            }
             
-        //     if ($client->ppi->ppi_q_5 == "High School Graduate") {
-        //         $q5 = 4;
-        //     }
+            if ($client->ppi->ppi_q_5 == "High School Graduate") {
+                $q5 = 4;
+            }
 
-        //     if ($client->ppi->ppi_q_5 == "College undergrad o higit pa") {
-        //         $q5 = 7;
-        //     }
+            if ($client->ppi->ppi_q_5 == "College undergrad o higit pa") {
+                $q5 = 7;
+            }
 
-        // // Question 6
+        // Question 6
 
-        //     if ($client->ppi->ppi_q_6 == "Light Materials (LM) (cogon/nipa/anahaw) or mixed but more LM") {
-        //         $q6 = 0;
-        //     }
-        //     if ($client->ppi->ppi_q_6 == "Mixed but predominantly strong materials") {
-        //         $q6 = 2;
-        //     }
+            if ($client->ppi->ppi_q_6 == "Light Materials (LM) (cogon/nipa/anahaw) or mixed but more LM") {
+                $q6 = 0;
+            }
+            if ($client->ppi->ppi_q_6 == "Mixed but predominantly strong materials") {
+                $q6 = 2;
+            }
 
-        //     if ($client->ppi->ppi_q_6 == "Strong materials (galvanized iron, aluminum, tile, concrete, brick, stone, wood, plywood, asbestos)") {
-        //         $q6 = 3;
-        //     }
+            if ($client->ppi->ppi_q_6 == "Strong materials (galvanized iron, aluminum, tile, concrete, brick, stone, wood, plywood, asbestos)") {
+                $q6 = 3;
+            }
 
-        // // Question 7
+        // Question 7
 
-        //     if ($client->ppi_ppi_q_7 == "Hindi (Walang pagmamay-ari)") {
-        //         $q7 = 0;
-        //     }
+            if ($client->ppi_ppi_q_7 == "Hindi (Walang pagmamay-ari)") {
+                $q7 = 0;
+            }
 
-        //     if ($client->ppi_ppi_q_7 == "Oo (Mayroong pagmamay-ari)") {
-        //         $q7 = 3;
-        //     }
+            if ($client->ppi_ppi_q_7 == "Oo (Mayroong pagmamay-ari)") {
+                $q7 = 3;
+            }
 
-        //  // Question 8
-        //     if ($client->ppi->ppi_q_8 == "Wala (Walang pagmamay-ari)") {
-        //         $q8 = 0;
-        //     }
+         // Question 8
+            if ($client->ppi->ppi_q_8 == "Wala (Walang pagmamay-ari)") {
+                $q8 = 0;
+            }
 
-        //     if ($client->ppi->ppi_q_8 == "1 sa nabanggit, pero hindi pareho") {
-        //         $q8 = 6;
-        //     }
+            if ($client->ppi->ppi_q_8 == "1 sa nabanggit, pero hindi pareho") {
+                $q8 = 6;
+            }
 
-        //     if ($client->ppi->ppi_q_8 == "Parehong may pagmamay-ari") {
-        //         $q8 = 12;
-        //     }
+            if ($client->ppi->ppi_q_8 == "Parehong may pagmamay-ari") {
+                $q8 = 12;
+            }
 
-        // // Question 9
+        // Question 9
 
-        //     if ($client->ppi->ppi_q_9 == "Hindi/ Wala") {
-        //         $q9 = 0;
-        //     }
+            if ($client->ppi->ppi_q_9 == "Hindi/ Wala") {
+                $q9 = 0;
+            }
 
-        //     if ($client->ppi->ppi_q_9 == "TV lamang") {
-        //         $q9 = 4;
-        //     }
-        //     if ($client->ppi->ppi_q_9 == "TV/ VCD/DVD player") {
-        //         $q9 = 7;
-        //     }   
+            if ($client->ppi->ppi_q_9 == "TV lamang") {
+                $q9 = 4;
+            }
+            if ($client->ppi->ppi_q_9 == "TV/ VCD/DVD player") {
+                $q9 = 7;
+            }   
 
-        // // Question 10
+        // Question 10
 
-        //     if ($client->ppi->ppi_q_10 == "Wala") {
-        //         $q10 = 0;
-        //     }
+            if ($client->ppi->ppi_q_10 == "Wala") {
+                $q10 = 0;
+            }
 
-        //     if ($client->ppi->ppi_q_10 == "Isa") {
-        //         $q10 = 4;
-        //     }
+            if ($client->ppi->ppi_q_10 == "Isa") {
+                $q10 = 4;
+            }
 
-        //     if ($client->ppi->ppi_q_10 == "Dalawa") {
-        //         $q10 = 7;
-        //     }
-        //     if ($client->ppi->ppi_q_10 == "Tatlo o Higit pa") {
-        //         $q10 = 12;
-        //     }         
+            if ($client->ppi->ppi_q_10 == "Dalawa") {
+                $q10 = 7;
+            }
+            if ($client->ppi->ppi_q_10 == "Tatlo o Higit pa") {
+                $q10 = 12;
+            }         
 
-        //     $qts = $q1+$q2+$q3+$q4+$q5+$q6+$q7+$q8+$q9+$q10;     
-        //     $templateProcessor->setValue('q1', $q1);
-        //     $templateProcessor->setValue('q2', $q2);
-        //     $templateProcessor->setValue('q3', $q3);
-        //     $templateProcessor->setValue('q4', $q4);
-        //     $templateProcessor->setValue('q5', $q5);
-        //     $templateProcessor->setValue('q6', $q6);
-        //     $templateProcessor->setValue('q7', $q7);
-        //     $templateProcessor->setValue('q8', $q8);
-        //     $templateProcessor->setValue('q9', $q9);
-        //     $templateProcessor->setValue('q10', $q10);
-        //     $templateProcessor->setValue('qts', $qts);   
+            $qts = $q1+$q2+$q3+$q4+$q5+$q6+$q7+$q8+$q9+$q10;     
+            $templateProcessor->setValue('q1', $q1);
+            $templateProcessor->setValue('q2', $q2);
+            $templateProcessor->setValue('q3', $q3);
+            $templateProcessor->setValue('q4', $q4);
+            $templateProcessor->setValue('q5', $q5);
+            $templateProcessor->setValue('q6', $q6);
+            $templateProcessor->setValue('q7', $q7);
+            $templateProcessor->setValue('q8', $q8);
+            $templateProcessor->setValue('q9', $q9);
+            $templateProcessor->setValue('q10', $q10);
+            $templateProcessor->setValue('qts', $qts);   
 
 
             // Credit Worthiness Evaluation
