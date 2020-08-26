@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 
@@ -14,7 +15,7 @@ use Illuminate\Support\Facades\Storage;
 |
 */
 
-Route::group(['middleware' => ['auth']], function () {
+Route::group(['middleware' => ['auth','password.changed']], function () {
         Route::get('/import','UploadController@import');
         Route::get('/home', 'UploadController@index')->name('home');
         Route::post('/home', 'UploadController@upload')->name('form.upload');
@@ -33,8 +34,16 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/export/{id}', 'UploadController@exportClient');     
         Route::get('/export', 'UploadController@getClients');        
         Route::get('/admin', 'UploadController@admin')->middleware('is.admin');
+
+        Route::get('/users','UserController@list');
+
+       
 });
 
+Route::get('/changepass', function(Request $request){
+        return view('changepass');
+})->name('change.password')->middleware('auth');
+Route::post('/changepass', 'UserController@changePassword')->name('change.password')->middleware('auth');
 // Route::get('/dl',function(){
 //         $str = '1AyIUrmAeT_kZfu7xRJKRqC03zH9TnP03';
 //         $contents = collect(Storage::disk('google')->listContents('/',false));

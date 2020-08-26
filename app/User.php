@@ -17,7 +17,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password','level'
+        'name', 'email', 'password','level','password_changed'
     ];
 
     /**
@@ -40,5 +40,12 @@ class User extends Authenticatable
 
     public function office(){
         return $this->belongsToMany(Office::class)->orderBy('office_id');
+    }
+    public function logs(){
+        return $this->hasMany(UserLog::class);
+    }
+
+    public function lastLogin(){
+        return $this->logs->sortByDesc('id')->first();
     }
 }
