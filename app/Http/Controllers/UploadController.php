@@ -36,14 +36,23 @@ class UploadController extends Controller
             
         }else{
             if($request->has('branch')){
+                
                 if($request->branch != $branch){
                     abort(404);
                 }
                 $clients = Client::batches()->where('branch',$request->branch);
             }
-            if (auth()->user()->level!="MANAGER") {
+
+            $clients = Client::batches()->where('branch', $branch);
+
+            if (auth()->user()->level!="MANAGER") {    
+                $branch = auth()->user()->office->first()->getTopOffice('branch')->name;
                 $clients = Client::batches()->where('branch', $branch);
+                
+                
             }
+            
+            
         }
 
         
@@ -999,7 +1008,7 @@ class UploadController extends Controller
         $user = auth()->user()->office->first();
         $client = Client::find($id)->load('ppi','cwe');
         if(!auth()->user()->is_admin){
-            if($client->branch != auth()->user()->office->first()){
+            if($client->branch != auth()->user()->office->first()->name){
                 abort(403);
             }
         }

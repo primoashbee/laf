@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Office;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -41,11 +42,28 @@ class User extends Authenticatable
     public function office(){
         return $this->belongsToMany(Office::class)->orderBy('office_id');
     }
+    public function offices(){
+        return $this->hasMany(OfficeUser::class);
+    }
     public function logs(){
         return $this->hasMany(UserLog::class);
     }
 
     public function lastLogin(){
         return $this->logs->sortByDesc('id')->first();
+    }
+
+    public function reset(){
+        $this->password = Hash::make('lightmfi123');
+        $this->password_changed = false;
+        return $this->save();
+    }
+    public function disable(){
+        $this->disabled = true;
+        return $this->save();
+    }
+    public function enable(){
+        $this->disabled = false;
+        return $this->save();
     }
 }

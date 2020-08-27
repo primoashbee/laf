@@ -22,6 +22,7 @@ class CreateUsersTable extends Migration
             $table->string('password');
             $table->string('level')->default('MANAGER');
             $table->boolean('password_changed')->default(false);
+            $table->boolean('disabled')->default(false);
             $table->rememberToken();
             $table->timestamps();
         });

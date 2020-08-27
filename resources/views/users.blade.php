@@ -35,8 +35,14 @@
                                         <td>{{$user->lastLogin()['ip_address']}}</td>
                                         <td>{{$user->lastLogin()['created_at']}}</td>
                                         <td>
-                                            <a href=""><button class="btn btn-primary">Reset</button></a>
-                                            <a href=""><button class="btn btn-danger">Disable</button></a>
+                                            <a href="{{route('user.reset',$user->id)}}"><button class="btn btn-primary">Reset</button></a>
+                                            @if($user->disabled)
+                                            <a href="{{route('user.enable',$user->id)}}"><button class="btn btn-success">Enable</button></a>
+                                            @else
+                                            <a href="{{route('user.disable',$user->id)}}"><button class="btn btn-danger">Disable</button></a>
+                                            @endif
+
+                                            
                                         </td>
                                     </tr>
                                 @endforeach
