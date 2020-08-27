@@ -36,7 +36,7 @@ Route::group(['middleware' => ['auth','password.changed']], function () {
         Route::get('/admin', 'UploadController@admin')->middleware('is.admin');
 
         Route::get('/users','UserController@list');
-        Route::get('/gdrive/users','UserController@pullAccountsFromGoogleDrive');
+        // Route::get('/gdrive/users','UserController@pullAccountsFromGoogleDrive');
 
         Route::get('/user/reset/{id}','UserController@reset')->name('user.reset');
         Route::get('/user/disable/{id}','UserController@disable')->name('user.disable');
