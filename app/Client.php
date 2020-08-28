@@ -67,7 +67,8 @@ class Client extends Model
     	'branch',
 		'received',
 		'batch_id',
-		'loan_officer'
+		'loan_officer',
+		'timestamp'
 	];
 		
 
