@@ -76,6 +76,7 @@ class CreateClientsTable extends Migration
             $table->string('branch')->nullable();
             $table->string('loan_officer')->nullable();
             $table->boolean('received')->nullable();
+            $table->date('timestamp')->nullable();
             $table->string('batch_id')->nullable();
      
             
