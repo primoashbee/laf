@@ -1036,7 +1036,7 @@ class UploadController extends Controller
 
         $name = ucwords($client->last_name.', '.$client->first_name.', '.$client->middle_name);
 
-        $templateProcessor->setValue('date', $client->date);
+        $templateProcessor->setValue('date', $client->timestamp);
         $templateProcessor->setValue('name', $name);
         $templateProcessor->setValue('nickname', ucwords($client->nickname));
         $present_address = ucwords($client->street_address.' '.'Brgy.'.$client->barangay.' '.$client->city.', '.$client->province);
