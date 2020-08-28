@@ -12,7 +12,8 @@ class ExcelReader
 	public function __construct($array,$batch_id)
 	{
 			$this->batch_id =  $batch_id;
-			$date = Carbon::parse($array[0])->format('d-F-Y');
+			// $date = Carbon::parse($array[0])->format('d-F-Y');
+			$date = Carbon::parse($array[0])
 			$birthday = Carbon::parse($array[17])->format('d-F-Y');
 			$spouse_birthday= Carbon::parse($array[30])->format('d-F-Y');
 			$this->client = array(
