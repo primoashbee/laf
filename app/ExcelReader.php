@@ -16,7 +16,7 @@ class ExcelReader
 			$birthday = Carbon::parse($array[17])->format('d-F-Y');
 			$spouse_birthday= Carbon::parse($array[30])->format('d-F-Y');
 			$this->client = array(
-				'date' => $date,				
+				'timestamp' => $date,				
 				'first_name' => $array[1],
 				'middle_name' => $array[2],
 				'last_name' => $array[3],
