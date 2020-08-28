@@ -1033,7 +1033,7 @@ class UploadController extends Controller
         
         $templateProcessor = new TemplateProcessor($template);
 
-        $name = ucwords($client->last_name.' ,'.$client->first_name.' '.$client->middle_name);
+        $name = ucwords($client->last_name.', '.$client->first_name.', '.$client->middle_name);
 
         $templateProcessor->setValue('name', $name);
         $templateProcessor->setValue('nickname', ucwords($client->nickname));
