@@ -1159,6 +1159,7 @@ class UploadController extends Controller
 
         $other_income='';
         $spouse_other_income='';
+        $self_employed = '';
         if ($client->self_employed == 'Yes') {
             $self_employed = 'X';
         }
