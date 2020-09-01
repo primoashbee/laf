@@ -33,8 +33,9 @@ class UploadController extends Controller
                 // $clients = Client::where('received',true)->where('branch',$request->branch)->get();
                 $clients = Client::batches()->where('branch',$request->branch);
             }
-            
+            // dd('dito');
         }else{
+            
             if($request->has('branch')){
                 
                 if($request->branch != $branch){
@@ -42,7 +43,7 @@ class UploadController extends Controller
                 }
                 $clients = Client::batches()->where('branch',$request->branch);
             }
-
+            
             $clients = Client::batches()->where('branch', $branch);
 
             if (auth()->user()->level!="MANAGER") {    
