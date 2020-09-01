@@ -14,7 +14,6 @@ use Illuminate\Support\Facades\Storage;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
 Route::group(['middleware' => ['auth','password.changed']], function () {
         Route::get('/import','UploadController@import');
         Route::get('/home', 'UploadController@index')->name('home');

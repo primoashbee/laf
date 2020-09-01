@@ -21,13 +21,15 @@ class UserLoggedIn
      */
     public $user;
     public $ip;
-    public function __construct($ip, $user)
+    public function __construct($ip, $user,$description)
     {
         $this->ip = $ip;
         $this->user = $user;
+        $this->description = $description;
 
         $user->logs()->create([
             'ip_address'=>$ip,
+            'description'=>$description
         ]);
         
     }
@@ -39,6 +41,6 @@ class UserLoggedIn
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('channel-name');
+        // return new PrivateChannel('channel-name');
     }
 }

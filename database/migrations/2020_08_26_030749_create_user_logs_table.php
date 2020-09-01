@@ -17,6 +17,7 @@ class CreateUserLogsTable extends Migration
             $table->id();
             $table->unsignedInteger('user_id');
             $table->ipAddress('ip_address');
+            $table->string('description');
             $table->timestamps();
         });
     }

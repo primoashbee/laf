@@ -22,7 +22,8 @@
                                     <td>Level</td>
                                     <td>Branch</td>
                                     <td>IP Address</td>
-                                    <td>Last login</td>
+                                    <td style="width: 100px">Last login</td>
+                                    <td >Description</td>
                                     <td>Action</td>
                                 </tr>
                             </thead>
@@ -33,7 +34,8 @@
                                         <td>{{$user->level}}</td>
                                         <td>{{$user->office()->first()->name}}</td>
                                         <td>{{$user->lastLogin()['ip_address']}}</td>
-                                        <td>{{$user->lastLogin()['created_at']}}</td>
+                                        <td>{{\Carbon\Carbon::parse($user->lastLogin()['created_at'])->diffForHumans()}}</td>
+                                        <td>{{$user->lastLogin()['description']}}</td>
                                         <td>
                                             <a href="{{route('user.reset',$user->id)}}"><button class="btn btn-primary">Reset</button></a>
                                             @if($user->disabled)
