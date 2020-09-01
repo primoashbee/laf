@@ -89,14 +89,28 @@ class Client extends Model
 				$unit = auth()->user()->level;
                 return collect(
 					DB::select(
-						'SELECT x.* from (Select date(created_at) as created_at, count(id) as total, RIGHT(loan_officer,1) AS unit, branch 
+						'SELECT x.* from (Select date(timestamp) as created_at, count(id) as total, RIGHT(loan_officer,1) AS unit, branch 
 						from clients 
-						group by date(created_at), branch, loan_officer) X where x.unit = :unit',
+						group by date(timestamp), branch, loan_officer) X where x.unit = :unit',
 						['unit'=>$unit]
 					)
 				);
+				
 			}
-			return collect(DB::select('Select date(created_at) as created_at, count(id) as total, branch from clients group by date(created_at), branch'));
+			
+			return collect(DB::select('Select date(timestamp) as created_at, count(id) as total, RIGHT(loan_officer,1) AS unit, branch from clients group by date(timestamp), unit, branch'));
+			// if (auth()->user()->level!="MANAGER") {
+			// 	$unit = auth()->user()->level;
+            //     return collect(
+			// 		DB::select(
+			// 			"SELECT x.* from (Select STR_TO_DATE(timestamp, '%m/%d/%Y') as timestamp, count(id) as total, RIGHT(loan_officer,1) AS unit, branch 
+			// 			from clients 
+			// 			group by timestamp, branch, loan_officer) X where x.unit = :unit",
+			// 			['unit'=>$unit]
+			// 		)
+			// 	);
+			// }
+			// return collect(DB::select("Select STR_TO_DATE(timestamp, '%m/%d/%Y') as timestamp, count(id) as total, branch from clients group by timestamp, branch"));
 			
 		}
 

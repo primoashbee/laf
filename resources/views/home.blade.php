@@ -47,15 +47,18 @@
                             <thead>
                                 <tr>
                                     <td>Branch</td>
+                                    <td>Unit</td>
                                     <td>Total</td>
                                     <td>Created At</td>
                                     <td>Action</td>
                                 </tr>
                             </thead>
                             <tbody>
+                                
                                 @foreach($clients as $client)
                                         <tr>
                                             <td>{{$client->branch}}</td>
+                                            <td>{{$client->unit}}</td>
                                             <td>{{$client->total}}</td>
                                             <td>{{Carbon\Carbon::parse($client->created_at)->format('F d, Y')}}</td>
                                             <td>

@@ -55,8 +55,6 @@ class UploadController extends Controller
             
             
         }
-
-        
         $offices = Office::where('level','branch')->orderBy('name','asc')->get();
 
         return view('home',compact('clients','offices'));
@@ -89,14 +87,14 @@ class UploadController extends Controller
     public function batchByNameAndDate(Request $request){
 
         $offices = Office::where('level','branch')->orderBy('name','asc')->get();
-        $clients = Client::where('branch',$request->branch)->where(DB::raw('date(created_at)'),$request->date);
-        $client_list = Client::where('branch',$request->branch)->where(DB::raw('date(created_at)'),$request->date)->get();
+        $clients = Client::where('branch',$request->branch)->where(DB::raw('date(timestamp)'),$request->date);
+        $client_list = Client::where('branch',$request->branch)->where(DB::raw('date(timestamp)'),$request->date)->get();
         
         if(auth()->user()->level!="MANAGER"){
             
             $client_list = Client::where('branch',$request->branch)
             ->where(DB::raw('RIGHT(loan_officer,1)'),auth()->user()->level)
-            ->where(DB::raw('date(created_at)'),$request->date)
+            ->where(DB::raw('date(timestamp)'),$request->date)
             ->get();
         }
         
@@ -375,6 +373,7 @@ class UploadController extends Controller
 
             $other_income='';
             $spouse_other_income='';
+            $self_employed='';
             if ($client->self_employed == 'Yes') {
                 $self_employed = 'X';
             }
@@ -933,7 +932,7 @@ class UploadController extends Controller
 
         if(auth()->user()->level!="MANAGER"){
             $clients = Client::where('branch', $request->branch)
-                    ->where(DB::raw('date(created_at)'), $request->date)
+                    ->where(DB::raw('date(timestamp)'), $request->date)
                     ->where(DB::raw('RIGHT(loan_officer,1)'),auth()->user()->level)
                     ->get();
         }

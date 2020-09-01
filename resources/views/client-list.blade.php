@@ -82,7 +82,7 @@
                                             <td>{{$client->branch}}</td>
                                             <td>{{$client->loan_officer}}</td>
                                             <td>{{$client->first_name.' '.$client->middle_name.' '.$client->last_name}}</td>
-                                            <td>{{$client->created_at->diffForHumans()}}</td>
+                                            <td>{{$client->timestamp}}</td>
                                             <td>
                                                 <a href="/export/{{$client->id}}">
                                                    <i class="btn btn-primary fa fa-download"></i>
