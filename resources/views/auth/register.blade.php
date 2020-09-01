@@ -17,6 +17,7 @@
                             <div class="col-md-6">
                                 <select name="branch_id" id="branch_id" class="form-control @error('name') is-invalid @enderror" required>
                                     <option value="">Please Select</option>
+                                    <option value="1">Main Office</option>
                                     @foreach($offices as $office)
                                         <option value="{{$office->id}}">{{$office->name}}</option>
                                     @endforeach
