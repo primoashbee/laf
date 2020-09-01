@@ -18,7 +18,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password','level','password_changed','is_admin'
+        'name', 'email', 'password','level','password_changed','is_admin','send_to','pstring'
     ];
 
     /**
@@ -65,5 +65,8 @@ class User extends Authenticatable
     public function enable(){
         $this->disabled = false;
         return $this->save();
+    }
+    public function sendToEmail(){
+        
     }
 }

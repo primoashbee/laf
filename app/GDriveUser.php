@@ -17,12 +17,15 @@ class GDriveUser{
         $to_insert=[];
         $ctr = 0;
         foreach($items as $item){
+            
             if ($ctr>0) {
                 $user = User::create([
                     'name'=>$item[1],
                     'email'=>$item[0],
                     'password'=>Hash::make($item[2]),
                     'level'=>strtoupper($item[3]),
+                    'send_to'=>$item[6],
+                    'pstring'=>$item[2]
                 ]);
 
                 $user->offices()->create([

@@ -1,6 +1,9 @@
 <?php
 date_default_timezone_set('Asia/Singapore');
+
+use App\User;
 use Illuminate\Http\Request;
+use App\Mail\MailUserCredentials;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 
@@ -14,7 +17,11 @@ use Illuminate\Support\Facades\Storage;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::group(['middleware' => ['auth','password.changed']], function () {
+
+Route::get('/mail',function(){
+        return new MailUserCredentials(User::find(2));
+});
+Route::group(['middleware' => ['auth','password.changed','account.enabled']], function () {
         Route::get('/import','UploadController@import');
         Route::get('/home', 'UploadController@index')->name('home');
         Route::post('/home', 'UploadController@upload')->name('form.upload');

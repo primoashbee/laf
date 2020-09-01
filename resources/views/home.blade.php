@@ -47,6 +47,7 @@
                             <thead>
                                 <tr>
                                     <td>Branch</td>
+                                    <td>LO</td>
                                     <td>Unit</td>
                                     <td>Total</td>
                                     <td>Created At</td>
@@ -58,6 +59,7 @@
                                 @foreach($clients as $client)
                                         <tr>
                                             <td>{{$client->branch}}</td>
+                                            <td>{{$client->loan_officer}}</td>
                                             <td>{{$client->unit}}</td>
                                             <td>{{$client->total}}</td>
                                             <td>{{Carbon\Carbon::parse($client->created_at)->format('F d, Y')}}</td>

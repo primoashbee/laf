@@ -55,7 +55,7 @@ class CreateUsers extends Command
 
         // The range of A2:H will get columns A through H and all rows starting from row 2
         $spreadsheetId = '1ymdMHX48AeXIhmnSrLiG0nYQ5ZmtosZC52tjtPqkSOM';
-        $range = 'A1:F';
+        $range = 'A1:G';
         
         
         $rows = collect($sheets->spreadsheets_values->get($spreadsheetId, $range, ['majorDimension' => 'ROWS']));

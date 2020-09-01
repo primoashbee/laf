@@ -46,8 +46,9 @@ class UploadController extends Controller
             
             $clients = Client::batches()->where('branch', $branch);
 
-            if (auth()->user()->level!="MANAGER") {    
+            if (auth()->user()->level!="MANAGER") {
                 $branch = auth()->user()->office->first()->getTopOffice('branch')->name;
+                
                 $clients = Client::batches()->where('branch', $branch);
                 
                 

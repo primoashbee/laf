@@ -89,7 +89,7 @@ class Client extends Model
 				$unit = auth()->user()->level;
                 return collect(
 					DB::select(
-						'SELECT x.* from (Select date(timestamp) as created_at, count(id) as total, RIGHT(loan_officer,1) AS unit, branch 
+						'SELECT x.* from (Select date(timestamp) as created_at, count(id) as total, RIGHT(loan_officer,1) AS unit, loan_officer, branch 
 						from clients 
 						group by date(timestamp), branch, loan_officer) X where x.unit = :unit',
 						['unit'=>$unit]
@@ -97,8 +97,7 @@ class Client extends Model
 				);
 				
 			}
-			
-			return collect(DB::select('Select date(timestamp) as created_at, count(id) as total, RIGHT(loan_officer,1) AS unit, branch from clients group by date(timestamp), unit, branch'));
+			return collect(DB::select('Select date(timestamp) as created_at, count(id) as total, RIGHT(loan_officer,1) AS unit, loan_officer, branch from clients group by date(timestamp), branch, loan_officer'));
 			// if (auth()->user()->level!="MANAGER") {
 			// 	$unit = auth()->user()->level;
             //     return collect(
