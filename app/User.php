@@ -3,7 +3,9 @@
 namespace App;
 
 use App\Office;
+use App\Mail\MailUserCredentials;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -67,6 +69,7 @@ class User extends Authenticatable
         return $this->save();
     }
     public function sendToEmail(){
-        
+        Mail::to($this->send_to)->send(new MailUserCredentials($this));
+        return true;
     }
 }
