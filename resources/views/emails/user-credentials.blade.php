@@ -5,7 +5,7 @@ Hello! {{$user->name}}
 This will be your username for the Online Loan Application <br>
 Email: <b>{{$user->email}}</b> <br>
 Password: <b>{{$user->pstring}}</b>
-@component('mail::button', ['url' => 'http://laf.light.org.ph/'])
+@component('mail::button', ['url' => 'https://laf.light.org.ph/'])
 Go to site
 @endcomponent
 
