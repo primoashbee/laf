@@ -241,6 +241,7 @@ class UploadController extends Controller
 
         $folder = uniqid();
         File::makeDirectory(Storage::disk('public')->path($folder));
+        
         $ctr= 0;
         
         foreach ($clients as $client) {
@@ -415,8 +416,8 @@ class UploadController extends Controller
                 $templateProcessor->setValue('position', $client->position);
                 $templateProcessor->setValue('company', $client->company);
 
-                if ($client->monthly_gross_income_at_work>0) {
-                    $templateProcessor->setValue('sep_mgi', $this->currency($client->monthly_gross_income_at_work));
+                if ($client->spouse_monthly_gross_income_at_work>0) {
+                    $templateProcessor->setValue('sep_mgi', $this->currency($client->spouse_monthly_gross_income_at_work));
                 }else{
                     $templateProcessor->setValue('sep_mgi', '');
                 }
@@ -892,14 +893,16 @@ class UploadController extends Controller
             
             $newFile = Storage::disk('public')->path($folder.'/LAF Record - '.'('.$ctr.') '.$name.'.docx');
             
+            
             $templateProcessor->saveAs($newFile);
             $ctr++;
         }
 
+        
             $zip = new ZipArchive();
                 
             $zipFileName = storage_path('app/public/'.$folder).'.zip';
-
+            
             $files = Storage::disk('public')->files($folder);
         
             // dd($folder);
@@ -920,7 +923,6 @@ class UploadController extends Controller
                 $zip->addFile($file->getPathname(), $file->getFilename());
             }
             $zip->close();
-           
             File::deleteDirectory(storage_path('app/public/'.$folder));
             return $zipFileName;
             return response()->download($zipFileName)->deleteFileAfterSend(true);
@@ -929,7 +931,7 @@ class UploadController extends Controller
     public function download(Request $request){
         $branch = auth()->user()->office->first()->name;
         $printed = false;
-        $clients = Client::where('branch', $request->branch)->where(DB::raw('date(created_at)'), $request->date)->get();
+        $clients = Client::where('branch', $request->branch)->where(DB::raw('date(timestamp)'), $request->date)->get();
 
         if(auth()->user()->level!="MANAGER"){
             $clients = Client::where('branch', $request->branch)
@@ -1026,7 +1028,6 @@ class UploadController extends Controller
         $q10 = 0;
 
         $template = public_path('LAF Final Template.docx');
-
         $folder = uniqid();
         File::makeDirectory(Storage::disk('public')->path($folder));
 
@@ -1187,7 +1188,7 @@ class UploadController extends Controller
             }
             $templateProcessor->setValue('se', $spouse_self_employed);
             $templateProcessor->setValue('s_service_type', $client->spouse_business_type);
-
+            
              if ($client->monthly_income_for_spouse_business>0) {
                 $templateProcessor->setValue('se_mgi', $this->currency($client->monthly_income_for_spouse_business));
             }else{
@@ -1198,13 +1199,13 @@ class UploadController extends Controller
             if ($client->spouse_employed == 'Yes') {
                 $spouse_employed = 'X';
             }
-
+            
             $templateProcessor->setValue('sep', $spouse_employed);
             $templateProcessor->setValue('position', $client->position);
-            $templateProcessor->setValue('company', $client->company);
-
-            if ($client->monthly_gross_income_at_work>0) {
-                $templateProcessor->setValue('sep_mgi', $this->currency($client->monthly_gross_income_at_work));
+            $templateProcessor->setValue('company', $client->company_name);
+            
+            if ($client->spouse_monthly_gross_income_at_work>0) {
+                $templateProcessor->setValue('sep_mgi', $this->currency($client->spouse_monthly_gross_income_at_work));
             }else{
                 $templateProcessor->setValue('sep_mgi', '');
             }
@@ -1235,7 +1236,11 @@ class UploadController extends Controller
             if (!empty($client->monthly_income_for_spouse_business)) {
                 $monthly_income_for_spouse_business = $client->monthly_income_for_spouse_business;
             }
-            $spouse_total_income = $spouse_other_income_monthly_estimated_earnings+$monthly_gross_income_at_work+$monthly_income_for_spouse_business;
+
+            if (!empty($client->spouse_monthly_gross_income_at_work)) {
+                $spouse_monthly_gross_income_at_work = $client->spouse_monthly_gross_income_at_work;
+            }
+            $spouse_total_income = $spouse_other_income_monthly_estimated_earnings+$monthly_gross_income_at_work+$monthly_income_for_spouse_business + $spouse_monthly_gross_income_at_work;
 
         }else{
             $templateProcessor->setValue('se', $spouse_self_employed);
@@ -1715,6 +1720,7 @@ class UploadController extends Controller
         }
 
         $template = public_path('LAF Final Template.docx');
+        
         // $template = Storage::disk('public')->path('LAF Final Template.docx');
         // $template = public_path('LAF Final Template.docx');
         $folder = uniqid();
@@ -1896,8 +1902,8 @@ class UploadController extends Controller
                 $templateProcessor->setValue('position', $client->position);
                 $templateProcessor->setValue('company', $client->company);
 
-                if ($client->monthly_gross_income_at_work>0) {
-                    $templateProcessor->setValue('sep_mgi', $this->currency($client->monthly_gross_income_at_work));
+                if ($client->spouse_monthly_gross_income_at_work>0) {
+                    $templateProcessor->setValue('sep_mgi', $this->currency($client->spouse_monthly_gross_income_at_work));
                 }else{
                     $templateProcessor->setValue('sep_mgi', '');
                 }
@@ -1917,6 +1923,7 @@ class UploadController extends Controller
                 $spouse_other_income_monthly_estimated_earnings = 0;
                 $monthly_gross_income_at_work = 0;
                 $monthly_income_for_spouse_business= 0;
+                $spouse_monthly_gross_income_at_work = 0;
                 if (!empty($client->spouse_other_income_monthly_estimated_earnings)) {
                     $spouse_other_income_monthly_estimated_earnings = $client->spouse_other_income_monthly_estimated_earnings;
                 }
@@ -1928,7 +1935,10 @@ class UploadController extends Controller
                 if (!empty($client->monthly_income_for_spouse_business)) {
                     $monthly_income_for_spouse_business = $client->monthly_income_for_spouse_business;
                 }
-                $spouse_total_income = $spouse_other_income_monthly_estimated_earnings+$monthly_gross_income_at_work+$monthly_income_for_spouse_business;
+                if (!empty($client->spouse_monthly_gross_income_at_work)) {
+                    $spouse_monthly_gross_income_at_work = $client->spouse_monthly_gross_income_at_work;
+                }
+                $spouse_total_income = $spouse_other_income_monthly_estimated_earnings+$monthly_gross_income_at_work+$monthly_income_for_spouse_business + $spouse_monthly_gross_income_at_work;
 
             }else{
                 $templateProcessor->setValue('se', $spouse_self_employed);
