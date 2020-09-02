@@ -2,11 +2,13 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 
 class Client extends Model
 {
+	protected $appends = ['age'];
     protected $fillable = [
     	'first_name',
     	'middle_name',
@@ -117,6 +119,10 @@ class Client extends Model
 			return collect(DB::select('Select date(created_at) as created_at, count(id) as total, branch, loan_officer from clients group by date(created_at), branch, loan_officer'));
 		}
 
+
+		public function getAgeAttribute(){
+			return Carbon::parse($this->birthday)->age;
+		}
 }
 
 
