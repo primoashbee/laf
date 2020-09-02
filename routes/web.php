@@ -19,7 +19,9 @@ use Illuminate\Support\Facades\Storage;
 */
 
 Route::get('/mail',function(){
-        return new MailUserCredentials(User::find(2));
+        Mail::raw('From new gmail' , function ($message) {
+                $message->to('ashbee.morgado@icloud.com')->subject('Waddduppp mah nigga');
+        });
 });
 Route::group(['middleware' => ['auth','password.changed','account.enabled']], function () {
         Route::get('/import','UploadController@import');
