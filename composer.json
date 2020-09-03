@@ -14,11 +14,13 @@
         "google/apiclient": "^2.4",
         "guzzlehttp/guzzle": "^6.3",
         "laravel/framework": "^7.0",
+        "laravel/horizon": "^4.3",
         "laravel/tinker": "^2.0",
         "laravel/ui": "^2.0",
         "maatwebsite/excel": "^3.1",
         "nao-pon/flysystem-google-drive": "~1.1",
         "phpoffice/phpword": "^0.17.0",
+        "predis/predis": "^1.1",
         "revolution/laravel-google-sheets": "^5.3"
     },
     "require-dev": {
