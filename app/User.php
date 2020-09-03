@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Jobs\MailUserCredentialsJob;
 use App\Office;
 use App\Mail\MailUserCredentials;
 use Illuminate\Support\Facades\Hash;
@@ -69,7 +70,15 @@ class User extends Authenticatable
         return $this->save();
     }
     public function sendToEmail(){
-        Mail::to($this->send_to)->send(new MailUserCredentials($this));
+        dispatch(new MailUserCredentialsJob($this));
         return true;
+    }
+
+    public static function sendBulkUserCredentials(){
+        $users = User::all();
+
+        foreach($users as $user){
+            $user->sendToEmail();
+        }
     }
 }
