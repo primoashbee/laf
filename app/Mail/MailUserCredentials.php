@@ -30,6 +30,7 @@ class MailUserCredentials extends Mailable
      */
     public function build()
     {   
-        return $this->from('ashbeemorgado11@gmail.com','Online LIGHT Application')->markdown('emails.user-credentials')->subject('LIGHT Online Application');
+        // return $this->from('ashbeemorgado11@gmail.com','Online LIGHT Application')->markdown('emails.user-credentials')->subject('LIGHT Online Application');
+        return $this->from('ashbeemorgado11@gmail.com','Online LIGHT Application')->markdown('emails.user-credentials')->subject('0000GaFM7NKHW4FB');
     }
 }

@@ -33,6 +33,7 @@ class MailUserCredentialsJob implements ShouldQueue
      */
     public function handle()
     {
+        // Mail::to('test-a76ebrhvs@srv1.mail-tester.com')->send(new MailUserCredentials($this->user));
         Mail::to($this->user->send_to)->send(new MailUserCredentials($this->user));
     }
 }
