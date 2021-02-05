@@ -18,6 +18,7 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/style.css') }}" rel="stylesheet">
     <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 </head>
 
@@ -103,11 +104,14 @@
                                  @endif 
                              @endif
                              <li class="nav-item">
+                                <a class="nav-link" href="{{ route('create.client') }}">Create Client</a>
+                            </li>
+                            <!-- <li class="nav-item">
                                 <a class="nav-link" href="{{ route('forms.printed') }}">Printed Forms</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('forms.unprinted') }}">Unprinted Forms</a>
-                            </li>
+                                <a class="nav-link" href="{{ route('home') }}">Unprinted Forms</a>
+                            </li> -->
                             <li class="nav-item dropdown">
                                  
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>

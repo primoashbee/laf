@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Client extends Model
 {
+	protected $casts = ['self_employed' => 'boolean','spouse_employed' => 'boolean','spouse_self_employed' => 'boolean'];
     protected $fillable = [
     	'first_name',
     	'middle_name',
