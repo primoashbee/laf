@@ -140,14 +140,14 @@ class UploadController extends Controller
                         'business_barangay' => 'required',
                         'business_farm_province' => 'required',
                         'business_farm_zip_code' => 'required',
-                        'birthday' => 'required|date',
+                        'birthday' => 'required|date|before:today',
                         'birthplace' => 'required',
-                        'mobile_number' => 'required|alpha_num',
-                        'facebook_account_link' => 'required',
-                        'spouse_mobile_number' => 'sometimes|alpha_num',
+                        'mobile_number' => 'required',
+                        // 'facebook_account_link' => 'required',
+                        'spouse_mobile_number' => 'sometimes',
                         'mothers_maiden_name' => 'required',
-                        'spouse_birthday' => 'sometimes|date',
-                        'household_size' => 'required|integer',
+                        'spouse_birthday' => 'sometimes|nullable|date|before:today',
+                        'household_size' => 'required|integer|gt:0',
                         'number_of_dependents' => 'required|integer',
                         'person_1_name' => 'required',
                         'person_1_whole_address' => 'required',
@@ -161,7 +161,7 @@ class UploadController extends Controller
                         'branch' => ['required', new Branch],
                         'loan_officer' => 'required',
                         'estimated_monthly_income_for_business' => 'required|integer',
-                        'self_employed' => 'required',
+                        // 'self_employed' => 'required',
                         'spouse_business_type' => ['required_if:spouse_self_employed,1'],
                         'monthly_income_for_spouse_business' => 'required_if:spouse_self_employed,1',
                         'spouse_monthly_gross_income_at_work' => 'required_if:spouse_employed,1',
@@ -177,7 +177,7 @@ class UploadController extends Controller
         
         Client::create($request->all());
         
-        return redirect()->back()->with('message', 'Client Successfully Created.');
+        return redirect()->back()->with('message', 'Client Successfully Encoded');
         
     }
 
@@ -1117,6 +1117,8 @@ class UploadController extends Controller
 
         $other_income='';
         $spouse_other_income='';
+        $self_employed = '';
+
         if ($client->self_employed == true) {
             $self_employed = 'X';
         }

@@ -119,7 +119,7 @@
                                         <tr>
                                             <td>{{$client->branch}}</td>
                                             <td>{{$client->first_name.' '.$client->middle_name.' '.$client->last_name}}</td>
-                                            <td>{{$client->created_at->diffForHumans()}}</td>
+                                            <td>{{$client->created_at->format('F d, Y')}}</td>
                                             <td>
                                                 <a href="/export/{{$client->id}}">
                                                    <i class="btn btn-primary fa fa-download"></i>

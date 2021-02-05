@@ -83,6 +83,13 @@ class Client extends Model
 			return $this->where('batch_id',$this->batch_id)->orderBy('created_at','desc')->limit(1)->get()->first()->created_at;
 		}
 
+		public function getSelfEmployedAttribute($value){
+			if(is_null($value)){
+				return false;
+			}
+			return $value;
+		}
+
 }
 
 

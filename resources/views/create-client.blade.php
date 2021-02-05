@@ -9,14 +9,16 @@
             	<div class="card-body">
 	            	<div class="form-container">
 
-	            		@if(session()->has('message'))
-	                        <div class="hidden animated fadeOut alert alert-success">
-	                            {{ session()->get('message') }}
+						@if(session()->has('message'))
+							
+	                        <div class="alert alert-success">
+	                            <h1>{{ session()->get('message') }}</h1>
 	                        </div>
                     	@endif
 	            		<div>
 	            			
-	            		</div>
+						</div>
+
 	            		<h1 class="h1 ml-3 mt-3">Personal Information</h1>
 		            	<form method="POST">
 		            		@csrf()
@@ -223,8 +225,8 @@
 			            		
 			            		<div class="row">
 			            			<div class="col-md-6">
-			            			<label class="title" for="gender">Civil Status:</label>
-				            			<select name="civil_status" value="{{ old('civil_status') }}" id="gender" class="form-control" style="max-width: 605px;">
+			            			<label class="title" for="civil_status">Civil Status:</label>
+				            			<select name="civil_status" value="{{ old('civil_status') }}" id="civil_status" class="form-control" style="max-width: 605px;">
 				            				<option value="">Please Select Options</option>
 				            				<option value="SINGLE">SINGLE</option>
 				            				<option value="SEPARATED">SEPARATED</option>
@@ -243,7 +245,7 @@
 			            		
 			            		<div class="row">
 				            		<div class="col-md-6">
-				            			<label class="title" for="tin_id">Education:</label>
+				            			<label class="title" for="education">Education:</label>
 				            			<select name="education" value="{{ old('education') }}" id="education" class="form-control" style="max-width: 610px;">
 				            				<option value="">Please Select Options</option>
 				            				<option value="POST GRADUATE">POST GRADUATE</option>
@@ -526,4 +528,38 @@
 </div>
 
 
+@endsection
+
+
+@section('scripts')
+<script defer>
+    window.addEventListener('DOMContentLoaded', function() {
+           
+                
+             @if(old('branch') != '')
+				 $('#branch').val("{{old('branch')}}")
+			 @endif
+
+             @if(old('house') != '')
+				 $('#house').val("{{old('house')}}")
+			@endif
+             @if(old('gender') != '')
+				 $('#gender').val("{{old('gender')}}")
+			@endif
+             @if(old('civil_status') != '')
+				 $('#civil_status').val("{{old('civil_status')}}")
+			@endif
+             @if(old('education') != '')
+				 $('#education').val("{{old('education')}}")
+			@endif
+             @if(old('business_type') != '')
+				 $('#business_type').val("{{old('business_type')}}")
+			@endif
+             @if(old('spouse_business_type') != '')
+				 $('#spouse_business_type').val("{{old('spouse_business_type')}}")
+			@endif
+
+            });
+        
+    </script>
 @endsection

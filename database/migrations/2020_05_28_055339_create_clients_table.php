@@ -38,7 +38,7 @@ class CreateClientsTable extends Migration
             $table->string('civil_status');
             $table->string('other_ids')->nullable();
             $table->string('education');
-            $table->string('facebook_account_link');
+            $table->string('facebook_account_link')->nullable();
             $table->string('mobile_number');
             $table->string('spouse_first_name')->nullable();
             $table->string('spouse_middle_name')->nullable();
@@ -57,7 +57,7 @@ class CreateClientsTable extends Migration
             $table->string('person_2_contact_number')->nullable();
             $table->string('person_2_whole_address')->nullable();
 
-            $table->boolean('self_employed');
+            $table->boolean('self_employed')->nullable();
             $table->string('business_type');
             $table->integer('estimated_monthly_income_for_business');
             $table->string('other_income')->nullable();
