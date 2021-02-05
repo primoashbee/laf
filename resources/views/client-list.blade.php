@@ -6,7 +6,9 @@
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header">Client List</div>
+                <div class="card-header">
+                    <h4 class="h4">Client List</h4>
+                </div>
 
                 
                 <div class="card-body">
@@ -16,62 +18,82 @@
                         </div>
                     @endif
                     <div class="table-container">
-                        {{-- <div class="form-inline float-left">
+                          <!--   <div class="form-inline float-left">
                             <input type="text" class="form-control" placeholder="Client name" aria-label="Client name" aria-describedby="basic-addon2">
                             <div class="input-group-append">
                                 <button class="btn btn-outline-secondary" type="button">Search</button>
                             </div>
-                        </div>                             --}}
-                        @if(\Str::contains(request()->fullUrl(),'/home'))
-                        <div class="form-inline float-right">
-                            <div class="form-check mb-2 mr-sm-2">
+                        </div>     -->                        
+
+                        <div class="d-inline-block" style="width: 100%;">
+                            <div class="form-inline mb-2 mr-sm-2 float-left">
                                 <label class="form-check-label" for="inlineFormCheck">
                                     Filter Branch: 
                                 </label>
 
                                 <select class="form-control" style="margin-left:10px" id="select_office">
+                                    
                                     @if(auth()->user()->is_admin)
-                                        <option value="MAIN OFFICE"> Main Office </option>
-                                        @foreach ($offices as $office)
-                                            <option value="{{$office->name}}">{{ $office->name }}</option>
-                                        @endforeach
-                                    @else
-                                        <option value="{{auth()->user()->office()->first()->name}}">{{ auth()->user()->office()->first()->name}}</option>
-                                    @endif   
+                                    <option> Please Select </option>
+                                    <option value="MAIN OFFICE"> Main Office </option>
+                                    @foreach ($offices as $office)
+                                    <option value="{{$office->name}}">{{ $office->name }}</option>
+                                    @endforeach
+                                    @endif
+                                    
+                                    <option value="{{ Auth::user()->office->first()->name }}">{{ Auth::user()->office->first()->name }}</option>
+                                    
                                 </select>
-                              </div>
-                        </div>
-                        @endif
-                        <div class="clearfix"></div>
-                        @if(\Str::contains(request()->fullUrl(),'/batch/'))
-                        <h3>Branch: {{request()->branch}}</h3>
-                        <h3>Date: {{request()->date}}</h3>
-                            @if(auth()->user()->level=="MANAGER")
-                            <h5>Unit A: {{$clients->where(DB::raw('RIGHT(loan_officer,1)'),'A')->count()}}</h5>
-                            <h5>Unit B: {{$clients->where(DB::raw('RIGHT(loan_officer,1)'),'B')->count()}} </h5>
-                            @endif
-                        @endif
-                        <div class="form-inline float-right">
-                            <div class="form-check mb-2 mr-sm-2">
-                            @if($client_list->count() > 0)  
-                             
-                                @if(\Str::contains(request()->fullUrl(),'/batch/'))
+                            </div>
                             
-                                    <a href="{{route('print.list').'?branch='.request()->branch.'&date='.request()->date}}"> <button class="btn btn-primary">Print All</button></a>
+                            <div class="float-right mb-2 mr-sm-2">
+                            @if($clients->count() > 0)  
+                                
+                                {{-- @if(\Str::contains(request()->fullUrl(),'print') )
+                                    @if(\Str::contains(request()->fullUrl(),'?'))
+                                        @if(!\Str::contains(request()->fullUrl(),'print=true'))
+                                            <a href="{{request()->fullUrl().'&print=true'}}">
+                                        @endif
+                                    @else
+                                        <a href="{{request()->fullUrl().'?print=true'}}">
+                                        
+                                    @endif
+                                    <button class="btn btn-primary ">Print All</button></a>
+                                @endif --}}
+                                
+                                @if(\Str::contains(request()->fullUrl(),'/unprinted'))
+                                    @if(request()->has('branch'))
+                                        <a href="{{route('download.list').'?printed=false&branch='.request()->branch}}"> <button class="btn btn-primary">Print All</button></a>
+                                    @else
+                                        <a href="{{route('download.list').'?printed=false'}}"> <button class="btn btn-primary">Print All</button></a>
+                                    @endif            
+                                @endif
+
+                                @if(\Str::contains(request()->fullUrl(),'/printed'))
+                                    @if(request()->has('branch'))
+                                        <a href="{{route('download.list').'?printed=true&branch='.request()->branch}}"> <button class="btn btn-primary">Print All</button></a>
+                                    @else
+                                        <a href="{{route('download.list').'?printed=true'}}"> <button class="btn btn-primary">Print All</button></a>
+                                    @endif   
                                 @endif
 
                                 
                             @endif
 
                             </div>
+                            
                         </div>
-                        <table class="table" id="table-list">
+                        
+                        <div>
+                            
+                        </div>
+                        
+                        <table class="table table-bordered table-striped" id="table-list">
                             <thead>
                                 <tr>
                                     <td>Branch</td>
                                     <td>Loan Officer</td>
                                     <td>Name</td>
-                                    <td>Exported At</td>
                                     <td>Action</td>
                                 </tr>
                             </thead>
@@ -82,7 +104,6 @@
                                             <td>{{$client->branch}}</td>
                                             <td>{{$client->loan_officer}}</td>
                                             <td>{{$client->first_name.' '.$client->middle_name.' '.$client->last_name}}</td>
-                                            <td>{{$client->timestamp}}</td>
                                             <td>
                                                 <a href="/export/{{$client->id}}">
                                                    <i class="btn btn-primary fa fa-download"></i>
@@ -94,12 +115,18 @@
                             </tbody>
                         </table>
 
-                        {{-- @if($clients->count() == 0)
-                            <h3>No Results Found.</h3>
-                        @else
-                            <h4># of Clients: {{$clients->total()}}</h4>
-                        @endif --}}
-                        {{-- {{ $clients->links() }} --}}
+                        <div class="d-inline-block" style="width:100%;">
+                            <div class="float-left">
+                            @if($clients->count() == 0)
+                                <h3>No Results Found.</h3>
+                            @else
+                                <h4># of Clients: {{$clients->total()}}</h4>
+                            @endif 
+                            </div>
+                            <div class="float-right">
+                            {{ $clients->links() }} 
+                            </div>
+                        </div>  
                     </div>
                     
                 </div>
@@ -113,10 +140,7 @@
 @section('scripts')
 <script defer>
     window.addEventListener('DOMContentLoaded', function() {
-            (function($) {
-                $('#table-list').DataTable({
-                    "pageLength": 25
-                })
+           
                 
                 @if(request()->has('branch'))
                     $('#select_office').val('{{request()->branch}}')
@@ -141,6 +165,6 @@
                     })
 
             })(jQuery);
-        });
+        
     </script>
 @endsection 

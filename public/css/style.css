@@ -1,0 +1,100 @@
+@-webkit-keyframes fadeOut {
+    0% {opacity: 1;}
+    100% {opacity: 0;}
+ }
+ 
+ @keyframes fadeOut {
+    0% {opacity: 1;}
+    100% {opacity: 0;}
+ }
+ .animated{
+  animation-duration: 7s!important;
+ }
+ .fadeOut {
+    -webkit-animation-name: fadeOut;
+    animation-name: fadeOut;
+ }
+.date-group input[type="date"]{
+  height: 46px;
+}
+#table-list{
+  width: 100%!important;
+}
+.invalid-danger{
+  color:red;
+}
+.container{
+	max-width: 1280px!important;
+}
+select.form-control{
+	height: 46px!important;
+}
+label.title{
+  font-size: 14px;
+  font-weight: bold;
+  position: absolute;
+  top: -24px;
+  left: 20px;
+  -webkit-transition: .1s;
+  -o-transition: .1s;
+  transition: .1s;
+}
+
+.form-group{
+  margin: 30px 0; 
+  position: relative; 
+}
+
+.row{
+  margin: 30px 0 0 0; 
+  position: relative; 
+}
+
+div.form-wrapper input[type="text"].form-control,
+div.form-wrapper input[type="password"].form-control,
+div.form-wrapper input[type="email"].form-control,
+div.form-wrapper input[type="url"].form-control,
+div.form-wrapper input[type="date"].form-control,
+div.form-wrapper input[type="number"].form-control {
+  padding: 15px 0 15px;
+  width: 100%;
+  border: none;
+  border-bottom: 3px solid #34495e;
+  font-size: 20px;
+  background: #ecf0f1;
+  padding-left: 5px;
+}
+
+
+/*magic happens here */
+input[type="text"].form-control:focus{
+  outline: none;
+  border-color: #2980b9;
+}
+
+ /*detects if input has valid input*/
+
+
+input[type="text"].form-control ~ label.title
+{ 
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.hidden {
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0s 4s, opacity 4s linear;
+}
+
+.np{
+	padding: 0!important;
+}
+@media only screen and (max-width: 768px) {
+  label.title {
+    position: inherit;
+    top: 0;
+    left: 0;
+    margin-top: 10px;
+  }
+}

@@ -17,32 +17,32 @@ use Illuminate\Support\Facades\Storage;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::group(['middleware' => ['auth','password.changed','account.enabled']], function () {
-        // Route::get('/import','UploadController@import');
+
+Route::group(['middleware' => ['auth']], function () {
+        
         Route::get('/home', 'UploadController@index')->name('home');
-        Route::post('/home', 'UploadController@upload')->name('form.upload');
         Route::get('/', function(){
                 return response()->redirectTo('/home');
         });
-        // Route::get('/printed','UploadController@printed')->name('forms.printed');
-        // Route::get('/unprinted','UploadController@unPrinted')->name('forms.unprinted');
+        Route::get('/printed','UploadController@printed')->name('forms.printed');
+        Route::get('/unprinted','UploadController@unPrinted')->name('forms.unprinted');
         // Route::get('/batch/{batch_id}','UploadController@byBatch')->name('forms.by.batch');
-        Route::get('/batch/{branch}/{date}','UploadController@batchByNameAndDate')->name('forms.by.batch.and.date');
-        Route::get('/print/list','UploadController@download')->name('print.list');
-        // Route::get('/download','UploadController@download')->name('download.list');
+        
+        // Route::get('/date')
+        Route::get('/download','UploadController@download')->name('download.list');
         // Route::post('/downloadFile', function(Request $request){
         //         return response()->download($file)->deleteFileAfterSend(true);
         // })->name('download.file');
         Route::get('/export/{id}', 'UploadController@exportClient');     
         // Route::get('/export', 'UploadController@getClients');        
-        Route::get('/admin', 'UploadController@admin')->middleware('is.admin');
+        // Route::get('/admin', 'UploadController@admin')->middleware('is.admin');
 
-        Route::get('/users','UserController@list');
-        // Route::get('/gdrive/users','UserController@pullAccountsFromGoogleDrive');
-
+        Route::get('/create/client','UploadController@createClient');
+        Route::post('/create/client','UploadController@store')->name('create.client');
         Route::get('/user/reset/{id}','UserController@reset')->name('user.reset');
         Route::get('/user/disable/{id}','UserController@disable')->name('user.disable');
         Route::get('/user/enable/{id}','UserController@enable')->name('user.enable');
+        Route::get('/users','UserController@list');
        
 });
 

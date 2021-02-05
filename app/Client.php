@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 class Client extends Model
 {
 	protected $appends = ['age'];
+	protected $casts = ['self_employed' => 'boolean','spouse_employed' => 'boolean','spouse_self_employed' => 'boolean'];
     protected $fillable = [
     	'first_name',
     	'middle_name',
@@ -444,6 +445,13 @@ class Client extends Model
 		public function getTimestampAttribute($value){
 			return Carbon::parse($value);
 		}
+		public function getSelfEmployedAttribute($value){
+			if(is_null($value)){
+				return false;
+			}
+			return $value;
+		}
+
 }
 
 
