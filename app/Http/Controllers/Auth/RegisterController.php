@@ -73,9 +73,9 @@ class RegisterController extends Controller
     protected function create(array $data)
     {
         $is_admin = false;
-        if($data['branch_id']=="1"){
-            $is_admin = true;
-        }
+        // if($data['branch_id']=="1"){
+        //     $is_admin = true;
+        // }
         $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
