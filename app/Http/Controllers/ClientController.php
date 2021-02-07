@@ -20,12 +20,13 @@ class ClientController extends Controller
 {
     public function index(Request $request){
         
-        // if(!Office::canBeAccessedBy($request->office_id,auth()->user()->id)){
-        //     abort(403);
-        // }
         $user_offices = collect(auth()->user()->office->first()->getAllChildren())->where('level', 'branch')->sortBy('name');
         $clients = Client::whereNull('id')->paginate(25);
         if ($request->has('office_id') && $request->has('date')) {
+
+        if(!Office::canBeAccessedBy($request->office_id,auth()->user()->id)){
+            abort(403);
+        }
             $date = $request->date;
             $query = $request->search;
         
