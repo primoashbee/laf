@@ -20,32 +20,33 @@ class ClientController extends Controller
 {
     public function index(Request $request){
         
-        if(!Office::canBeAccessedBy($request->office_id,auth()->user()->id)){
-            abort(403);
-        }
-        $date = $request->date;
-        $query = $request->search;
-
-        $req_office = Office::findOrFail($request->office_id);
-        $user_offices = collect(auth()->user()->office->first()->getAllChildren())->where('level','branch')->sortBy('name');
+        // if(!Office::canBeAccessedBy($request->office_id,auth()->user()->id)){
+        //     abort(403);
+        // }
+        $user_offices = collect(auth()->user()->office->first()->getAllChildren())->where('level', 'branch')->sortBy('name');
+        $clients = Client::whereNull('id')->paginate(25);
+        if ($request->has('office_id') && $request->has('date')) {
+            $date = $request->date;
+            $query = $request->search;
         
-        $clients = Client::whereIn('office_id',$req_office->getLowerOfficeIDS())    
-        ->whereDay('created_at',Carbon::parse($date))
+            $req_office = Office::find($request->office_id);
+            
+        
+            $clients = Client::whereIn('office_id', $req_office->getLowerOfficeIDS())
+        ->whereDay('created_at', Carbon::parse($date))
         ->paginate(25);
     
-        if($request->has('search')){
-            $search = $request->search;
-            
-            $clients = Client::whereIn('office_id',$req_office->getLowerOfficeIDS())
-            ->whereDay('created_at',Carbon::parse($date))
-            ->where(function($q) use ($search){
-                $q->orWhere('first_name','like','%'.$search.'%');
-                $q->orWhere('last_name','like','%'.$search.'%');
-                $q->orWhere('loan_officer','like','%'.$search.'%');
-                
+            if ($request->has('search')) {
+                $search = $request->search;
+                $clients = Client::whereIn('office_id', $req_office->getLowerOfficeIDS())
+            ->whereDay('created_at', Carbon::parse($date))
+            ->where(function ($q) use ($search) {
+                $q->orWhere('first_name', 'like', '%'.$search.'%');
+                $q->orWhere('last_name', 'like', '%'.$search.'%');
+                $q->orWhere('loan_officer', 'like', '%'.$search.'%');
             })
             ->paginate(25);
-                
+            }
         }
 
         return view('home',compact('clients','user_offices'));
@@ -839,7 +840,6 @@ class ClientController extends Controller
                 
             })
             ->get();
-                
         }
         
         $file = $this->printList($clients);

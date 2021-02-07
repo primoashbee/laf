@@ -44,21 +44,16 @@
                                         <button class="btn btn-primary" type="submit" id="fetch"> Filter</button>
                                     </div>
                             </div>  
-                            
                             <div class="float-right">
-
                                 @if($clients->count() > 0)  
                                     <form action="{{route('download.list')}}" method = "POST">
                                         {{csrf_field()}}
                                         <button class="btn btn-success" type="submit"> Export Clients</button> 
-                                        <input type="text" value="{{request()->office_id}}" name="office_id">
-                                        <input type="text" value="{{request()->date}}" name="date">
-                                        <input type="text" value="{{request()->search}}" name="search">
+                                        <input type="hidden" value="{{request()->office_id}}" name="office_id" >
+                                        <input type="hidden" value="{{request()->date}}" name="date">
+                                        <input type="hidden" value="{{request()->search}}" name="search">
                                     </form>
                                 @endif
-                                
-                                    
-                                
                             </div>
                             
                         </div>
