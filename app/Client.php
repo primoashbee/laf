@@ -67,7 +67,7 @@ class Client extends Model
 		'spouse_other_income_monthly_estimated_earnings',
 		'pension',
 		'remittance',
-    	'branch',
+    	'office_id',
 		'received',
 		'batch_id',
 		'loan_officer',
@@ -85,6 +85,9 @@ class Client extends Model
 
 		public function pulledAt(){
 			return $this->where('batch_id',$this->batch_id)->orderBy('created_at','desc')->limit(1)->get()->first()->created_at;
+		}
+		public function office(){
+			return $this->hasOne(Office::class,'id','office_id');
 		}
 
 		public static function batches(){
@@ -450,6 +453,17 @@ class Client extends Model
 				return false;
 			}
 			return $value;
+		}
+
+
+
+		public function canBeExportedBy($user_id){
+			$client_office_id = $this->office->id;
+			$list = User::find($user_id)->office->first()->getLowerOfficeIDS();
+			if(in_array($client_office_id,$list)){
+				return true;
+			}
+			return false;
 		}
 
 }

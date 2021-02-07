@@ -20,25 +20,25 @@ use Illuminate\Support\Facades\Storage;
 
 Route::group(['middleware' => ['auth']], function () {
         
-        Route::get('/home', 'UploadController@index')->name('home');
+        Route::get('/home', 'ClientController@index')->name('home');
         Route::get('/', function(){
                 return response()->redirectTo('/home');
         });
-        Route::get('/printed','UploadController@printed')->name('forms.printed');
-        Route::get('/unprinted','UploadController@unPrinted')->name('forms.unprinted');
+        // Route::get('/printed','UploadController@printed')->name('forms.printed');
+        // Route::get('/unprinted','UploadController@unPrinted')->name('forms.unprinted');
         // Route::get('/batch/{batch_id}','UploadController@byBatch')->name('forms.by.batch');
         
         // Route::get('/date')
-        Route::get('/download','UploadController@download')->name('download.list');
+        Route::post('/download','ClientController@download')->name('download.list');
         // Route::post('/downloadFile', function(Request $request){
         //         return response()->download($file)->deleteFileAfterSend(true);
         // })->name('download.file');
-        Route::get('/export/{id}', 'UploadController@exportClient');     
+        Route::get('/export/{id}', 'ClientController@exportClient');     
         // Route::get('/export', 'UploadController@getClients');        
         // Route::get('/admin', 'UploadController@admin')->middleware('is.admin');
 
-        Route::get('/create/client','UploadController@createClient');
-        Route::post('/create/client','UploadController@store')->name('create.client');
+        Route::get('/create/client','ClientController@createClient');
+        Route::post('/create/client','ClientController@store')->name('create.client');
         Route::get('/user/reset/{id}','UserController@reset')->name('user.reset');
         Route::get('/user/disable/{id}','UserController@disable')->name('user.disable');
         Route::get('/user/enable/{id}','UserController@enable')->name('user.enable');

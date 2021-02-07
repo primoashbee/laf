@@ -17,36 +17,17 @@
                         </div>
                         @endif                     
                         <div class="d-inline-block" style="width:100%">
-                          <!--   <div class="form-inline float-left mb-2 mr-sm-2">
-                                <label class="form-check-label" for="inlineFormCheck">
-                                    Filter Branch: 
-                                </label>
-                                <select class="form-control" style="margin-left:10px" name="branch" id="select_office">
-                                    
-                                    @if(auth()->user()->is_admin)
-                                    <option value="MAIN OFFICE"> Main Office </option>
-                                    @foreach ($offices as $office)
-                                    <option value="{{$office->name}}">{{ $office->name }}</option>
-                                    @endforeach
-                                    @endif
-                                    <option value="{{ Auth::user()->office->first()->name }}">{{ Auth::user()->office->first()->name }}</option>
-                                </select>
-                                
-                            </div> -->
                              <div class="wrapper float-left">
                                     <div class="d-inline-block mb-2 mr-sm-2">
                                         <label class="form-check-label" for="inlineFormCheck">
                                             Filter Branch: 
                                         </label>
-                                        <select class="form-control" name="branch" id="select_office">
-                                            
-                                            @if(auth()->user()->is_admin)
-                                            <option value=""> Main Office </option>
-                                            @foreach ($offices as $office)
-                                            <option value="{{$office->name}}">{{ $office->name }}</option>
+                                        <select class="form-control" name="office_id" id="office_id" required>
+                                            <option value=""> Please Select </option>
+                                            @foreach ($user_offices as $office)
+                                                <option value="{{$office->id}}">{{ $office->name }}</option>
                                             @endforeach
-                                            @endif
-                                            <option value="{{ Auth::user()->office->first()->name }}">{{ Auth::user()->office->first()->name }}</option>
+                                            
                                         </select>
                                         
                                     </div>
@@ -54,34 +35,26 @@
                                         <label for="from_date" class="form-check-label">
                                         From Date
                                         </label>
-                                        <input type="date" class="form-control mb-4" id="from_date" name="from_date">
+                                        <input type="date" class="form-control mb-4" id="date" name="date" required>
                                     </div>
-                                     @error('from_date')
-                                        <div class="animated fadeOut invalid-danger">{{ $message }}</div>
-                                    @enderror
+                                     @error('date')
+                                        <div class="invalid-danger">{{ $message }}</div>
+                                    @enderror   
                                     <div>
-                                        <button class="btn btn-primary" id="filter_client">Filter</button>
+                                        <button class="btn btn-primary" type="submit" id="fetch"> Filter</button>
                                     </div>
                             </div>  
+                            
                             <div class="float-right">
 
                                 @if($clients->count() > 0)  
-                                    @if(\Str::contains(request()->fullUrl(),'/home'))
-                                        @if(request()->has('from_date'))
-                                            @if(request()->has('branch'))
-                                                <a href="{{ route('download.list').'?branch='.request()->branch.'&from_date='.request()->from_date}}" class="btn btn-primary">Export Clients</a>
-                                            @else
-                                                <a href="{{ route('download.list').'&from_date='.request()->from_date}}" class="btn btn-primary">Export Clients</a>    
-                                            @endif
-                                        @else
-                                            @if(request()->has('branch'))
-                                                <a href="{{ route('download.list').'?branch='.request()->branch}}" class="btn btn-primary">Export Clients</a>
-                                            @else    
-                                                <a href="{{ route('download.list')}}" class="btn btn-primary">Export Clients</a>
-                                            @endif    
-
-                                        @endif        
-                                    @endif
+                                    <form action="{{route('download.list')}}" method = "POST">
+                                        {{csrf_field()}}
+                                        <button class="btn btn-success" type="submit"> Export Clients</button> 
+                                        <input type="text" value="{{request()->office_id}}" name="office_id">
+                                        <input type="text" value="{{request()->date}}" name="date">
+                                        <input type="text" value="{{request()->search}}" name="search">
+                                    </form>
                                 @endif
                                 
                                     
@@ -90,8 +63,7 @@
                             
                         </div>
                         <div>
-                            <!-- <form role="search" id="form-search">
-                                {{ csrf_field() }} -->
+                            @if($clients->count() > 0)  
                             <div class="form-inline form-group">
                                 <input type="text" class="form-control" id="search" required name="search"
                                     placeholder="Search Clients">
@@ -99,9 +71,7 @@
                                         Search
                                     </button>
                             </div>
-                            @error('search')
-                                <strong class="invalid-danger">{{ $message }}</strong>
-                            @enderror
+                            @endif
 
                             <!-- </form> -->
                         </div>          
@@ -117,7 +87,7 @@
                             <tbody>
                                 @foreach($clients as $client)
                                         <tr>
-                                            <td>{{$client->branch}}</td>
+                                            <td>{{$client->office->name}}</td>
                                             <td>{{$client->first_name.' '.$client->middle_name.' '.$client->last_name}}</td>
                                             <td>{{$client->created_at->format('F d, Y')}}</td>
                                             <td>
@@ -158,46 +128,50 @@
     window.addEventListener('DOMContentLoaded', function() {
             
                 
-                @if(request()->has('branch'))
-                    $('#select_office').val('{{request()->branch}}')
+                @if(request()->has('office_id'))
+                    $('#office_id').val('{{request()->office_id}}')
+                @endif
+                @if(request()->has('office_id'))
+                    $('#date').val('{{request()->date}}')
+                @endif
+                @if(request()->has('search'))
+                    $('#search').val('{{request()->search}}')
                 @endif
 
                 @if(session()->has('download'))
                     console.log("{{session('download')}}")
                     location.reload()
                 @endif
+
                 @if(request()->has('page'))
                     $('#pills-profile-tab').click()
                 @endif
                     
                     $('#btn_search').click(function(){
+                        
+                        var selected = $('#office_id').val()
+                        var from_date = $('#date').val()
                         var search = $('#search').val()
                         var href = window.location.origin + window.location.pathname
-                        if (search == '') {
-                            window.location = href;
-                        }else{
-                            window.location = href+'?search='+search;
+                        if(selected == "" || from_date == "" || search == ""){
+                            return false;
                         }
+                        return window.location = href+'?office_id='+selected+'&date='+from_date+'&search='+search; 
                         
                     })
 
-                    $('#filter_client').click(function(){
-                        var selected = $('#select_office').val()
-                        var from_date = $('#from_date').val()
+                    $('#fetch').click(function(){
+                        var selected = $('#office_id').val()
+                        var from_date = $('#date').val()
                         var href = window.location.origin + window.location.pathname
-
-                        if (from_date == '') {
-                            if(selected==""){
-                              window.location = href;
-                            }else{
-                                window.location = href+'?branch='+selected
-                            } 
-                        }else{
-                            window.location = href+'?branch='+selected+'&from_date='+from_date;
+                        if(selected == "" || from_date == ""){
+                            return false;
                         }
+
+                        return window.location = href+'?office_id='+selected+'&date='+from_date
                         
                     })
-            })(jQuery);
+            });
         
     </script>
 @endsection

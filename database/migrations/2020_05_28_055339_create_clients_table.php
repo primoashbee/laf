@@ -73,10 +73,9 @@ class CreateClientsTable extends Migration
             $table->integer('spouse_other_income_monthly_estimated_earnings')->nullable();
             $table->integer('pension')->nullable();
             $table->integer('remittance')->nullable();
-            $table->string('branch');
+            $table->unsignedInteger('office_id');
             $table->string('loan_officer');
-            $table->boolean('received')->default('0');
-
+            $table->boolean('received')->default(false);
             $table->timestamps();
         });
     }

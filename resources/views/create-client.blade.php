@@ -18,25 +18,25 @@
 	            		<div>
 	            			
 						</div>
-
+						
 	            		<h1 class="h1 ml-3 mt-3">Personal Information</h1>
 		            	<form method="POST">
 		            		@csrf()
 		            		<div class="form-wrapper">
 		            			<div class="row pb-4">
 		            				<div class="col-md-6">
-		            					<label for="branch" class="title">Branch</label>
-		            					<select name="branch" id="branch" value="{{ old('branch') }}" class="form-control">
+		            					<label for="office_id" class="title">Branch</label>
+		            					<select name="office_id" id="office_id" value="{{ old('office_id') }}" class="form-control">
 		            						@if(auth()->user()->is_admin)
 		                                    <option> Please Select </option>
 			                                    @foreach ($offices as $office)
-			                                    <option value="{{$office->name}}">{{ $office->name }}</option>
+			                                    <option value="{{$office->id}}">{{ $office->name }}</option>
 			                                    @endforeach
 		                                    @endif
 			                                    
-			                                <option value="{{ Auth::user()->office->first()->name }}">{{ Auth::user()->office->first()->name }}</option>
+			                                <option value="{{ Auth::user()->office->first()->id }}">{{ Auth::user()->office->first()->name }}</option>
 		            					</select>
-		            					@error('branch')
+		            					@error('office_id')
 										    <strong class="invalid-danger">{{ $message }}</strong>
 										@enderror
 		            				</div>
@@ -271,7 +271,7 @@
 				            		</div>
 				            		<div class="col-md-6">
 				            			<label class="title" for="facebook_account_link">Facebook Link:</label>
-				            			<input class="form-control" value="{{ old('facebook_account_link') }}" type="url" id="facebook_account_link" name="facebook_account_link">
+				            			<input class="form-control" value="{{ old('facebook_account_link') }}" type="text" id="facebook_account_link" name="facebook_account_link">
 				            			@error('facebook_account_link')
 										    <strong class="invalid-danger">{{ $message }}</strong>
 										@enderror
@@ -304,7 +304,11 @@
 			            			<div class="col-md-6">
 				            			<label class="title" for="spouse_birthday">Spouse Birthday</label>
 				            			<input type="date" id="spouse_birthday" name="spouse_birthday" value="{{ old('spouse_birthday') }}" style="max-width: 550px;" class="d-inline-block form-control">
-				            		</div>
+										@error('spouse_birthday')
+												<strong class="invalid-danger">{{ $message }}</strong>
+										@enderror
+									</div>
+									
 				            		<div class="col-md-6">
 				            			<label class="title" for="mothers_maiden_name">Mothers Maiden Name:</label>
 			            				<input class="form-control" value="{{ old('mothers_maiden_name') }}" type="text" id="mothers_maiden_name" name="mothers_maiden_name">
@@ -536,8 +540,8 @@
     window.addEventListener('DOMContentLoaded', function() {
            
                 
-             @if(old('branch') != '')
-				 $('#branch').val("{{old('branch')}}")
+             @if(old('office_id') != '')
+				 $('#office_id').val("{{old('office_id')}}")
 			 @endif
 
              @if(old('house') != '')
