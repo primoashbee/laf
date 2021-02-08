@@ -97,6 +97,7 @@ $factory->define(Client::class, function (Faker $faker) {
     	'office_id'=> Office::where('level','branch')->inRandomOrder()->first()->id,
 		'received'=>rand(0,1),
 		
-		'loan_officer'=>$lo
+		'loan_officer'=>$lo,
+		'created_by'=>1
     ];
 });

@@ -24,22 +24,22 @@ class ClientController extends Controller
         $clients = Client::whereNull('id')->paginate(25);
         if ($request->has('office_id') && $request->has('date')) {
 
-        if(!Office::canBeAccessedBy($request->office_id,auth()->user()->id)){
-            abort(403);
-        }
+            if(!Office::canBeAccessedBy($request->office_id,auth()->user()->id)){
+                abort(403);
+            }
             $date = $request->date;
             $query = $request->search;
         
             $req_office = Office::find($request->office_id);
             
         
-            $clients = Client::whereIn('office_id', $req_office->getLowerOfficeIDS())
+            $clients = Client::select('id','created_by','office_id','created_at','first_name','middle_name','last_name','loan_officer')->whereIn('office_id', $req_office->getLowerOfficeIDS())
         ->whereDay('created_at', Carbon::parse($date))
         ->paginate(25);
     
             if ($request->has('search')) {
                 $search = $request->search;
-                $clients = Client::whereIn('office_id', $req_office->getLowerOfficeIDS())
+                $clients = Client::select('id','created_by','office_id','created_at','first_name','middle_name','last_name','loan_officer')->whereIn('office_id', $req_office->getLowerOfficeIDS())
             ->whereDay('created_at', Carbon::parse($date))
             ->where(function ($q) use ($search) {
                 $q->orWhere('first_name', 'like', '%'.$search.'%');
@@ -114,6 +114,7 @@ class ClientController extends Controller
         } catch (Exception $e) {
             return redirect()->back()->with($e);
         }
+        $request['created_by'] = auth()->user()->id;
         Client::create($request->all());
         return redirect()->back()->with('message', 'Client Successfully Encoded');
         

@@ -26,15 +26,15 @@
 		            			<div class="row pb-4">
 		            				<div class="col-md-6">
 		            					<label for="office_id" class="title">Branch</label>
-		            					<select name="office_id" id="office_id" value="{{ old('office_id') }}" class="form-control">
-		            						@if(auth()->user()->is_admin)
+		            					<select name="office_id" id="office_id"  class="form-control">
+		            						
 		                                    <option> Please Select </option>
-			                                    @foreach ($offices as $office)
-			                                    <option value="{{$office->id}}">{{ $office->name }}</option>
-			                                    @endforeach
-		                                    @endif
+											@foreach ($offices as $office)
+											<option value="{{$office->id}}">{{ $office->name }}</option>
+											@endforeach
+		                                    
 			                                    
-			                                <option value="{{ Auth::user()->office->first()->id }}">{{ Auth::user()->office->first()->name }}</option>
+			                                
 		            					</select>
 		            					@error('office_id')
 										    <strong class="invalid-danger">{{ $message }}</strong>
@@ -78,7 +78,7 @@
 		            			</div>
 			            		
 			            		<div class="row">
-			            			<div class="col-md-10 np">
+			            			<div class="col-md-12 np">
 			            				<div class="row">
 						            		<div class="col-md-6">
 						            			<label class="title" for="street_address">Street Address</label>
@@ -103,38 +103,141 @@
 						            		</div>
 					            		</div>
 					            		<div class="row">
-						            		<div class="form-group col-md-6">
+						            		<div class="form-group col-md-4">
 						            			<label class="title" for="province">Province</label>
 						            			<input class="form-control" value="{{ old('province') }}" type="text" id="province" name="province">
 						            			@error('province')
 												    <strong class="invalid-danger">{{ $message }}</strong>
 												@enderror
 						            		</div>
-						            		<div class="form-group col-md-6">
+						            		<div class="form-group col-md-2">
 						            			<label class="title" for="zip_code">Zip Code</label>
 						            			<input class="form-control" value="{{ old('zip_code') }}" type="number" id="zip_code" name="zip_code">
 						            			@error('zip_code')
 												    <strong class="invalid-danger">{{ $message }}</strong>
 												@enderror
 						            		</div>
+											<div class="form-group col-md-2">
+													<label class="title" for="years_of_stay">Years of Stay</label>
+													<input class="form-control" value="{{ old('years_of_stay') }}" type="number" id="years_of_stay" name="years_of_stay">
+													@error('years_of_stay')
+														<strong class="invalid-danger">{{ $message }}</strong>
+													@enderror
+											</div>
+											<div class="form-group col-md-4">
+												<label for="house" class="title">House</label>
+												<select value="{{ old('house') }}" name="house" id="house" class="form-control">
+													<option value="">Select Options</option>
+													<option value="RENTED">RENTED</option>
+													<option value="OWNED">OWNED</option>
+												</select>
+												@error('house')
+													<strong class="invalid-danger">{{ $message }}</strong>
+												@enderror
+											</div>
 					            		</div>
+										<div class="row">
+											<div class="col-md-6">
+												<label class="title" for="birthday">Birthday:</label>
+												<input class="form-control" value="{{ old('birthday') }}" type="date" id="birthday" name="birthday">
+												@error('birthday')
+													<strong class="invalid-danger">{{ $message }}</strong>
+												@enderror
+											</div>
+											<div class="col-md-6">
+												<label class="title" for="gender">Gender:</label>
+												<select name="gender" value="{{ old('gender') }}" id="gender" class="form-control">
+													<option value="">Please Select Options</option>
+													<option value="MALE">MALE</option>
+													<option value="FEMALE">FEMALE</option>
+												</select>
+												@error('gender')
+													<strong class="invalid-danger">{{ $message }}</strong>
+												@enderror
+											</div>
+										</div>
+										
+										<div class="row">
+											<div class="col-md-6">
+												<label class="title" for="birthplace">Birthplace:</label>
+												<input class="form-control" value="{{ old('birthplace') }}" type="text" id="birthplace" name="birthplace">
+												@error('birthplace')
+													<strong class="invalid-danger">{{ $message }}</strong>
+												@enderror
+											</div>
+											<div class="col-md-6">
+												<label class="title" for="tin_id">TIN ID:</label>
+												<input class="form-control" value="{{ old('tin_id') }}" type="text" id="tin_id" name="tin_id">
+											</div>
+										</div>
+										
+										<div class="row">
+											<div class="col-md-4">
+											<label class="title" for="civil_status">Civil Status:</label>
+												<select name="civil_status" value="{{ old('civil_status') }}" id="civil_status" class="form-control" style="max-width: 605px;">
+													<option value="">Please Select Options</option>
+													<option value="SINGLE">SINGLE</option>
+													<option value="SEPARATED">SEPARATED</option>
+													<option value="WIDOW">WIDOW</option>
+													<option value="MARRIED">MARRIED</option>
+												</select>
+												@error('civil_status')
+													<strong class="invalid-danger">{{ $message }}</strong>
+												@enderror
+											</div>
+											<div class="col-md-4">
+												<label class="title" for="other_ids">Other ID (ID Number)</label>
+												<input class="form-control" type="text" id="other_ids  `" name="other_ids">
+											</div>
+											<div class="col-md-4">
+												<label class="title" for="education">Education:</label>
+												<select name="education" value="{{ old('education') }}" id="education" class="form-control" style="max-width: 610px;">
+													<option value="">Please Select Options</option>
+													<option value="POST GRADUATE">POST GRADUATE</option>
+													<option value="COLLEGE">COLLEGE</option>
+													<option value="HIGH SCHOOL">HIGH SCHOOL</option>
+													<option value="ELEMENTARY">ELEMENTARY</option>
+													<option value="OTHERS">OTHERS</option>
+												</select>
+												@error('education')
+													<strong class="invalid-danger">{{ $message }}</strong>
+												@enderror
+											</div>
+										</div>
+										
+										<div class="row">
+
+											
+										</div>
+		
+										<div class="row">
+											<div class="col-md-6">
+												<label class="title" for="mobile_number">Mobile Number:</label>
+												<input class="form-control" value="{{ old('mobile_number') }}" type="number" id="mobile_number" name="mobile_number">
+												@error('mobile_number')
+													<strong class="invalid-danger">{{ $message }}</strong>
+												@enderror
+											</div>
+											<div class="col-md-6">
+												<label class="title" for="facebook_account_link">Facebook Link:</label>
+												<input class="form-control" value="{{ old('facebook_account_link') }}" type="text" id="facebook_account_link" name="facebook_account_link">
+												@error('facebook_account_link')
+													<strong class="invalid-danger">{{ $message }}</strong>
+												@enderror
+											</div>
+										</div>
 				            		</div>
 
-				            		<div class="col-md-2">
-				            			<div class="row form-group">
-					            			<label class="title" for="years_of_stay">Years of Stay</label>
-					            			<input class="form-control" value="{{ old('years_of_stay') }}" type="number" id="years_of_stay" name="years_of_stay">
-					            			@error('years_of_stay')
-											    <strong class="invalid-danger">{{ $message }}</strong>
-											@enderror
-					            		</div>
-				            		</div>
+									
+
+
+
 			            		</div>
-
+								<hr>
 			            		<div class="row">
 				            		<h1 class="h1 pl-3">Business Information</h1>
 
-				            		<div class="col-md-10 np">
+				            		<div class="col-md-12 np">
 				            			<div class="row">
 						            		<div class="col-md-6">
 						            			<label class="title" for="business_farm_street_address">Business / Farm Street Address</label>
@@ -175,109 +278,10 @@
 						            		</div>
 					            		</div>
 				            		</div>
-				            		<div class="col-md-2">
-				            			<label for="house">House</label>
-				            			<select value="{{ old('house') }}" name="house" id="house" class="form-control">
-				            				<option value="">Select Options</option>
-				            				<option value="RENTED">RENTED</option>
-				            				<option value="OWNED">OWNED</option>
-				            			</select>
-				            			@error('house')
-										    <strong class="invalid-danger">{{ $message }}</strong>
-										@enderror
-				            		</div>
+
 				            	</div>
 				            	<hr>
-				            	<div class="row">
-				            		<div class="col-md-6">
-				            			<label class="title" for="birthday">Birthday:</label>
-				            			<input class="form-control" value="{{ old('birthday') }}" type="date" id="birthday" name="birthday">
-				            			@error('birthday')
-										    <strong class="invalid-danger">{{ $message }}</strong>
-										@enderror
-				            		</div>
-				            		<div class="col-md-6">
-				            			<label class="title" for="gender">Gender:</label>
-				            			<select name="gender" value="{{ old('gender') }}" id="gender" class="form-control">
-				            				<option value="">Please Select Options</option>
-				            				<option value="MALE">MALE</option>
-				            				<option value="FEMALE">FEMALE</option>
-				            			</select>
-				            			@error('gender')
-										    <strong class="invalid-danger">{{ $message }}</strong>
-										@enderror
-				            		</div>
-				            	</div>
-			            		
-			            		<div class="row">
-			            			<div class="col-md-6">
-				            			<label class="title" for="birthplace">Birthplace:</label>
-				            			<input class="form-control" value="{{ old('birthplace') }}" type="text" id="birthplace" name="birthplace">
-				            			@error('birthplace')
-										    <strong class="invalid-danger">{{ $message }}</strong>
-										@enderror
-				            		</div>
-				            		<div class="col-md-6">
-				            			<label class="title" for="tin_id">TIN ID:</label>
-				            			<input class="form-control" value="{{ old('tin_id') }}" type="number" id="tin_id" name="tin_id">
-				            		</div>
-			            		</div>
-			            		
-			            		<div class="row">
-			            			<div class="col-md-6">
-			            			<label class="title" for="civil_status">Civil Status:</label>
-				            			<select name="civil_status" value="{{ old('civil_status') }}" id="civil_status" class="form-control" style="max-width: 605px;">
-				            				<option value="">Please Select Options</option>
-				            				<option value="SINGLE">SINGLE</option>
-				            				<option value="SEPARATED">SEPARATED</option>
-				            				<option value="WIDOW">WIDOW</option>
-				            				<option value="MARRIED">MARRIED</option>
-				            			</select>
-				            			@error('civil_status')
-										    <strong class="invalid-danger">{{ $message }}</strong>
-										@enderror
-				            		</div>
-				            		<div class="col-md-6">
-				            			<label class="title" for="other_ids">Other ID's</label>
-				            			<input class="form-control" type="number" id="other_ids  `" name="other_ids">
-				            		</div>
-			            		</div>
-			            		
-			            		<div class="row">
-				            		<div class="col-md-6">
-				            			<label class="title" for="education">Education:</label>
-				            			<select name="education" value="{{ old('education') }}" id="education" class="form-control" style="max-width: 610px;">
-				            				<option value="">Please Select Options</option>
-				            				<option value="POST GRADUATE">POST GRADUATE</option>
-				            				<option value="COLLEGE">COLLEGE</option>
-				            				<option value="HIGH SCHOOL">HIGH SCHOOL</option>
-				            				<option value="ELEMENTARY">ELEMENTARY</option>
-				            				<option value="OTHERS">OTHERS</option>
-				            			</select>
-				            			@error('education')
-										    <strong class="invalid-danger">{{ $message }}</strong>
-										@enderror
-				            		</div>
-				            		
-			            		</div>
-
-			            		<div class="row">
-			            			<div class="col-md-6">
-				            			<label class="title" for="mobile_number">Mobile Number:</label>
-				            			<input class="form-control" value="{{ old('mobile_number') }}" type="number" id="mobile_number" name="mobile_number">
-				            			@error('mobile_number')
-										    <strong class="invalid-danger">{{ $message }}</strong>
-										@enderror
-				            		</div>
-				            		<div class="col-md-6">
-				            			<label class="title" for="facebook_account_link">Facebook Link:</label>
-				            			<input class="form-control" value="{{ old('facebook_account_link') }}" type="text" id="facebook_account_link" name="facebook_account_link">
-				            			@error('facebook_account_link')
-										    <strong class="invalid-danger">{{ $message }}</strong>
-										@enderror
-				            		</div>
-			            		</div>
-
+								<h1 class="h1 pl-3">Other Information</h1>
 			            		<div class="row">
 				            		<div class="col-md-3">
 				            			<label class="title" for="spouse_first_name">Spouse First Name</label>
@@ -383,7 +387,7 @@
 
 			            	<div class="form-wrapper">
 			            		<div class="row">
-				            		<div class="col-md-4 form-group">
+				            		<div class="col-md-2 form-group">
 				            			<input type="checkbox" class="d-inline-block" value="1" id="self_employed" name="self_employed" value="1"
 				            			{{ old('self_employed') == '1' ? 'checked' : '' }}>
 				            			<label class="d-inline-block" for="self_employed">Self Employed</label>
@@ -431,9 +435,9 @@
 			            	<div class="form-wrapper">
 			            		<h1 class="h1 ml-3 mt-5">Spouse Employment Information</h1>
 			            		<div class="row">
-				            		<div class="col-md-4 form-group">
-				            			<input type="checkbox" class="d-inline-block" id="spouse_self_employed" name="spouse_self_employed" value="1"
-				            			{{ old('spouse_self_employed') == '1' ? 'checked' : '' }}>
+				            		<div class="col-md-2 form-group">
+				            			<input type="checkbox" class="d-inline-block" value="1" id="spouse_self_employed" name="spouse_self_employed" 
+				            			{{ old('spouse_self_employed') == "1" ? 'checked' : '' }}>
 					            			<label class="d-inline-block" for="spouse_self_employed">Spouse Self Employed</label>
 				            		</div>
 
@@ -453,7 +457,7 @@
 										@enderror
 				            		</div>
 
-				            		<div class="col-md-4 form-group">
+				            		<div class="col-md-6 form-group">
 				            			<label class="title" for="monthly_income_for_spouse_business">Monthly Income for Spouse Business</label>
 				            			<input value="{{ old('monthly_income_for_spouse_business') }}" type="number" class="form-control" id="monthly_income_for_spouse_business" name="monthly_income_for_spouse_business">
 				            			@error('monthly_income_for_spouse_business')
@@ -464,7 +468,7 @@
 
 
 			            		<div class="row">
-				            		<div class="col-md-3">
+				            		<div class="col-md-2">
 				            			<input type="checkbox" class="d-inline-block" id="spouse_employed" name="spouse_employed" value="1" {{ old('spouse_employed') == '1' ? 'checked' : '' }}>
 					            		<label class="d-inline-block" for="spouse_employed">Spouse Employed</label>
 				            		</div>
@@ -479,7 +483,7 @@
 										@enderror				            			
 				            		</div>
 
-				            		<div class="col-md-3">
+				            		<div class="col-md-4">
 				            			<label class="title" for="company_name">Spouse Company Name</label>
 				            			<input type="text" value="{{ old('company_name') }}" class="form-control" name="company_name" id="company_name">
 				            			@error('company_name')

@@ -76,6 +76,7 @@ class CreateClientsTable extends Migration
             $table->unsignedInteger('office_id');
             $table->string('loan_officer');
             $table->boolean('received')->default(false);
+            $table->unsignedInteger('created_by');
             $table->timestamps();
         });
     }

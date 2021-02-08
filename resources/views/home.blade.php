@@ -75,7 +75,9 @@
                                 <tr>
                                     <td>Branch</td>
                                     <td>Name</td>
+                                    <td>LO</td>
                                     <td>Created At</td>
+                                    <td>Created By</td>
                                     <td>Action</td>
                                 </tr>
                             </thead>
@@ -84,7 +86,9 @@
                                         <tr>
                                             <td>{{$client->office->name}}</td>
                                             <td>{{$client->first_name.' '.$client->middle_name.' '.$client->last_name}}</td>
+                                            <td>{{$client->loan_officer}}</td>
                                             <td>{{$client->created_at->format('F d, Y')}}</td>
+                                            <td>{{$client->user->name}}</td>
                                             <td>
                                                 <a href="/export/{{$client->id}}">
                                                    <i class="btn btn-primary fa fa-download"></i>

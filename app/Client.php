@@ -71,10 +71,12 @@ class Client extends Model
 		'received',
 		'batch_id',
 		'loan_officer',
-		'timestamp'
+		'timestamp',
+		'created_by'
 	];
-		
-
+		public function user(){
+			return $this->hasOne(User::class,'id','created_by');
+		}
 		public function ppi(){
 			return $this->hasOne(PPI::class);
 		}
