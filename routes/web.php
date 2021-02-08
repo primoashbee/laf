@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\Storage;
 */
 
 Route::group(['middleware' => ['auth']], function () {
-        
+        Route::get('/',funnct);
         Route::get('/home', 'ClientController@index')->name('home');
         Route::get('/', function(){
                 return response()->redirectTo('/home');
