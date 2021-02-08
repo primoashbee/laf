@@ -13,6 +13,6 @@ class DatabaseSeeder extends Seeder
     {
         generateStucture();
         createAdminAccount();
-        $this->call(ClientSeeder::class);
+        // $this->call(ClientSeeder::class);
     }
 }
