@@ -406,7 +406,6 @@ table.dataTable td {
   height: 0;
 }
 
-
 @media screen and (max-width: 767px) {
   .dataTables_wrapper .dataTables_info,
   .dataTables_wrapper .dataTables_paginate {
@@ -416,7 +415,6 @@ table.dataTable td {
   .dataTables_wrapper .dataTables_paginate {
     margin-top: 0.5em;
   }
-  
 }
 @media screen and (max-width: 640px) {
   .dataTables_wrapper .dataTables_length,

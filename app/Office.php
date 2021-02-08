@@ -8,6 +8,21 @@ class Office extends Model
 {
     protected $fillable = ['name','code','parent_id','level'];
 
+
+    public function getChild(){
+        $children = $this->children;
+        
+        // $count = $this->children->count();
+        $result = [];
+        //if ($count>0) {
+            foreach ($children as $child) {
+                array_push($result,$child);
+                $result = array_merge($result, $child->getChild());
+            }
+        //}
+
+        return $result;
+    }
     public function parent(){
         return $this->belongsTo(static::class, 'parent_id');
     }
@@ -73,4 +88,9 @@ class Office extends Model
     public static function canBeAccessedBy($office_id, $user_id){
         return in_array($office_id, User::find($user_id)->office->first()->getLowerOfficeIDS());
     }
+
+    // public function getNameAttribute($value){
+        
+    //     // return $this->level =='loan_officer' ? $this->parent->code .'-' .$value : $value;
+    // }
 }

@@ -20,7 +20,7 @@ class ClientController extends Controller
 {
     public function index(Request $request){
         
-        $user_offices = collect(auth()->user()->office->first()->getAllChildren())->where('level', 'branch')->sortBy('name');
+        $user_offices = collect(auth()->user()->office->first()->getAllChildren())->sortBy('name');
         $clients = Client::whereNull('id')->paginate(25);
         if ($request->has('office_id') && $request->has('date')) {
 

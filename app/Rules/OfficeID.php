@@ -26,10 +26,7 @@ class OfficeID implements Rule
      */
     public function passes($attribute, $value)
     {
-        if($value==1){
-            return true;
-        }
-        return in_array($value,Office::where('level','branch')->pluck('id')->toArray()) ? true : false;
+        return Office::where('id',$value)->count() > 0 ? true : false;
     }
 
     /**

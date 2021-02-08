@@ -6,7 +6,6 @@
         <div class="col-md-8">
             <div class="card">
                 <div class="card-header">{{ __('Register') }}</div>
-
                 <div class="card-body">
                     <form method="POST" action="{{ route('register') }}">
                         @csrf
@@ -14,33 +13,8 @@
                         <div class="form-group row">
                             <label for="branch_id" class="col-md-4 col-form-label text-md-right">{{ __('Branch') }}</label>
                             <div class="col-md-6">
-                                <select name="branch_id" id="branch_id" class="form-control @error('name') is-invalid @enderror" required>
-                                    <option value="">Please Select</option>
-                                    <option value="1">MAIN OFFICE</option>
-                                    @foreach($offices as $office)
-                                        <option value="{{$office->id}}">{{$office->name}}</option>
-                                    @endforeach
-                                </select>
-                               
+                                <office-list name="branch_id"></office-list>
                                 @error('branch_id')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="level" class="col-md-4 col-form-label text-md-right">{{ __('Level') }}</label>
-
-                            <div class="col-md-6">
-                                <select name="level" id="level" class="form-control @error('level') is-invalid @enderror" required>
-                                    <option value="">Please Select</option>
-                                    <option value="MANAGER">Branch Manager</option>
-                                    <option value="A">UNIT A</option>
-                                    <option value="B">UNIT B</option>
-                                </select>
-                               
-                                @error('level')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>

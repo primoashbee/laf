@@ -17,19 +17,13 @@
                         </div>
                         @endif                     
                         <div class="d-inline-block" style="width:100%">
+                            
                              <div class="wrapper float-left">
                                     <div class="d-inline-block mb-2 mr-sm-2">
                                         <label class="form-check-label" for="inlineFormCheck">
-                                            Filter Branch: 
+                                            Filter Level: 
                                         </label>
-                                        <select class="form-control" name="office_id" id="office_id" required>
-                                            <option value=""> Please Select </option>
-                                            @foreach ($user_offices as $office)
-                                                <option value="{{$office->id}}">{{ $office->name }}</option>
-                                            @endforeach
-                                            
-                                        </select>
-                                        
+                                        <office-list style="width:360px"></office-list>
                                     </div>
                                     <div class="d-inline-block date-group">
                                         <label for="from_date" class="form-check-label">

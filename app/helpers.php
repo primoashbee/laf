@@ -1,12 +1,13 @@
 <?php 
 
-use App\Office;
 use App\User;
-use App\OfficeUser;
+use App\Office;
 use Carbon\Carbon;
+use App\OfficeUser;
 use App\Imports\OfficeImport;
+use Illuminate\Support\Facades\Hash;
     function generateStucture(){
-        $structure = Excel::toCollection(new OfficeImport, "public/OFFICE STRUCTURE.xlsx");
+        $structure = Excel::toCollection(new OfficeImport, public_path("OFFICE STRUCTURE.xlsx"));
         $data = array();
         $ctr = 0;
 
@@ -27,6 +28,37 @@ use App\Imports\OfficeImport;
         }
         
         Office::insert($data);
+        
+    }
+
+    function seedPilotUsers(){
+        $users = Excel::toCollection(new OfficeImport, public_path("Users.xlsx"))[0];
+        $ctr = 0;
+        
+        \DB::beginTransaction();
+
+        try {
+            foreach($users as $row){
+                if($ctr>0){
+                    
+                    $data = array(
+                        'name'=>$row[0],
+                        'email'=>$row[1],
+                        'password'=> Hash::make('lightmfi123'),
+                        'is_admin'=>false,
+                        'disabled'=>false,
+                    );
+                    $office_id = $row[3];
+                    $user = User::create($data);
+                    $user->office()->attach([$office_id]);
+                }
+                $ctr++;
+            }
+            \DB::commit();
+        }catch(Exception $e){
+            $e->getMessage();
+        }
+        
     }
 
     function createAdminAccount(){

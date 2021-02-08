@@ -56,8 +56,7 @@ class RegisterController extends Controller
         return Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'level' => ['required', 'string', new UserLevel],
-            'branch_id' => ['required', new OfficeID],
+            'office_id' => ['required', new OfficeID],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ], [
             'branch_id.required'=>'Branch must be selected'
@@ -72,20 +71,17 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        $is_admin = false;
-        // if($data['branch_id']=="1"){
-        //     $is_admin = true;
-        // }
+        
         $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
-            'level'=>$data['level'],
-            'is_admin'=>$is_admin,
+            // 'level'=>$data['level'],
+            'is_admin'=>false,
             'password' => Hash::make($data['password']),
         ]);
         OfficeUser::create([
             'user_id'=>$user->id,
-            'office_id'=>$data['branch_id'],
+            'office_id'=>$data['office_id'],
         ]);
         return $user;
     }

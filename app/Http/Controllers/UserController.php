@@ -12,6 +12,10 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
+
+    public function branches(Request $request){
+        return auth()->user()->scopesBranch($request->level);
+    }
     public function changePassword(Request $request){
         
         Validator::make($request->all(), [

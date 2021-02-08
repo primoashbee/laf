@@ -26,24 +26,29 @@
 		            			<div class="row pb-4">
 		            				<div class="col-md-6">
 		            					<label for="office_id" class="title">Branch</label>
-		            					<select name="office_id" id="office_id"  class="form-control">
-		            						
-		                                    <option> Please Select </option>
-											@foreach ($offices as $office)
-											<option value="{{$office->id}}">{{ $office->name }}</option>
-											@endforeach
-		                                    
-			                                    
-			                                
-		            					</select>
+
+										
+										<?php 
+										$value = null;
+										if(!is_null(old('office_id'))){
+											$value = json_encode(App\Office::select('id','name')->find(old('office_id')));
+										}
+										?>
+
+										
+										<office-list default_value="{{is_null(old('office_id')) ? '' : $value }}"></office-list>
 		            					@error('office_id')
 										    <strong class="invalid-danger">{{ $message }}</strong>
 										@enderror
 		            				</div>
 		            				<div class="col-md-6">
 		            					<label for="loan_officer" class="title">Loan Officer</label>
-		            					<input type="text" name="loan_officer" id="loan_officer" value="{{ old('loan_officer') }}" class="form-control">
-		            					@error('loan_officer')
+										@if(auth()->user()->office->first()->level != 'loan_officer')
+		            					<input type="text" name="loan_officer" id="loan_officer" value="{{ old('loan_officer')}}" class="form-control">
+		            					@else
+										<input type="text" name="loan_officer" id="loan_officer" value="{{ old('loan_officer') ? old('loan_officer') : auth()->user()->name }}" class="form-control">
+										@endif
+										@error('loan_officer')
 										    <strong class="invalid-danger">{{ $message }}</strong>
 										@enderror
 		            				</div>
