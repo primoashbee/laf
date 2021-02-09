@@ -22,7 +22,7 @@ class ClientController extends Controller
 {
     public function clearStorage(){
         $file = new Filesystem;
-        $file->cleanDirectory(Storage::disk('public')->getAdapter()->getPathPrefix());
+        $file->cleanDirectory(Storage::disk('exports')->getAdapter()->getPathPrefix());
     }
     public function index(Request $request){
         $clients = Client::whereNull('id')->paginate(25);
@@ -177,7 +177,7 @@ class ClientController extends Controller
         $input = $request->all();
         $client = Client::find($id);
 
-        $client->fill($input)->save();
+        $z = $client->fill($input)->save();
 
         return redirect()->back()->with('message', 'Client Successfully Updated');
     }
@@ -198,7 +198,7 @@ class ClientController extends Controller
         $template = public_path('LAF Final Template.docx');
 
         $folder = uniqid();
-        File::makeDirectory(Storage::disk('public')->path($folder));
+        File::makeDirectory(Storage::disk('exports')->path($folder));
         $ctr= 0;
         
         
@@ -839,7 +839,7 @@ class ClientController extends Controller
                     $client->update(['received' => true]);    
                 }
             
-            $newFile = Storage::disk('public')->path($folder.'/LAF Record - '.'('.$ctr.') '.$name.'.docx');
+            $newFile = Storage::disk('exports')->path($folder.'/LAF Record - '.'('.$ctr.') '.$name.'.docx');
             
             $templateProcessor->saveAs($newFile);
             $ctr++;
@@ -849,10 +849,10 @@ class ClientController extends Controller
                 
             $zipFileName = storage_path('app/public/'.$folder).'.zip';
 
-            $files = Storage::disk('public')->files($folder);
+            $files = Storage::disk('exports')->files($folder);
         
             // dd($folder);
-            $path = storage_path('app/public/'.$folder);
+            $path = storage_path('app/public/exports/'.$folder);
             // $path = storage_path('app/public/5f05496e13ace');
 
             $files = File::allfiles($path);
@@ -870,9 +870,9 @@ class ClientController extends Controller
             }
             $zip->close();
            
-            File::deleteDirectory(storage_path('app/public/'.$folder));
+            File::deleteDirectory(storage_path('app/public/exports/'.$folder));
             return $zipFileName;
-            return response()->download($zipFileName)->deleteFileAfterSend(true);
+            // return response()->download($zipFileName)->deleteFileAfterSend(true);
     }
 
 
@@ -970,7 +970,7 @@ class ClientController extends Controller
         $template = public_path('LAF Final Template.docx');
 
         $folder = uniqid();
-        File::makeDirectory(Storage::disk('public')->path($folder));
+        File::makeDirectory(Storage::disk('exports')->path($folder));
 
 
         
