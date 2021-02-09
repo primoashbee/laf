@@ -49,7 +49,7 @@ Route::group(['middleware' => ['auth']], function () {
                 Route::group(['middleware'=>['is.admin']], function () {
                         Route::get('/user/disable/{id}','UserController@disable')->name('user.disable');
                         Route::get('/user/enable/{id}','UserController@enable')->name('user.enable');
-                        Route::get('/users','UserController@list');
+                        Route::get('/users','UserController@list')->name('users');
                         Route::get('/user/reset/{id}','UserController@reset')->name('user.reset');
                 });
                 
