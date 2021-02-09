@@ -89,7 +89,7 @@ class Office extends Model
         return $ids;
     }
     public static function canBeAccessedBy($office_id, $user_id){
-        $offices =User::select('id')->find($user_id)->office->first()->getLowerOfficeIDS();
+        $offices  = session('accessible_office_ids');
         return in_array($office_id, $offices);
     }
 

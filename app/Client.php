@@ -460,13 +460,11 @@ class Client extends Model
 
 
 		public function canBeExportedBy($user_id){
-			return true;
+			$offices  = session('accessible_office_ids');
+        	
 			$client_office_id = $this->office->id;
-			$list = User::find($user_id)->office->first()->getLowerOfficeIDS();
-			if(in_array($client_office_id,$list)){
-				return true;
-			}
-			return false;
+			return in_array($client_office_id, $offices);
+			
 		}
 
 }

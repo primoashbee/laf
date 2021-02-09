@@ -28,9 +28,9 @@ class ClientController extends Controller
         $clients = Client::whereNull('id')->paginate(25);
         if ($request->has('office_id') && $request->has('date')) {
 
-            // if(!Office::canBeAccessedBy($request->office_id,auth()->user()->id)){
-            //     abort(403);
-            // }
+            if(!Office::canBeAccessedBy($request->office_id,auth()->user()->id)){
+                abort(403);
+            }
             $date = $request->date;
             $query = $request->search;
         

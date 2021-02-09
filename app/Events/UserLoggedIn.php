@@ -31,6 +31,10 @@ class UserLoggedIn
             'ip_address'=>$ip,
             'description'=>$description
         ]);
+
+        
+        $accessible_ids = $user->office->first()->getLowerOfficeIDS();
+        session(['accessible_office_ids' => $accessible_ids]);
         
     }
 

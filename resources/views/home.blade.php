@@ -17,7 +17,6 @@
                         </div>
                         @endif                     
                         <div class="d-inline-block" style="width:100%">
-                            
                              <div class="wrapper float-left">
                                     <div class="d-inline-block mb-2 mr-sm-2">
                                         <label class="form-check-label" for="inlineFormCheck">
