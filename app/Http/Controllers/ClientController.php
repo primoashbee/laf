@@ -12,45 +12,51 @@ use App\Rules\HouseType;
 use App\Rules\CivilStatus;
 use App\Rules\BusinessType;
 use Illuminate\Http\Request;
+
 use Illuminate\Support\Facades\File;
+use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Storage;
 use PhpOffice\PhpWord\TemplateProcessor;
 
 class ClientController extends Controller
 {
+    public function clearStorage(){
+        $file = new Filesystem;
+        $file->cleanDirectory(Storage::disk('public')->getAdapter()->getPathPrefix());
+    }
     public function index(Request $request){
-        
-        $user_offices = collect(auth()->user()->office->first()->getAllChildren())->sortBy('name');
         $clients = Client::whereNull('id')->paginate(25);
         if ($request->has('office_id') && $request->has('date')) {
 
-            if(!Office::canBeAccessedBy($request->office_id,auth()->user()->id)){
-                abort(403);
-            }
+            // if(!Office::canBeAccessedBy($request->office_id,auth()->user()->id)){
+            //     abort(403);
+            // }
             $date = $request->date;
             $query = $request->search;
         
             $req_office = Office::find($request->office_id);
             
         
-            $clients = Client::select('id','created_by','office_id','created_at','first_name','middle_name','last_name','loan_officer')->whereIn('office_id', $req_office->getLowerOfficeIDS())
-        ->whereDay('created_at', Carbon::parse($date))
-        ->paginate(25);
+            $clients = Client::select('id','created_by','office_id','created_at','first_name','middle_name','last_name','loan_officer')
+                        ->whereIn('office_id', $req_office->getLowerOfficeIDS())
+                        ->whereDay('created_at', Carbon::parse($date))
+                        ->paginate(25);
     
             if ($request->has('search')) {
                 $search = $request->search;
-                $clients = Client::select('id','created_by','office_id','created_at','first_name','middle_name','last_name','loan_officer')->whereIn('office_id', $req_office->getLowerOfficeIDS())
-            ->whereDay('created_at', Carbon::parse($date))
-            ->where(function ($q) use ($search) {
-                $q->orWhere('first_name', 'like', '%'.$search.'%');
-                $q->orWhere('last_name', 'like', '%'.$search.'%');
-                $q->orWhere('loan_officer', 'like', '%'.$search.'%');
-            })
-            ->paginate(25);
+                $clients = Client::select('id','created_by','office_id','created_at','first_name','middle_name','last_name','loan_officer')
+                            ->whereIn('office_id', $req_office->getLowerOfficeIDS())
+                            ->whereDay('created_at', Carbon::parse($date))
+                            ->where(function ($q) use ($search) {
+                                $q->orWhere('first_name', 'like', '%'.$search.'%');
+                                $q->orWhere('last_name', 'like', '%'.$search.'%');
+                                $q->orWhere('loan_officer', 'like', '%'.$search.'%');
+                            })
+                            ->paginate(25);
             }
         }
 
-        return view('home',compact('clients','user_offices'));
+        return view('home',compact('clients'));
 
     }
 
@@ -120,7 +126,64 @@ class ClientController extends Controller
         
     }
 
+    public function updateClient(Request $request,$id){
+        // $request->validate(
+        //     [
+        //     'first_name' => 'required',
+        //     'middle_name' => 'sometimes',
+        //     'last_name' => 'required',
+        //     'street_address' => 'required',
+        //     'barangay' => 'required',
+        //     'city' => 'required',
+        //     'zip_code' => 'required|integer',
+        //     'province' => 'required',
+        //     'years_of_stay' => 'required|integer',
+        //     'business_farm_street_address' => 'required',
+        //     'business_farm_city' => 'required',
+        //     'business_barangay' => 'required',
+        //     'business_farm_province' => 'required',
+        //     'business_farm_zip_code' => 'required',
+        //     'birthday' => 'required|date|before:today',
+        //     'birthplace' => 'required',
+        //     'mobile_number' => 'required',
+        //     // 'facebook_account_link' => 'required',
+        //     'spouse_mobile_number' => 'sometimes',
+        //     'mothers_maiden_name' => 'required',
+        //     'spouse_birthday' => 'sometimes|nullable|date|before:today',
+        //     'household_size' => 'required|integer|gt:0',
+        //     'number_of_dependents' => 'required|integer',
+        //     'person_1_name' => 'required',
+        //     'person_1_whole_address' => 'required',
+        //     'person_1_contact_number' => 'required',
+        //     'estimated_monthly_income_for_business' => 'required',
+        //     'gender' => ['required', new Gender],
+        //     'civil_status' => ['required', new CivilStatus],
+        //     'education' => ['required', new Education],
+        //     'house' => ['required', new HouseType],
+        //     'business_type' => ['required', new BusinessType],
+        //     'office_id' => ['required', 'exists:offices,id'],
+        //     'loan_officer' => 'required',
+        //     'estimated_monthly_income_for_business' => 'required|integer',
+        //     // 'self_employed' => 'required',
+        //     'spouse_business_type' => ['required_if:spouse_self_employed,1'],
+        //     'monthly_income_for_spouse_business' => 'required_if:spouse_self_employed,1',
+        //     'spouse_monthly_gross_income_at_work' => 'required_if:spouse_employed,1',
+        //     'company_name' => 'required_if:spouse_employed,1',
+        //     'position' => 'required_if:spouse_employed,1',]
+        // );
+        
+
+        $request['created_by'] = auth()->user()->id;
+        $input = $request->all();
+        $client = Client::find($id);
+
+        $client->fill($input)->save();
+
+        return redirect()->back()->with('message', 'Client Successfully Updated');
+    }
+
     public function printList($clients){
+        $this->clearStorage();
         $q1 = 0;
         $q2 = 0;
         $q3 = 0;
@@ -818,6 +881,7 @@ class ClientController extends Controller
         if(!Office::canBeAccessedBy($request->office_id,auth()->user()->id)){
             abort(403);
         }
+        $this->clearStorage();
         
         $date = $request->date;
         $query = $request->search;
@@ -873,6 +937,13 @@ class ClientController extends Controller
     }
 
 
+    public function update($id){
+        $client = Client::findOrFail($id);
+        if(!$client->canBeExportedBy(auth()->user()->id)){
+            abort(403);
+        }
+        return view('update-client',compact('client'));
+    }
     public function exportClient($id){
 
 
@@ -883,6 +954,7 @@ class ClientController extends Controller
         if(!$client->canBeExportedBy($user->id)){
             abort(403);
         }
+        $this->clearStorage();
         $q1 = 0;
         $q2 = 0;
         $q3 = 0;

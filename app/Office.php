@@ -9,6 +9,9 @@ class Office extends Model
     protected $fillable = ['name','code','parent_id','level'];
 
 
+    public function officeSelectValue(){
+        return json_encode(array('id'=>$this->id, 'name'=>$this->name));
+    }
     public function getChild(){
         $children = $this->children;
         
@@ -86,7 +89,8 @@ class Office extends Model
         return $ids;
     }
     public static function canBeAccessedBy($office_id, $user_id){
-        return in_array($office_id, User::find($user_id)->office->first()->getLowerOfficeIDS());
+        $offices =User::select('id')->find($user_id)->office->first()->getLowerOfficeIDS();
+        return in_array($office_id, $offices);
     }
 
     // public function getNameAttribute($value){

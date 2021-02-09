@@ -20,14 +20,14 @@ use Illuminate\Support\Facades\Storage;
 |
 */
 
+// Route::get('/structure',function(){
+//         // seedPilotUsers();
+//         // Artisan::call('migrate:fresh --seed');
 
-Route::get('/structure',function(){
-        seedPilotUsers();
-        // Artisan::call('migrate:fresh --seed');
+//         $users = Users::all();
+//         return view('test',compact('users'));
+// });
 
-        // $offices = \App\Office::where('level','branch')->orderBy('name','asc')->get();
-        // return view('test',compact('offices'));
-});
 Route::group(['middleware' => ['auth']], function () {
         
         Route::get('/', function(){
@@ -40,14 +40,20 @@ Route::group(['middleware' => ['auth']], function () {
                 
                 Route::post('/download','ClientController@download')->name('download.list');
                 
-                Route::get('/export/{id}', 'ClientController@exportClient');     
+                Route::get('/export/{id}', 'ClientController@exportClient')->name("client.export") ;
                 
                 Route::get('/create/client','ClientController@createClient');
-                Route::post('/create/client','ClientController@store')->name('create.client');
-                Route::get('/user/reset/{id}','UserController@reset')->name('user.reset');
-                Route::get('/user/disable/{id}','UserController@disable')->name('user.disable');
-                Route::get('/user/enable/{id}','UserController@enable')->name('user.enable');
-                Route::get('/users','UserController@list');
+                Route::post('/create/client','ClientController@store')->name('client.create');
+                Route::get('/update/client/{id}','ClientController@update')->name('client.update');
+                Route::post('/update/client/{Client}','ClientController@updateClient')->name('client.update.post');
+                Route::group(['middleware'=>['is.admin']], function () {
+                        Route::get('/user/disable/{id}','UserController@disable')->name('user.disable');
+                        Route::get('/user/enable/{id}','UserController@enable')->name('user.enable');
+                        Route::get('/users','UserController@list');
+                        Route::get('/user/reset/{id}','UserController@reset')->name('user.reset');
+                });
+                
+                
         
         });
    

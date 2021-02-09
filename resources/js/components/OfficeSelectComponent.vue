@@ -13,6 +13,7 @@
     track-by="name" 
     label="name"
     @input = "emitToParent"
+    :disabled  = disabled
     >
       <span slot="noResult">Oops! No elements found. Consider changing the search query.</span>
     </multiselect>
@@ -29,7 +30,7 @@ export default {
   components: {
     Multiselect
   },
-  props: ['name','default_value','list_level'],
+  props: ['name','default_value','list_level','enable_after_load'],
   created(){
       
       if(this.list_level==null){
@@ -37,13 +38,15 @@ export default {
       }else{
           this.fetchListByLevel(this.list_level)
       }
+      
     
   },
   data () {
     return {
         lists: null,
         options: [],
-        value: []
+        value: [],
+        disabled :true
     }
   },
   methods: {
@@ -58,16 +61,21 @@ export default {
       axios.get('/usr/branches')
         .then(res=>{
           this.options=res.data
-            if(this.default_value!==undefined){
+          this.disabled =false
+            if(this.default_value!==undefined || this.default_value == null){
               
               this.options.filter( obj => {
                 var item = obj.data.filter(office => {
                    office.id == this.default_value ? this.value = office : ''
                 })
               })
+              
               if(selected !== ""){
                 this.value = JSON.parse(selected)
-                console.log(this.value)
+                
+                
+              }else{
+                
               }
 
               
@@ -84,6 +92,7 @@ export default {
                    office.id == this.default_value ? this.value = office : ''
                 })
               }) 
+              this.disabled =false
           }
         })
     }

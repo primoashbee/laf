@@ -104,7 +104,7 @@
                                  @endif 
                              @endif
                              <li class="nav-item">
-                                <a class="nav-link" href="{{ route('create.client') }}">Create Client</a>
+                                <a class="nav-link" href="{{ route('client.create') }}">Create Client</a>
                             </li>
                          
                             <li class="nav-item dropdown">

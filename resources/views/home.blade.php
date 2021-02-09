@@ -23,7 +23,16 @@
                                         <label class="form-check-label" for="inlineFormCheck">
                                             Filter Level: 
                                         </label>
-                                        <office-list style="width:360px"></office-list>
+                                        <?php 
+										$value = null;
+                                    
+										if(request()->has('office_id')){
+											$value = App\Office::select('id','name')->find(request()->office_id)->officeSelectValue();    
+										}
+                                        
+										?>
+										
+                                        <office-list  default_value="{{request()->has('office_id') ? $value : '' }}"  style="width:360px" ></office-list>
                                     </div>
                                     <div class="d-inline-block date-group">
                                         <label for="from_date" class="form-check-label">
@@ -84,8 +93,15 @@
                                             <td>{{$client->created_at->format('F d, Y')}}</td>
                                             <td>{{$client->user->name}}</td>
                                             <td>
-                                                <a href="/export/{{$client->id}}">
-                                                   <i class="btn btn-primary fa fa-download"></i>
+                                                <a href="{{route('client.export',$client->id)}}">
+                                                    <button class="btn btn-success" type="button">
+                                                        <i class="fa fa-download"></i>
+                                                    </button>
+                                                </a>
+                                                <a href="{{route('client.update',$client->id)}}">
+                                                    <button class="btn btn-primary" type="button">
+                                                        <i class=" fa fa-edit"></i>
+                                                    </button>
                                                 </a>
                                             </td>
                                         </tr>

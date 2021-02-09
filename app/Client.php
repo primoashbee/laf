@@ -460,6 +460,7 @@ class Client extends Model
 
 
 		public function canBeExportedBy($user_id){
+			return true;
 			$client_office_id = $this->office->id;
 			$list = User::find($user_id)->office->first()->getLowerOfficeIDS();
 			if(in_array($client_office_id,$list)){

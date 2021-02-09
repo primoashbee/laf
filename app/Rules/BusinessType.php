@@ -25,7 +25,7 @@ class BusinessType implements Rule
      */
     public function passes($attribute, $value)
     {
-        $business_type = ["TRADING/MERCHANDISING","MANUFACTURING","SERVICE", "AGRICULTURE"];
+        $business_type = ["TRADING / MERCHANDISING","MANUFACTURING","SERVICE", "AGRICULTURE"];
         return in_array($value,$business_type) ?  true : false;
     }
 

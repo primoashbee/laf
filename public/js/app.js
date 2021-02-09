@@ -1967,12 +1967,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
     Multiselect: vue_multiselect__WEBPACK_IMPORTED_MODULE_0___default.a
   },
-  props: ['name', 'default_value', 'list_level'],
+  props: ['name', 'default_value', 'list_level', 'enable_after_load'],
   created: function created() {
     if (this.list_level == null) {
       this.fetchAllLevels(this.default_value);
@@ -1984,7 +1985,8 @@ __webpack_require__.r(__webpack_exports__);
     return {
       lists: null,
       options: [],
-      value: []
+      value: [],
+      disabled: true
     };
   },
   methods: {
@@ -1999,8 +2001,9 @@ __webpack_require__.r(__webpack_exports__);
 
       axios.get('/usr/branches').then(function (res) {
         _this.options = res.data;
+        _this.disabled = false;
 
-        if (_this.default_value !== undefined) {
+        if (_this.default_value !== undefined || _this.default_value == null) {
           _this.options.filter(function (obj) {
             var item = obj.data.filter(function (office) {
               office.id == _this.default_value ? _this.value = office : '';
@@ -2009,8 +2012,7 @@ __webpack_require__.r(__webpack_exports__);
 
           if (selected !== "") {
             _this.value = JSON.parse(selected);
-            console.log(_this.value);
-          }
+          } else {}
         }
       });
     },
@@ -2026,6 +2028,8 @@ __webpack_require__.r(__webpack_exports__);
               office.id == _this2.default_value ? _this2.value = office : '';
             });
           });
+
+          _this2.disabled = false;
         }
       });
     }
@@ -53648,7 +53652,8 @@ var render = function() {
             "allow-empty": false,
             placeholder: "Select Level",
             "track-by": "name",
-            label: "name"
+            label: "name",
+            disabled: _vm.disabled
           },
           on: { input: _vm.emitToParent },
           model: {
