@@ -13,8 +13,10 @@ use Illuminate\Support\Facades\Hash;
 class UserController extends Controller
 {
 
-    public function branches(Request $request){
-        return auth()->user()->scopesBranch($request->level);
+    public function branches(Request $request){ 
+        
+        // return auth()->user()->scopesBranch($request->level);
+        return session('scopes_branch');
     }
     public function changePassword(Request $request){
         

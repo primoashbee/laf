@@ -35,6 +35,7 @@ class UserLoggedIn
         
         $accessible_ids = $user->office->first()->getLowerOfficeIDS();
         session(['accessible_office_ids' => $accessible_ids]);
+        session(['scopes_branch'=>auth()->user()->scopesBranch()]);
         
     }
 
