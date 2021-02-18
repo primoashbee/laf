@@ -32,7 +32,8 @@ class Client extends Model
 		'birthplace',
 		'tin_id',
 		'civil_status',
-		'other_ids',
+		'other_id_type',
+		'other_id_number',
 		'education',
 		'facebook_account_link',
 		'mobile_number',
@@ -467,6 +468,12 @@ class Client extends Model
 			
 		}
 
+		public function getOtherIdsAttribute(){
+			if($this->other_id_type =="" || !is_null($this->other_id_number)){
+				return $this->other_id_type . ': ' .$this->other_id_number;
+			}
+			return;
+		}
 }
 
 

@@ -36,7 +36,8 @@ class CreateClientsTable extends Migration
             $table->string('birthplace');
             $table->string('tin_id')->nullable();
             $table->string('civil_status');
-            $table->string('other_ids')->nullable();
+            $table->string('other_id_type')->nullable();
+            $table->string('other_id_number')->nullable();
             $table->string('education');
             $table->string('facebook_account_link')->nullable();
             $table->string('mobile_number');

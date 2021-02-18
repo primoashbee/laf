@@ -190,14 +190,10 @@
 													<strong class="invalid-danger">{{ $message }}</strong>
 												@enderror
 											</div>
-											<div class="col-md-4">
-												<label class="title" for="other_ids">Other ID (ID Number)</label>
-												<input class="form-control" type="text" id="other_ids  `" name="other_ids">
-											</div>
-											<div class="col-md-4">
+											<div class="col-md-2">
 												<label class="title" for="education">Education:</label>
 												<select name="education" value="{{ old('education') }}" id="education" class="form-control" style="max-width: 610px;">
-													<option value="">Please Select Options</option>
+													<option value="">Please Select</option>
 													<option value="POST GRADUATE">POST GRADUATE</option>
 													<option value="COLLEGE">COLLEGE</option>
 													<option value="HIGH SCHOOL">HIGH SCHOOL</option>
@@ -208,6 +204,42 @@
 													<strong class="invalid-danger">{{ $message }}</strong>
 												@enderror
 											</div>
+											<div class="col-2">
+												<label for=""class="title">Other ID</label>
+												<select name="other_id_type" id="other_id_type" class="form-control">
+													<option value="">Please Select</option>
+													<option value="School ID">School ID (Latest)</option>
+													<option value="PASSPORT">PASSPORT</option>
+													<option value="PRC ID">PRC ID</option>
+													<option value="GSIS">GSIS</option>
+													<option value="SSS">SSS</option>
+													<option value="UMID">UMID</option>
+													<option value="DRIVERS LICENSE">DRIVERS LICENSE</option>
+													<option value="PHILHEALTH">PHILHEALTH</option>
+													<option value="TIN">TIN</option>
+													<option value="VOTERS ID">VOTERS ID</option>
+													<option value="DIGITIZED POSTAL ID">DIGITIZED POSTAL ID</option>
+													<option value="SOCIAL AMELIORATION PROGRAM">SOCIAL AMELIORATION PROGRAM</option>
+													<option value="SENIOR CITIZENS ID">SENIOR CITIZENS ID</option>
+													<option value="EMPLOYEES ID">EMPLOYEES ID</option>
+													<option value="PAGIBIG MEMBER ID">PAGIBIG MEMBER ID</option>
+													<option value="SOLO PARENT ID">SOLO PARENT ID</option>
+													<option value="DSWD ID">DSWD ID</option>
+													<option value="4PS ID">4PS ID</option>
+													<option value="AFP DEPENDENT ID">AFP DEPENDENT ID</option>
+												</select>
+												@error('other_id_type')
+													<strong class="invalid-danger">{{ $message }}</strong>
+												@enderror
+											</div>
+											<div class="col-md-4">
+												<label class="title" for="other_id_number">Other ID (ID Number)</label>
+												<input class="form-control" type="text" id="other_id_number" name="other_id_number" value="{{old('other_id_number')}}">
+												@error('other_id_number')
+													<strong class="invalid-danger">{{ $message }}</strong>
+												@enderror
+											</div>
+
 										</div>
 										
 										<div class="row">
@@ -585,6 +617,9 @@
 			@endif
              @if(old('spouse_business_type') != '')
 				 $('#spouse_business_type').val("{{old('spouse_business_type')}}")
+			@endif
+             @if(old('other_id_type') != '')
+				 $('#other_id_type').val("{{old('other_id_type')}}")
 			@endif
 
             });

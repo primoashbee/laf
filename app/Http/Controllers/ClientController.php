@@ -11,6 +11,7 @@ use App\Rules\Education;
 use App\Rules\HouseType;
 use App\Rules\CivilStatus;
 use App\Rules\BusinessType;
+use App\Rules\IDList;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\File;
@@ -104,6 +105,8 @@ class ClientController extends Controller
                         'estimated_monthly_income_for_business' => 'required',
                         'gender' => ['required', new Gender],
                         'civil_status' => ['required', new CivilStatus],
+                        'other_id_type'=>['sometimes','nullable',new IDList,'required_with:other_id_number'],
+                        'other_id_number'=>['required_with:other_id_type'],
                         'education' => ['required', new Education],
                         'house' => ['required', new HouseType],
                         'business_type' => ['required', new BusinessType],
@@ -132,50 +135,60 @@ class ClientController extends Controller
     }
 
     public function updateClient(Request $request,$id){
-        // $request->validate(
-        //     [
-        //     'first_name' => 'required',
-        //     'middle_name' => 'sometimes',
-        //     'last_name' => 'required',
-        //     'street_address' => 'required',
-        //     'barangay' => 'required',
-        //     'city' => 'required',
-        //     'zip_code' => 'required|integer',
-        //     'province' => 'required',
-        //     'years_of_stay' => 'required|integer',
-        //     'business_farm_street_address' => 'required',
-        //     'business_farm_city' => 'required',
-        //     'business_barangay' => 'required',
-        //     'business_farm_province' => 'required',
-        //     'business_farm_zip_code' => 'required',
-        //     'birthday' => 'required|date|before:today',
-        //     'birthplace' => 'required',
-        //     'mobile_number' => 'required',
-        //     // 'facebook_account_link' => 'required',
-        //     'spouse_mobile_number' => 'sometimes',
-        //     'mothers_maiden_name' => 'required',
-        //     'spouse_birthday' => 'sometimes|nullable|date|before:today',
-        //     'household_size' => 'required|integer|gt:0',
-        //     'number_of_dependents' => 'required|integer',
-        //     'person_1_name' => 'required',
-        //     'person_1_whole_address' => 'required',
-        //     'person_1_contact_number' => 'required',
-        //     'estimated_monthly_income_for_business' => 'required',
-        //     'gender' => ['required', new Gender],
-        //     'civil_status' => ['required', new CivilStatus],
-        //     'education' => ['required', new Education],
-        //     'house' => ['required', new HouseType],
-        //     'business_type' => ['required', new BusinessType],
-        //     'office_id' => ['required', 'exists:offices,id'],
-        //     'loan_officer' => 'required',
-        //     'estimated_monthly_income_for_business' => 'required|integer',
-        //     // 'self_employed' => 'required',
-        //     'spouse_business_type' => ['required_if:spouse_self_employed,1'],
-        //     'monthly_income_for_spouse_business' => 'required_if:spouse_self_employed,1',
-        //     'spouse_monthly_gross_income_at_work' => 'required_if:spouse_employed,1',
-        //     'company_name' => 'required_if:spouse_employed,1',
-        //     'position' => 'required_if:spouse_employed,1',]
-        // );
+        $request->validate(
+            [
+                [
+                    'first_name' => 'required',
+                    'middle_name' => 'sometimes',
+                    'last_name' => 'required',
+                    'street_address' => 'required',
+                    'barangay' => 'required',
+                    'city' => 'required',
+                    'zip_code' => 'required|integer',
+                    'province' => 'required',
+                    'years_of_stay' => 'required|integer',
+                    'business_farm_street_address' => 'required',
+                    'business_farm_city' => 'required',
+                    'business_barangay' => 'required',
+                    'business_farm_province' => 'required',
+                    'business_farm_zip_code' => 'required',
+                    'birthday' => 'required|date|before:today',
+                    'birthplace' => 'required',
+                    'mobile_number' => 'required',
+                    // 'facebook_account_link' => 'required',
+                    // 'spouse_mobile_number' => 'sometimes|nullable',
+                    'mothers_maiden_name' => 'required',
+                    'spouse_first_name' => 'sometimes|nullable|required_with_all:spouse_last_name,spouse_mobile_number,spouse_birthday',  
+                    'spouse_last_name' => 'sometimes|nullable|required_with_all:spouse_first_name',  
+                    'spouse_birthday' => 'sometimes|nullable|required_with_all:spouse_first_name',  
+                    'spouse_mobile_number' => 'sometimes|nullable|required_with_all:spouse_first_name',  
+                    'household_size' => 'required|integer|gt:0',
+                    'number_of_dependents' => 'required|integer',
+                    'person_1_name' => 'required',
+                    'person_1_whole_address' => 'required',
+                    'person_1_contact_number' => 'required',
+                    'estimated_monthly_income_for_business' => 'required',
+                    'gender' => ['required', new Gender],
+                    'civil_status' => ['required', new CivilStatus],
+                    'other_id_type'=>['sometimes','nullable',new IDList],
+                    'other_ids'=>['required_with:other_id_type'],
+                    'education' => ['required', new Education],
+                    'house' => ['required', new HouseType],
+                    'business_type' => ['required', new BusinessType],
+                    'office_id' => ['required', 'exists:offices,id'],
+                    'loan_officer' => 'required',
+                    'estimated_monthly_income_for_business' => 'required|integer',
+                    // 'self_employed' => 'required',
+                    'spouse_business_type' => ['required_if:spouse_self_employed,1'],
+                    'monthly_income_for_spouse_business' => 'required_if:spouse_self_employed,1',
+                    'spouse_monthly_gross_income_at_work' => 'required_if:spouse_employed,1',
+                    'other_income' =>'nullable|required_with:other_income_monthly_estimated_earnings',
+                    'other_income_monthly_estimated_earnings' =>'sometimes|nullable|gt:0|required_with:other_income',
+                    'company_name' => 'required_if:spouse_employed,1',
+                    'position' => 'required_if:spouse_employed,1'
+                ]
+            ]
+        );
         
 
         $request['created_by'] = auth()->user()->id;
