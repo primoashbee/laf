@@ -90,7 +90,7 @@ class ClientController extends Controller
                         'birthplace' => 'required',
                         'mobile_number' => 'required',
                         // 'facebook_account_link' => 'required',
-                        'spouse_mobile_number' => 'sometimes',
+                        // 'spouse_mobile_number' => 'sometimes|nullable',
                         'mothers_maiden_name' => 'required',
                         'spouse_birthday' => 'sometimes|nullable|date|before:today',
                         'household_size' => 'required|integer|gt:0',
@@ -111,6 +111,8 @@ class ClientController extends Controller
                         'spouse_business_type' => ['required_if:spouse_self_employed,1'],
                         'monthly_income_for_spouse_business' => 'required_if:spouse_self_employed,1',
                         'spouse_monthly_gross_income_at_work' => 'required_if:spouse_employed,1',
+                        'other_income' =>'nullable',
+                        'other_income_monthly_estimated_earnings' =>'sometimes|nullable|gt:0',
                         'company_name' => 'required_if:spouse_employed,1',
                         'position' => 'required_if:spouse_employed,1',
                     ]

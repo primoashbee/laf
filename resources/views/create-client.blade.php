@@ -428,11 +428,17 @@
 				            		<div class="col-md-6">
 				            			<label class="title" for="other_income">Other Income</label>
 				            			<input type="text" class="form-control" value="{{ old('other_income') }}" name="other_income" id="other_income">
+										@error('other_income')
+											<strong class="invalid-danger">{{ $message }}</strong>
+									@enderror
 				            		</div>
 				            		<div class="col-md-6">
 				            			<label class="title" for="other_income_monthly_estimated_earnings">Other Income Estimated Earnings</label>
 				            			<input type="text" class="form-control" name="other_income_monthly_estimated_earnings" id="other_income_monthly_estimated_earnings"
 				            			value="{{ old('other_income_monthly_estimated_earnings') }}">
+										@error('other_income_monthly_estimated_earnings')
+											<strong class="invalid-danger">{{ $message }}</strong>
+										@enderror
 				            		</div>
 			            		</div>
 		            		</div>
