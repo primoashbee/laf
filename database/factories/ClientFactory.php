@@ -16,6 +16,7 @@ $factory->define(Client::class, function (Faker $faker) {
     $type = $faker->randomElement(['TRADING / MERCHANDISING', 'MANUFACTURING','SERVICE','AGRICULTURE']);
 	$contact = "09190700608";
     $dependents = rand(1,5);
+	$id_type = $faker->randomElement(['School ID','PASSPORT','PRC ID','GSIS','SSS','UMID','DRIVERS LICENSE','PHILHEALTH','TIN','VOTERS ID','DIGITIZED POSTAL ID','SOCIAL AMELIORATION PROGRAM','SENIOR CITIZENS ID','EMPLOYEES ID','PAGIBIG MEMBER ID','SOLO PARENT ID','DSWD ID','4PS ID','BARANGAY ID','AFP DEPENDEDNT ID']);
     $house_type = $faker->randomElement(['RENTED','OWNED']);
     $lo = $faker->randomElement([
 		'LO1A',
@@ -61,7 +62,8 @@ $factory->define(Client::class, function (Faker $faker) {
 		'birthplace'=>$faker->firstName,
 		'tin_id'=>$faker->firstName,
 		'civil_status'=>$civil_status,
-		'other_ids'=>$faker->firstName,
+		'other_id_type'=>$id_type,
+		'other_id_number'=>rand(11111111,999999),
 		'education'=>$education,
 		'facebook_account_link'=>$faker->firstName,
 		'mobile_number'=>$contact,

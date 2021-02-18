@@ -73,7 +73,9 @@ class Client extends Model
 		'batch_id',
 		'loan_officer',
 		'timestamp',
-		'created_by'
+		'created_by',
+		'deleted',
+		'deleted_by'
 	];
 		public function user(){
 			return $this->hasOne(User::class,'id','created_by');
@@ -473,6 +475,9 @@ class Client extends Model
 				return $this->other_id_type . ': ' .$this->other_id_number;
 			}
 			return;
+		}
+		public function deletedBy(){
+			return $this->belongsTo(User::class,'deleted_by');
 		}
 }
 

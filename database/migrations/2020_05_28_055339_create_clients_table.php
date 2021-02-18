@@ -78,6 +78,8 @@ class CreateClientsTable extends Migration
             $table->string('loan_officer');
             $table->boolean('received')->default(false);
             $table->unsignedInteger('created_by');
+            $table->boolean('deleted')->default(false);
+            $table->unsignedInteger('deleted_by')->nullable();
             $table->timestamps();
         });
     }

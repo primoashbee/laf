@@ -41,6 +41,7 @@ Route::group(['middleware' => ['auth']], function () {
                 Route::post('/download','ClientController@download')->name('download.list');
                 
                 Route::get('/export/{id}', 'ClientController@exportClient')->name("client.export") ;
+                Route::get('/delete/client/{id}','ClientController@delete')->name('client.delete');
                 
                 Route::get('/create/client','ClientController@createClient');
                 Route::post('/create/client','ClientController@store')->name('client.create');

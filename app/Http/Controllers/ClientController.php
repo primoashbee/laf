@@ -37,13 +37,15 @@ class ClientController extends Controller
         
             $req_office = Office::find($request->office_id);
             
-        
             $clients = Client::select('id','created_by','office_id','created_at','first_name','middle_name','last_name','loan_officer')
                         ->whereIn('office_id', $req_office->getLowerOfficeIDS())
                         ->whereDay('created_at', Carbon::parse($date))
+                        ->where('deleted',false)
                         ->paginate(25);
     
+            
             if ($request->has('search')) {
+
                 $search = $request->search;
                 $clients = Client::select('id','created_by','office_id','created_at','first_name','middle_name','last_name','loan_officer')
                             ->whereIn('office_id', $req_office->getLowerOfficeIDS())
@@ -53,6 +55,7 @@ class ClientController extends Controller
                                 $q->orWhere('last_name', 'like', '%'.$search.'%');
                                 $q->orWhere('loan_officer', 'like', '%'.$search.'%');
                             })
+                            ->where('deleted',false)
                             ->paginate(25);
             }
         }
@@ -910,6 +913,7 @@ class ClientController extends Controller
         
         $clients = Client::whereIn('office_id',$req_office->getLowerOfficeIDS())    
         ->whereDay('created_at',Carbon::parse($date))
+        ->where('deleted',false)
         ->get();
     
         if($request->has('search')){
@@ -954,7 +958,15 @@ class ClientController extends Controller
 
     }
 
-
+    public function delete($id){
+        $client = Client::find($id);
+        if(!Office::canBeAccessedBy($client->office->id, auth()->user()->id)){
+            abort(403);
+        }
+        $client->update(['deleted'=>true,'deleted_by'=>auth()->user()->id]);
+        return redirect()->back()->with('message', 'Client Successfully Deleted');
+        
+    }
     public function update($id){
         $client = Client::findOrFail($id);
         if(!$client->canBeExportedBy(auth()->user()->id)){

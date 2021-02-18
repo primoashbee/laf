@@ -33,6 +33,7 @@ use Illuminate\Support\Facades\Hash;
 
     function seedPilotUsers(){
         $users = Excel::toCollection(new OfficeImport, public_path("Users.xlsx"))[0];
+        
         $ctr = 0;
         
         \DB::beginTransaction();

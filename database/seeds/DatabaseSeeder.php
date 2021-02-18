@@ -14,6 +14,6 @@ class DatabaseSeeder extends Seeder
         generateStucture();
         createAdminAccount();
         seedPilotUsers();
-        // $this->call(ClientSeeder::class);
+        $this->call(ClientSeeder::class);
     }
 }

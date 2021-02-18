@@ -102,6 +102,11 @@
                                                         <i class=" fa fa-edit"></i>
                                                     </button>
                                                 </a>
+                                                <a href="{{route('client.delete',$client->id)}}">
+                                                    <button class="btn btn-danger" type="button">
+                                                        <i class=" fa fa-trash"></i>
+                                                    </button>
+                                                </a>
                                             </td>
                                         </tr>
                                 @endforeach
