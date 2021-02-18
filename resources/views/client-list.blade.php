@@ -12,11 +12,7 @@
 
                 
                 <div class="card-body">
-                    @if(session()->has('message'))
-                        <div class="animated fadeOut alert alert-danger">
-                            {{ session()->get('message') }}
-                        </div>
-                    @endif
+
                     <div class="table-container">
                           <!--   <div class="form-inline float-left">
                             <input type="text" class="form-control" placeholder="Client name" aria-label="Client name" aria-describedby="basic-addon2">

@@ -11,11 +11,11 @@
                 </div>
                 <div class="card-body">
                     <div class="table-container">
-                         @if(session()->has('message'))
-                        <div class="animated fadeOut alert alert-warning">
+                        @if(session()->has('message'))
+                        <div class="alert alert-danger" role="alert">
                             {{ session()->get('message') }}
                         </div>
-                        @endif                     
+                        @endif
                         <div class="d-inline-block" style="width:100%">
                              <div class="wrapper float-left">
                                     <div class="d-inline-block mb-2 mr-sm-2">
