@@ -291,14 +291,23 @@
 				            		<div class="col-md-3">
 				            			<label class="title" for="spouse_first_name">Spouse First Name</label>
 				            			<input type="text" value="{{ old('spouse_first_name') }}" id="spouse_first_name" name="spouse_first_name" class="form-control">
+										@error('spouse_first_name')
+											<strong class="invalid-danger">{{ $message }}</strong>
+										@enderror
 				            		</div>
 				            		<div class="col-md-3">
 				            			<label class="title" for="spouse_middle_name">Spouse Middle Name</label>
 				            			<input type="text" value="{{ old('spouse_middle_name') }}" name="spouse_middle_name" id="spouse_middle_name" class="form-control">
+										@error('spouse_middle_name')
+											<strong class="invalid-danger">{{ $message }}</strong>
+										@enderror
 				            		</div>
 				            		<div class="col-md-3">
 				            			<label class="title" for="spouse_last_name">Spouse Last Name</label>
 				            			<input type="text" value="{{ old('spouse_last_name') }}" id="spouse_last_name" name="spouse_last_name" class="form-control">
+										@error('spouse_last_name')
+											<strong class="invalid-danger">{{ $message }}</strong>
+										@enderror
 				            		</div>
 				            		<div class="col-md-3">
 				            			<label class="title" for="spouse_mobile_number">Spouse Mobile Number</label>
@@ -319,7 +328,7 @@
 									</div>
 									
 				            		<div class="col-md-6">
-				            			<label class="title" for="mothers_maiden_name">Mothers Maiden Name:</label>
+				            			<label class="title" for="mothers_maiden_name">Mother's Maiden Name:</label>
 			            				<input class="form-control" value="{{ old('mothers_maiden_name') }}" type="text" id="mothers_maiden_name" name="mothers_maiden_name">
 			            				@error('mothers_maiden_name')
 										    <strong class="invalid-danger">{{ $message }}</strong>
