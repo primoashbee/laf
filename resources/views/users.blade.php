@@ -32,7 +32,7 @@
                                 @foreach ($users as $user)
                                     <tr>
                                         <td>{{$user->email}}</td>
-                                        <td>{{$user->level}}</td>
+                                        <td>{{$user->office->first()->level}}</td>
                                         
                                         <td>{{$user->office->first()->name}}</td>
                                         <td>{{$user->lastLogin()['ip_address']}}</td>
